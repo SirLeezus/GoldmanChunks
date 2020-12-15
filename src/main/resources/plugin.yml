@@ -1,0 +1,11 @@
+name: MyChunks
+main: lee.code.mychunks.MyChunks
+version: ${project.version}
+api-version: 1.13
+author: Lee
+softdepend: [WorldGuard, WorldEdit]
+commands:
+  chunk:
+    description: Main plugin command.
+    permission: mychunks.command.use
+    aliases: [c]
