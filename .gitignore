@@ -1,4 +1,4 @@
 # Project exclude paths
 /target/
 # Ignore .idea files
-.idea/
+.idea
