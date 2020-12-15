@@ -103,7 +103,6 @@ public class Utility {
                 plugin.getData().removePlayerClickDelay(uuid), Values.CLICK_DELAY.getConfigValue());
     }
 
-    //gets the players hand item depending on version
     public ItemStack getHandItem(Player player) {
         ItemStack item;
         if (XMaterial.isOneEight()) item = new ItemStack(player.getInventory().getItemInHand());
