@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="MyChunks:jar">
-    <output-path>$USER_HOME$/Desktop/Minecraft Servers/1.16.4 Test Server/plugins</output-path>
-    <root id="archive" name="MyChunks.jar">
-      <element id="module-output" name="MyChunks" />
-    </root>
-  </artifact>
-</component>
