@@ -273,7 +273,11 @@ public class ChunkListener implements Listener {
                         }
                     }
                 } else if (SQL.isAdminChunk(chunkCord)) {
-                    if (!SQL.canAdminChunkInteract(chunkCord)) e.setCancelled(true);
+                    if (e.getClickedBlock().getType().isInteractable() || e.getAction() == Action.PHYSICAL) {
+                        if (!SQL.canAdminChunkInteract(chunkCord)) e.setCancelled(true);
+                    } else {
+                        if (!SQL.canAdminChunkBuild(chunkCord)) e.setCancelled(true);
+                    }
                 }
             }
         }
@@ -448,7 +452,11 @@ public class ChunkListener implements Listener {
                 } else if (projectile.getShooter() instanceof Monster) e.setCancelled(true);
             }
         } else if (SQL.isAdminChunk(chunkCord)) {
-            if (!SQL.canAdminChunkPVP(chunkCord)) e.setCancelled(true);
+            if (!(e.getEntity() instanceof Monster)) {
+                if (e.getEntity() instanceof Player) {
+                    if (!SQL.canAdminChunkPVP(chunkCord)) e.setCancelled(true);
+                } else if (!SQL.canAdminChunkPVE(chunkCord)) e.setCancelled(true);
+            }
         }
     }
 

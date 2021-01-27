@@ -139,7 +139,7 @@ public class AdminChunkSettings extends Menu {
             inventory.setItem(15, deny);
         }
 
-        if (plugin.getSqLite().canAdminChunkPVP(chunkCord)) {
+        if (plugin.getSqLite().canAdminChunkPVE(chunkCord)) {
             allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getConfigValue(new String[] { plugin.getUtility().format("&atrue") }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(16, allow);
