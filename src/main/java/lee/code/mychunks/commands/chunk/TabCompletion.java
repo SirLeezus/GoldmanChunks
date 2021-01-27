@@ -1,4 +1,4 @@
-package lee.code.mychunks.commands;
+package lee.code.mychunks.commands.chunk;
 
 import lee.code.mychunks.MyChunks;
 import lee.code.mychunks.database.SQLite;
@@ -50,7 +50,7 @@ public class TabCompletion implements TabCompleter {
                     return StringUtil.copyPartialMatches(args[1], SQL.getGlobalTrustedPlayers(uuid), new ArrayList<>());
                 }
             } else if (args[0].equals("admin")) {
-                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], Arrays.asList("unclaim", "unclaimall", "bypass", "bonusclaims"), new ArrayList<>());
+                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], Arrays.asList("unclaim", "unclaimall", "claim", "bypass", "bonusclaims"), new ArrayList<>());
                 else if (args.length == 3 && args[1].equals("bonusclaims")) return StringUtil.copyPartialMatches(args[2], Arrays.asList("add", "remove", "set"), new ArrayList<>());
                 else if (args.length == 4 && args[1].equals("bonusclaims")) return StringUtil.copyPartialMatches(args[3], plugin.getUtility().getOnlinePlayers(), new ArrayList<>());
                 else if (args.length == 5 && args[1].equals("bonusclaims")) return StringUtil.copyPartialMatches(args[4], Collections.singletonList("<amount>") , new ArrayList<>());

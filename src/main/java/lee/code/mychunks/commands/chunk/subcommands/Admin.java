@@ -1,4 +1,4 @@
-package lee.code.mychunks.commands.subcommands;
+package lee.code.mychunks.commands.chunk.subcommands;
 
 import lee.code.mychunks.MyChunks;
 import lee.code.mychunks.commands.SubCommand;
@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import java.util.Scanner;
 import java.util.UUID;

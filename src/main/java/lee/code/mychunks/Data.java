@@ -2,6 +2,7 @@ package lee.code.mychunks;
 
 import lee.code.mychunks.menusystem.PlayerMenuUtility;
 import org.bukkit.Chunk;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ public class Data {
 
     private final HashMap<UUID, PlayerMenuUtility> playerMenuUtilityMap = new HashMap<>();
     private final HashMap<UUID, Chunk> playerAutoClaimMap = new HashMap<>();
+    private final HashMap<UUID, Vector> adminClaimSelection = new HashMap<>();
     private final List<UUID> adminBypassList = new ArrayList<>();
     private final List<UUID> playerClickDelay = new ArrayList<>();
 
@@ -44,6 +46,18 @@ public class Data {
     }
     public boolean hasAdminBypass(UUID uuid) {
         return adminBypassList.contains(uuid);
+    }
+    public boolean hasAdminClaimSelection(UUID uuid) {
+        return adminClaimSelection.containsKey(uuid);
+    }
+    public void addAdminClaimSelection(UUID uuid, Vector vector) {
+        adminClaimSelection.put(uuid, vector);
+    }
+    public void removeAdminClaimSelection(UUID uuid) {
+        adminClaimSelection.remove(uuid);
+    }
+    public Vector getAdminClaimSelection(UUID uuid) {
+        return adminClaimSelection.get(uuid);
     }
 
     public PlayerMenuUtility getPlayerMenuUtil(UUID uuid) {

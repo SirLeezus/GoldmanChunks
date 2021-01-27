@@ -1,12 +1,14 @@
 package lee.code.mychunks;
 
+import lee.code.mychunks.commands.adminchunk.AdminCommandManager;
+import lee.code.mychunks.commands.adminchunk.AdminTabCompletion;
 import lee.code.mychunks.files.defaults.Config;
 import lee.code.mychunks.files.defaults.Settings;
 import lee.code.mychunks.files.defaults.Values;
 import lee.code.mychunks.listeners.ChunkCheckerListener;
 import lee.code.mychunks.listeners.ChunkListener;
-import lee.code.mychunks.commands.CommandManager;
-import lee.code.mychunks.commands.TabCompletion;
+import lee.code.mychunks.commands.chunk.CommandManager;
+import lee.code.mychunks.commands.chunk.TabCompletion;
 import lee.code.mychunks.database.SQLite;
 import lee.code.mychunks.files.FileManager;
 import lee.code.mychunks.files.defaults.Lang;
@@ -51,7 +53,9 @@ public class MyChunks extends JavaPlugin {
 
     private void registerCommands() {
         getCommand("chunk").setExecutor(new CommandManager());
+        getCommand("adminchunk").setExecutor(new AdminCommandManager());
         getCommand("chunk").setTabCompleter(new TabCompletion());
+        getCommand("adminchunk").setTabCompleter(new AdminTabCompletion());
     }
 
     private void registerListeners() {

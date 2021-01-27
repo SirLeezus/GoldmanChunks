@@ -1,7 +1,8 @@
-package lee.code.mychunks.commands;
+package lee.code.mychunks.commands.adminchunk;
 
 import lee.code.mychunks.MyChunks;
-import lee.code.mychunks.commands.subcommands.*;
+import lee.code.mychunks.commands.SubCommand;
+import lee.code.mychunks.commands.adminchunk.subcommands.*;
 import lee.code.mychunks.files.defaults.Lang;
 import lombok.Getter;
 import org.bukkit.command.Command;
@@ -12,26 +13,11 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandManager implements CommandExecutor {
+public class AdminCommandManager implements CommandExecutor {
     @Getter public final ArrayList<SubCommand> subCommands = new ArrayList<>();
 
-    public CommandManager() {
+    public AdminCommandManager() {
         subCommands.add(new Claim());
-        subCommands.add(new AutoClaim());
-        subCommands.add(new UnClaim());
-        subCommands.add(new AbandonAllClaims());
-        subCommands.add(new MaxClaims());
-        subCommands.add(new Trust());
-        subCommands.add(new TrustAll());
-        subCommands.add(new UnTrust());
-        subCommands.add(new UnTrustAll());
-        subCommands.add(new Trusted());
-        subCommands.add(new Map());
-        subCommands.add(new Info());
-        subCommands.add(new Manage());
-        subCommands.add(new ChunkList());
-        subCommands.add(new Reload());
-        subCommands.add(new Admin());
     }
 
     @Override

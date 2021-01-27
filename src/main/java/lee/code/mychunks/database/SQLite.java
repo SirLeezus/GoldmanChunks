@@ -78,6 +78,17 @@ public class SQLite {
                 "`explosions` int NOT NULL" +
                 ");");
 
+        update("CREATE TABLE IF NOT EXISTS admin_chunks (" +
+                "`chunk` varchar PRIMARY KEY," +
+                "`build` int NOT NULL," +
+                "`break` int NOT NULL," +
+                "`interact` int NOT NULL," +
+                "`pve` int NOT NULL," +
+                "`pvp` int NOT NULL," +
+                "`monster_spawning` int NOT NULL," +
+                "`explosions` int NOT NULL" +
+                ");");
+
         //player table
         update("CREATE TABLE IF NOT EXISTS player_data (" +
                 "`player` varchar PRIMARY KEY," +
@@ -194,7 +205,7 @@ public class SQLite {
         return Collections.singletonList("");
     }
 
-    //CHUNK DATA
+    //PLAYER CHUNK DATA
 
     public void claimChunk(String chunk, UUID uuid) {
         update("INSERT INTO chunks (chunk, owner, trusted, build, break, interact, pve, pvp, monster_spawning, explosions) VALUES( '" + chunk + "','" + uuid + "', 'n', '1', '1', '1', '1', '0', '0', '0');");
@@ -204,7 +215,13 @@ public class SQLite {
     @SneakyThrows
     public boolean isChunkClaimed(String chunk) {
         ResultSet rs = getResult("SELECT chunk FROM chunks WHERE chunk = '" + chunk + "';");
-        return rs.next();
+
+        if (rs.next()) {
+            return true;
+        } else {
+            ResultSet rsa = getResult("SELECT chunk FROM admin_chunks WHERE chunk = '" + chunk + "';");
+            return rsa.next();
+        }
     }
 
     @SneakyThrows
@@ -213,7 +230,11 @@ public class SQLite {
         if (rs.next()) {
             String owner = rs.getString("owner");
             return Bukkit.getOfflinePlayer(UUID.fromString(owner)).getName();
-        } else return "";
+        } else {
+            ResultSet rsa = getResult("SELECT chunk FROM admin_chunks WHERE chunk = '" + chunk + "';");
+            if (rsa.next()) return "Admin Claim";
+            else return "";
+        }
     }
 
     @SneakyThrows
@@ -280,6 +301,14 @@ public class SQLite {
         }
         return Collections.singletonList("");
     }
+
+    //ADMIN CHUNK DATA
+
+    public void claimAdminChunk(String chunk) {
+        update("INSERT INTO admin_chunks (chunk, build, break, interact, pve, pvp, monster_spawning, explosions) VALUES( '" + chunk + "', '0', '0', '0', '0', '0', '0', '0');");
+    }
+
+
 
     //PLAYER DATA
 

@@ -1,38 +1,38 @@
-package lee.code.mychunks.commands.subcommands;
+package lee.code.mychunks.commands.chunk.subcommands;
 
 import lee.code.mychunks.MyChunks;
 import lee.code.mychunks.commands.SubCommand;
 import lee.code.mychunks.files.defaults.Lang;
-import lee.code.mychunks.menusystem.menus.ChunkManager;
+import lee.code.mychunks.menusystem.menus.PlayerChunks;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class Manage extends SubCommand {
+public class ChunkList extends SubCommand {
 
     @Override
     public String getName() {
-        return "manage";
+        return "list";
     }
 
     @Override
     public String getDescription() {
-        return "Opens your trusted and chunk manager menu.";
+        return "Opens your chunks claimed menu.";
     }
 
     @Override
     public String getSyntax() {
-        return "/chunk manage";
+        return "/chunk list";
     }
 
     @Override
     public String getPermission() {
-        return "mychunks.command.manage";
+        return "mychunks.command.list";
     }
 
     @Override
     public void perform(Player player, String[] args) {
         MyChunks plugin = MyChunks.getPlugin();
-        new ChunkManager(plugin.getData().getPlayerMenuUtil(player.getUniqueId())).open();
+        new PlayerChunks(plugin.getData().getPlayerMenuUtil(player.getUniqueId())).open();
     }
 
     @Override
