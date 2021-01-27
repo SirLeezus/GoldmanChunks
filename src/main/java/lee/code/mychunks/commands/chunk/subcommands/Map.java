@@ -69,6 +69,8 @@ public class Map extends SubCommand {
                     UUID owner = SQL.getChunkOwnerUUID(chunkSelected);
                     if (SQL.isGlobalTrusted(owner, uuid)) chunkSquare.add("&a■");
                     else chunkSquare.add("&c■");
+                } else if (SQL.isAdminChunk(chunkSelected)) {
+                    chunkSquare.add("&4■");
                 } else {
                     chunkSquare.add("&7■");
                 }
@@ -84,12 +86,12 @@ public class Map extends SubCommand {
         for (String selectedChunk : chunkMap) player.sendMessage(plugin.getUtility().format(selectedChunk));
 
         String line1 = plugin.getUtility().format(" &e\\ &b&lN &e/ ");
-        String line2 = plugin.getUtility().format("  &b&lW &6&l• &b&lE");
+        String line2 = plugin.getUtility().format(" &b&lW &6&l• &b&lE");
         String line3 = plugin.getUtility().format(" &e/ &b&lS &e\\");
         player.sendMessage(Lang.COMMAND_MAP_KEY_HEADER.getConfigValue(null));
         player.sendMessage("");
         player.sendMessage(Lang.COMMAND_MAP_LINE_1.getConfigValue(new String[] { line1 }));
-        player.sendMessage(plugin.getUtility().format(line2));
+        player.sendMessage(Lang.COMMAND_MAP_LINE_2.getConfigValue(new String[] { line2 }));
         player.sendMessage(Lang.COMMAND_MAP_LINE_3.getConfigValue(new String[] { line3 }));
         player.sendMessage("");
         player.sendMessage(Lang.COMMAND_MAP_FOOTER.getConfigValue(null));

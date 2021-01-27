@@ -215,13 +215,7 @@ public class SQLite {
     @SneakyThrows
     public boolean isChunkClaimed(String chunk) {
         ResultSet rs = getResult("SELECT chunk FROM chunks WHERE chunk = '" + chunk + "';");
-
-        if (rs.next()) {
-            return true;
-        } else {
-            ResultSet rsa = getResult("SELECT chunk FROM admin_chunks WHERE chunk = '" + chunk + "';");
-            return rsa.next();
-        }
+        return rs.next();
     }
 
     @SneakyThrows
@@ -230,11 +224,7 @@ public class SQLite {
         if (rs.next()) {
             String owner = rs.getString("owner");
             return Bukkit.getOfflinePlayer(UUID.fromString(owner)).getName();
-        } else {
-            ResultSet rsa = getResult("SELECT chunk FROM admin_chunks WHERE chunk = '" + chunk + "';");
-            if (rsa.next()) return "Admin Claim";
-            else return "";
-        }
+        } else return "";
     }
 
     @SneakyThrows
@@ -308,7 +298,81 @@ public class SQLite {
         update("INSERT INTO admin_chunks (chunk, build, break, interact, pve, pvp, monster_spawning, explosions) VALUES( '" + chunk + "', '0', '0', '0', '0', '0', '0', '0');");
     }
 
+    @SneakyThrows
+    public boolean isAdminChunk(String chunk) {
+        ResultSet rsa = getResult("SELECT chunk FROM admin_chunks WHERE chunk = '" + chunk + "';");
+        return rsa.next();
+    }
 
+    @SneakyThrows
+    public boolean canAdminChunkBuild(String chunk) {
+        ResultSet rs = getResult("SELECT * FROM admin_chunks WHERE chunk = '" + chunk + "';");
+        return rs.getInt("build") == 1;
+    }
+
+    @SneakyThrows
+    public boolean canAdminChunkBreak(String chunk) {
+        ResultSet rs = getResult("SELECT * FROM admin_chunks WHERE chunk = '" + chunk + "';");
+        return rs.getInt("break") == 1;
+    }
+
+    @SneakyThrows
+    public boolean canAdminChunkInteract(String chunk) {
+        ResultSet rs = getResult("SELECT * FROM admin_chunks WHERE chunk = '" + chunk + "';");
+        return rs.getInt("interact") == 1;
+    }
+
+    @SneakyThrows
+    public boolean canAdminChunkPVE(String chunk) {
+        ResultSet rs = getResult("SELECT * FROM admin_chunks WHERE chunk = '" + chunk + "';");
+        return rs.getInt("pve") == 1;
+    }
+
+    @SneakyThrows
+    public boolean canAdminChunkPVP(String chunk) {
+        ResultSet rs = getResult("SELECT * FROM admin_chunks WHERE chunk = '" + chunk + "';");
+        return rs.getInt("pvp") == 1;
+    }
+
+    @SneakyThrows
+    public boolean canAdminChunkSpawnMonsters(String chunk) {
+        ResultSet rs = getResult("SELECT * FROM admin_chunks WHERE chunk = '" + chunk + "';");
+        return rs.getInt("monster_spawning") == 1;
+    }
+
+    @SneakyThrows
+    public boolean canAdminChunkExplode(String chunk) {
+        ResultSet rs = getResult("SELECT * FROM admin_chunks WHERE chunk = '" + chunk + "';");
+        return rs.getInt("explosions") == 1;
+    }
+
+    public void setAdminChunkBuild(String chunk, int canBuild) {
+        update("UPDATE admin_chunks SET build ='" + canBuild + "' WHERE chunk ='" + chunk + "';");
+    }
+
+    public void setAdminChunkBreak(String chunk, int canBreak) {
+        update("UPDATE admin_chunks SET break ='" + canBreak + "' WHERE chunk ='" + chunk + "';");
+    }
+
+    public void setAdminChunkInteract(String chunk, int canInteract) {
+        update("UPDATE admin_chunks SET interact ='" + canInteract + "' WHERE chunk ='" + chunk + "';");
+    }
+
+    public void setAdminChunkPVE(String chunk, int canPVE) {
+        update("UPDATE admin_chunks SET pve ='" + canPVE + "' WHERE chunk ='" + chunk + "';");
+    }
+
+    public void setAdminChunkPVP(String chunk, int canPVP) {
+        update("UPDATE admin_chunks SET pvp ='" + canPVP + "' WHERE chunk ='" + chunk + "';");
+    }
+
+    public void setAdminChunkSpawnMonsters(String chunk, int canSpawnMonster) {
+        update("UPDATE admin_chunks SET monster_spawning ='" + canSpawnMonster + "' WHERE chunk ='" + chunk + "';");
+    }
+
+    public void setAdminChunkExplosion(String chunk, int canExplode) {
+        update("UPDATE admin_chunks SET explosions ='" + canExplode + "' WHERE chunk ='" + chunk + "';");
+    }
 
     //PLAYER DATA
 

@@ -18,6 +18,8 @@ public class AdminCommandManager implements CommandExecutor {
 
     public AdminCommandManager() {
         subCommands.add(new Claim());
+        subCommands.add(new Manage());
+        subCommands.add(new Bypass());
     }
 
     @Override

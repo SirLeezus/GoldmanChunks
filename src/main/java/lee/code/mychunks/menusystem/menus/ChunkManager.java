@@ -8,6 +8,7 @@ import lee.code.mychunks.menusystem.PlayerMenuUtility;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 
 import java.util.UUID;
 
@@ -30,11 +31,13 @@ public class ChunkManager extends Menu {
     @Override
     public void handleMenu(InventoryClickEvent e) {
         MyChunks plugin = MyChunks.getPlugin();
+        Player player = playerMenuUtility.getOwner();
 
         if (plugin.getData().getPlayerClickDelay(playerMenuUtility.getOwner().getUniqueId())) return;
         else plugin.getUtility().addPlayerClickDelay(playerMenuUtility.getOwner().getUniqueId());
 
-        Player player = playerMenuUtility.getOwner();
+        if (e.getClickedInventory() == player.getInventory()) return;
+
         Chunk chunk = player.getLocation().getChunk();
         String chunkCord = plugin.getUtility().formatChunk(chunk);
         UUID uuid = player.getUniqueId();

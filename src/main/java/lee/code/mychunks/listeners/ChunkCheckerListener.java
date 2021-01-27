@@ -1,6 +1,7 @@
 package lee.code.mychunks.listeners;
 
 import lee.code.mychunks.MyChunks;
+import lee.code.mychunks.database.SQLite;
 import lee.code.mychunks.files.defaults.Lang;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -33,6 +34,9 @@ public class ChunkCheckerListener implements Listener {
                 Chunk chunk = e.getClickedBlock().getLocation().getChunk();
                 String chunkCord = plugin.getUtility().formatChunk(chunk);
                 String owner = plugin.getSqLite().getChunkOwner(chunkCord);
+                SQLite SQL = plugin.getSqLite();
+
+                if (SQL.isAdminChunk(chunkCord)) owner = plugin.getUtility().format("&4&lAdmin");
 
                 player.sendMessage(Lang.COMMAND_INFO_HEADER.getConfigValue(null));
                 player.sendMessage("");

@@ -45,6 +45,11 @@ public class Claim extends SubCommand {
 
             if (!SQL.isChunkClaimed(chunkCord)) {
 
+                if (SQL.isAdminChunk(chunkCord)) {
+                    player.sendMessage(Lang.PREFIX.getConfigValue(null) + Lang.ERROR_ADMIN_CLAIMED.getConfigValue(null));
+                    return;
+                }
+
                 int playerClaimAmount = SQL.getClaimedAmount(uuid);
                 int playerMaxClaims = SQL.getMaxPlayerClaims(player);
 
@@ -54,7 +59,6 @@ public class Claim extends SubCommand {
                     player.sendMessage(Lang.PREFIX.getConfigValue(null) + Lang.COMMAND_CLAIM_SUCCESSFUL.getConfigValue(new String[] { chunkCord, plugin.getUtility().formatAmount(playerClaimAmount), plugin.getUtility().formatAmount(playerMaxClaims) }));
                     plugin.getUtility().renderChunkBorder(player, chunk, "claim");
                 } else player.sendMessage(Lang.PREFIX.getConfigValue(null) + Lang.ERROR_COMMAND_CLAIM_MAXED.getConfigValue(new String[] { plugin.getUtility().formatAmount(playerClaimAmount), plugin.getUtility().formatAmount(playerMaxClaims) }));
-
             } else player.sendMessage(Lang.PREFIX.getConfigValue(null) + Lang.ERROR_CLAIMED.getConfigValue(new String[] { plugin.getSqLite().getChunkOwner(chunkCord) }));
         }
     }

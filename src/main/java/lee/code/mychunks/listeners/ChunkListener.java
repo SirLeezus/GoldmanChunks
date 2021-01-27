@@ -92,6 +92,8 @@ public class ChunkListener implements Listener {
                         warnMessage(player, false, owner, "break");
                     }
                 }
+            } else if (SQL.isAdminChunk(chunkCord)) {
+                if (!SQL.canAdminChunkBreak(chunkCord)) e.setCancelled(true);
             }
         }
     }
@@ -133,6 +135,8 @@ public class ChunkListener implements Listener {
             } else if (e.getCause().equals(HangingBreakEvent.RemoveCause.EXPLOSION)) {
                 e.setCancelled(true);
             }
+        } else if (SQL.isAdminChunk(chunkCord)) {
+            if (!SQL.canAdminChunkBreak(chunkCord)) e.setCancelled(true);
         }
     }
 
@@ -171,6 +175,8 @@ public class ChunkListener implements Listener {
             } else if (!(e.getAttacker() instanceof Player)) {
                 e.setCancelled(true);
             }
+        } else if (SQL.isAdminChunk(chunkCord)) {
+            if (!SQL.canAdminChunkBreak(chunkCord)) e.setCancelled(true);
         }
     }
 
@@ -205,6 +211,8 @@ public class ChunkListener implements Listener {
                         warnMessage(player, false, owner, "build");
                     }
                 }
+            } else if (SQL.isAdminChunk(chunkCord)) {
+                if (!SQL.canAdminChunkBuild(chunkCord)) e.setCancelled(true);
             }
         }
     }
@@ -264,6 +272,8 @@ public class ChunkListener implements Listener {
                             }
                         }
                     }
+                } else if (SQL.isAdminChunk(chunkCord)) {
+                    if (!SQL.canAdminChunkInteract(chunkCord)) e.setCancelled(true);
                 }
             }
         }
@@ -302,6 +312,8 @@ public class ChunkListener implements Listener {
                             warnMessage(player, false, owner, "interact");
                         }
                     }
+                } else if (SQL.isAdminChunk(chunkCord)) {
+                    if (!SQL.canAdminChunkInteract(chunkCord)) e.setCancelled(true);
                 }
             }
         }
@@ -340,6 +352,8 @@ public class ChunkListener implements Listener {
                             warnMessage(player, false, owner, "interact");
                         }
                     }
+                } else if (SQL.isAdminChunk(chunkCord)) {
+                    if (!SQL.canAdminChunkInteract(chunkCord)) e.setCancelled(true);
                 }
             }
         }
@@ -433,6 +447,8 @@ public class ChunkListener implements Listener {
                     }
                 } else if (projectile.getShooter() instanceof Monster) e.setCancelled(true);
             }
+        } else if (SQL.isAdminChunk(chunkCord)) {
+            if (!SQL.canAdminChunkPVP(chunkCord)) e.setCancelled(true);
         }
     }
 
@@ -440,12 +456,15 @@ public class ChunkListener implements Listener {
     @EventHandler
     public void onExplodeEvent(EntityExplodeEvent e) {
         MyChunks plugin = MyChunks.getPlugin();
+        SQLite SQL = plugin.getSqLite();
 
         for (Block block : new ArrayList<Block>(e.blockList())) {
             Chunk chunk = block.getLocation().getChunk();
             String chunkCord = plugin.getUtility().formatChunk(chunk);
-            if (plugin.getSqLite().isChunkClaimed(chunkCord)) {
-                if (!plugin.getSqLite().canChunkExplode(chunkCord)) e.blockList().remove(block);
+            if (SQL.isChunkClaimed(chunkCord)) {
+                if (!SQL.canChunkExplode(chunkCord)) e.blockList().remove(block);
+            } else if (SQL.isAdminChunk(chunkCord)) {
+                if (!SQL.canAdminChunkExplode(chunkCord)) e.blockList().remove(block);
             }
         }
     }
@@ -454,14 +473,17 @@ public class ChunkListener implements Listener {
     @EventHandler
     public void onPistonMove(BlockPistonExtendEvent e) {
         MyChunks plugin = MyChunks.getPlugin();
+        SQLite SQL = plugin.getSqLite();
 
         //check piston location
         Chunk chunk = e.getBlock().getLocation().getChunk();
         String chunkCord = plugin.getUtility().formatChunk(chunk);
-        if (!plugin.getSqLite().isChunkClaimed(chunkCord)) {
+        if (!SQL.isChunkClaimed(chunkCord)) {
             e.setCancelled(true);
             return;
         }
+
+        if (SQL.isAdminChunk(chunkCord)) return;
 
         //check piston moved blocks
         for (Block block : new ArrayList<Block>(e.getBlocks())) {
@@ -483,10 +505,13 @@ public class ChunkListener implements Listener {
 
             Chunk chunk = e.getEntity().getLocation().getChunk();
             String chunkCord = plugin.getUtility().formatChunk(chunk);
+            SQLite SQL = plugin.getSqLite();
 
             //check if chunk is claimed or they own it
-            if (plugin.getSqLite().isChunkClaimed(chunkCord)) {
-                if (!plugin.getSqLite().canChunkSpawnMonsters(chunkCord)) e.setCancelled(true);
+            if (SQL.isChunkClaimed(chunkCord)) {
+                if (!SQL.canChunkSpawnMonsters(chunkCord)) e.setCancelled(true);
+            } else if (SQL.isAdminChunk(chunkCord)) {
+                if (!SQL.canAdminChunkSpawnMonsters(chunkCord)) e.setCancelled(true);
             }
         }
     }
@@ -503,7 +528,13 @@ public class ChunkListener implements Listener {
             Chunk chunk = player.getLocation().getChunk();
             String chunkCord = plugin.getUtility().formatChunk(chunk);
 
-            if (!plugin.getSqLite().isChunkClaimed(chunkCord)) {
+            if (!SQL.isChunkClaimed(chunkCord)) {
+
+                if (SQL.isAdminChunk(chunkCord)) {
+                    plugin.getData().removePlayerAutoClaim(uuid);
+                    player.sendMessage(Lang.PREFIX.getConfigValue(null) + Lang.ERROR_ADMIN_CLAIMED.getConfigValue(null));
+                    return;
+                }
 
                 Collection<Chunk> chunksAroundPlayer = plugin.getUtility().getChunksAroundPlayer(player);
                 Chunk lastChunkClaim = plugin.getData().getPlayerLastAutoClaim(uuid);

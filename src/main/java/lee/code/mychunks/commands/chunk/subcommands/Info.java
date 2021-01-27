@@ -2,6 +2,7 @@ package lee.code.mychunks.commands.chunk.subcommands;
 
 import lee.code.mychunks.MyChunks;
 import lee.code.mychunks.commands.SubCommand;
+import lee.code.mychunks.database.SQLite;
 import lee.code.mychunks.files.defaults.Lang;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
@@ -36,6 +37,9 @@ public class Info extends SubCommand {
         Chunk chunk = player.getLocation().getChunk();
         String chunkCord = plugin.getUtility().formatChunk(chunk);
         String owner = plugin.getSqLite().getChunkOwner(chunkCord);
+        SQLite SQL = plugin.getSqLite();
+
+        if (SQL.isAdminChunk(chunkCord)) owner = plugin.getUtility().format("&4&lAdmin");
 
         player.sendMessage(Lang.COMMAND_INFO_HEADER.getConfigValue(null));
         player.sendMessage("");

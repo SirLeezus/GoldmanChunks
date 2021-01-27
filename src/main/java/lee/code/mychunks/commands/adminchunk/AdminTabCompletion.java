@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdminTabCompletion implements TabCompleter {
 
-    private final List<String> subCommands = Arrays.asList("claim");
+    private final List<String> subCommands = Arrays.asList("claim", "manage", "bypass");
     private final List<String> blank = new ArrayList<>();
 
     @Override
