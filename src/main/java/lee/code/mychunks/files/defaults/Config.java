@@ -10,7 +10,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 public enum Config {
 
     AMOUNT_FORMAT("general-settings.amount-format", "#,###"),
-    CHUNK_CHECKER_ITEM("general-settings.chunk-checker-item", "STICK"),
     INTERFACE_FILLER_GLASS_ITEM("interface-items.filler-glass-item", "GRAY_STAINED_GLASS_PANE"),
     INTERFACE_BACK_ITEM("interface-items.back-item", "BARRIER"),
     INTERFACE_CLOSE_ITEM("interface-items.close-item", "BARRIER"),

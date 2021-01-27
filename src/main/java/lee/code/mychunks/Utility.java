@@ -1,24 +1,19 @@
 package lee.code.mychunks;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldguard.LocalPlayer;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import com.sk89q.worldguard.protection.regions.RegionContainer;
-import com.sk89q.worldguard.protection.regions.RegionQuery;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import lee.code.mychunks.database.SQLite;
 import lee.code.mychunks.files.defaults.Config;
 import lee.code.mychunks.files.defaults.Values;
-import lee.code.mychunks.xseries.XMaterial;
+import lombok.SneakyThrows;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -103,14 +98,6 @@ public class Utility {
                 plugin.getData().removePlayerClickDelay(uuid), Values.CLICK_DELAY.getConfigValue());
     }
 
-    public ItemStack getHandItem(Player player) {
-        ItemStack item;
-        if (XMaterial.isOneEight()) item = new ItemStack(player.getInventory().getItemInHand());
-        else item = new ItemStack(player.getInventory().getItemInMainHand());
-        item.setAmount(1);
-        return item;
-    }
-
     public void accruedClaimTimer() {
         MyChunks plugin = MyChunks.getPlugin();
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
@@ -141,5 +128,26 @@ public class Utility {
         else if (hours != 0) return hours + " hour, " + minutes + " min, " + seconds + " sec";
         else if (minutes != 0) return minutes + " min, " + seconds + " sec";
         else return seconds + " sec";
+    }
+
+    @SneakyThrows
+    public ItemStack createCustomPlayerHead(ItemStack head, String base64) {
+
+        if (base64.isEmpty()) return head;
+
+        SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
+        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+        profile.getProperties().put("textures", new Property("textures", base64));
+
+        try {
+            Method mtd = skullMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
+            mtd.setAccessible(true);
+            mtd.invoke(skullMeta, profile);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
+            ex.printStackTrace();
+        }
+
+        head.setItemMeta(skullMeta);
+        return head;
     }
 }

@@ -18,7 +18,6 @@ public class Data {
     public boolean getPlayerClickDelay(UUID uuid) {
         return playerClickDelay.contains(uuid);
     }
-
     public void addPlayerClickDelay(UUID uuid) {
         playerClickDelay.add(uuid);
     }
@@ -52,9 +51,7 @@ public class Data {
 
         if (playerMenuUtilityMap.containsKey(uuid)) {
             return playerMenuUtilityMap.get(uuid);
-
         } else {
-
             playerMenuUtility = new PlayerMenuUtility(uuid);
             playerMenuUtilityMap.put(uuid, playerMenuUtility);
             return playerMenuUtility;

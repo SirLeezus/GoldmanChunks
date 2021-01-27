@@ -1,6 +1,5 @@
 package lee.code.mychunks;
 
-import lee.code.mychunks.softdependency.WorldGuardAPI;
 import lee.code.mychunks.files.defaults.Config;
 import lee.code.mychunks.files.defaults.Settings;
 import lee.code.mychunks.files.defaults.Values;
@@ -22,7 +21,6 @@ public class MyChunks extends JavaPlugin {
     @Getter private FileManager fileManager;
     @Getter private Utility utility;
     @Getter private SQLite sqLite;
-    @Getter private WorldGuardAPI worldGuardAPI;
 
     @Override
     public void onEnable() {
@@ -43,10 +41,6 @@ public class MyChunks extends JavaPlugin {
         registerListeners();
 
         if (Settings.ACCRUED_CLAIMS_ENABLED.getConfigValue()) utility.accruedClaimTimer();
-
-        if (Settings.WORLD_GUARD_SUPPORT.getConfigValue()) {
-            this.worldGuardAPI = new WorldGuardAPI();
-        }
 
     }
 

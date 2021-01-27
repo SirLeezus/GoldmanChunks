@@ -8,8 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 @AllArgsConstructor
 public enum Settings {
 
-    ACCRUED_CLAIMS_ENABLED("accrued-claims.enabled", false),
-    WORLD_GUARD_SUPPORT("soft-dependencies.world-guard-support", false),
+    ACCRUED_CLAIMS_ENABLED("accrued-claims.enabled", true),
     ;
 
     @Getter private final String path;

@@ -4,9 +4,8 @@ import lee.code.mychunks.MyChunks;
 import lee.code.mychunks.files.defaults.Lang;
 import lee.code.mychunks.menusystem.PaginatedMenu;
 import lee.code.mychunks.menusystem.PlayerMenuUtility;
-import lee.code.mychunks.xseries.XEnchantment;
-import lee.code.mychunks.xseries.XMaterial;
 import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -86,9 +85,9 @@ public class PlayerChunks extends PaginatedMenu {
 
             for (int i = y ; i > 0; i--) {
                 Location loc = new Location(location.getWorld(), x, i, z);
-                if (loc.getBlock().getType() == XMaterial.AIR.parseMaterial()) {
+                if (loc.getBlock().getType() == Material.AIR) {
                     Location ground = new Location(loc.getWorld(), loc.getX(), loc.getY() - 1, loc.getZ());
-                    if (ground.getBlock().getType() != XMaterial.AIR.parseMaterial() && ground.getBlock().getType() != XMaterial.LAVA.parseMaterial()) {
+                    if (ground.getBlock().getType() != Material.AIR && ground.getBlock().getType() != Material.LAVA) {
                         player.teleport(loc);
                         player.sendMessage(Lang.PREFIX.getConfigValue(null) + Lang.MESSAGE_CHUNK_TELEPORT.getConfigValue(new String[] { cord }));
                         return;
@@ -120,14 +119,14 @@ public class PlayerChunks extends PaginatedMenu {
 
                 String[] world = chunk.split(",", 2);
                 String worldName = Bukkit.getWorld(world[0]).getEnvironment().name();
-                ItemStack itemChunk = XMaterial.GRASS_BLOCK.parseItem();
+                ItemStack itemChunk = new ItemStack(Material.GRASS_BLOCK);
 
                 switch (worldName) {
                     case "NETHER":
-                        itemChunk = XMaterial.NETHERRACK.parseItem();
+                        itemChunk = new ItemStack(Material.NETHERRACK);
                         break;
                     case "THE_END":
-                        itemChunk = XMaterial.END_STONE.parseItem();
+                        itemChunk = new ItemStack(Material.END_STONE);
                         break;
                 }
 
@@ -135,7 +134,7 @@ public class PlayerChunks extends PaginatedMenu {
                 itemChunkMeta.setDisplayName(plugin.getUtility().format("&b" + chunk));
 
                 if (chunk.equals(playerChunkCord)) {
-                    itemChunkMeta.addEnchant(XEnchantment.PROTECTION_FIRE.parseEnchantment(), 1, false);
+                    itemChunkMeta.addEnchant(Enchantment.PROTECTION_FALL, 1, false);
                     itemChunkMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 }
 

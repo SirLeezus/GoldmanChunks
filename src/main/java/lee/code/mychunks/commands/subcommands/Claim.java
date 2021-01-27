@@ -4,7 +4,6 @@ import lee.code.mychunks.MyChunks;
 import lee.code.mychunks.commands.SubCommand;
 import lee.code.mychunks.database.SQLite;
 import lee.code.mychunks.files.defaults.Lang;
-import lee.code.mychunks.files.defaults.Settings;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -45,13 +44,6 @@ public class Claim extends SubCommand {
             SQLite SQL = plugin.getSqLite();
 
             if (!SQL.isChunkClaimed(chunkCord)) {
-
-                if (Settings.WORLD_GUARD_SUPPORT.getConfigValue()) {
-                    if (!plugin.getWorldGuardAPI().canBuild(player)) {
-                        player.sendMessage(Lang.PREFIX.getConfigValue(null) + Lang.ERROR_COMMAND_CLAIM_WORLD_GUARD_REGION.getConfigValue(null));
-                        return;
-                    }
-                }
 
                 int playerClaimAmount = SQL.getClaimedAmount(uuid);
                 int playerMaxClaims = SQL.getMaxPlayerClaims(player);

@@ -1,10 +1,9 @@
 package lee.code.mychunks.listeners;
 
 import lee.code.mychunks.MyChunks;
-import lee.code.mychunks.files.defaults.Config;
 import lee.code.mychunks.files.defaults.Lang;
-import lee.code.mychunks.xseries.XMaterial;
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,9 +23,9 @@ public class ChunkCheckerListener implements Listener {
 
             Player player = e.getPlayer();
             UUID uuid = player.getUniqueId();
-            ItemStack handItem = plugin.getUtility().getHandItem(player);
+            ItemStack handItem = player.getInventory().getItemInMainHand();
 
-            if (handItem.getType().equals(XMaterial.valueOf(Config.CHUNK_CHECKER_ITEM.getConfigValue(null)).parseMaterial())) {
+            if (handItem.getType().equals(Material.STICK)) {
 
                 if (plugin.getData().getPlayerClickDelay(uuid)) return;
                 else plugin.getUtility().addPlayerClickDelay(uuid);

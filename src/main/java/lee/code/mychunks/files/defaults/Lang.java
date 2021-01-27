@@ -24,7 +24,6 @@ public enum Lang {
     ERROR_COMMAND_AUTO_CLAIM_WORLD_GUARD_REGION("ERROR_COMMAND_CLAIM_WORLD_GUARD_REGION", "&cYou can not claim chunks inside World Guard regions. Auto claim has been disabled."),
     ERROR_COMMAND_ABANDONALLCLAIMS_NO_CLAIMS("ERROR_COMMAND_ABANDONALLCLAIMS_NO_CLAIMS", "&cYou have no claimed chunks so nothing was unclaimed."),
     ERROR_COMMAND_CLAIM_MAXED("ERROR_COMMAND_CLAIM_MAXED", "&cYou have reached the max amount of chunks you can claim at this time &e(&2{0}&7/&2{1}&e)&c. "),
-    ERROR_COMMAND_CLAIM_WORLD_GUARD_REGION("ERROR_COMMAND_CLAIM_WORLD_GUARD_REGION", "&cYou can not claim chunks inside World Guard regions."),
     ERROR_COMMAND_TRUSTED_NOT_CHUNK_OWNER("ERROR_COMMAND_TRUSTED_NOT_CHUNK_OWNER", "&cYou do not own this chunk."),
     ERROR_COMMAND_TRUST_ALREADY_ADDED("ERROR_COMMAND_TRUST_ALREADY_ADDED", "&cThe player &6{0} &cis already added to your trusted list on chunk &e(&b{1}&e)&c."),
     ERROR_COMMAND_TRUSTALL_ALREADY_ADDED("ERROR_COMMAND_TRUSTALL_ALREADY_ADDED", "&cThe player &6{0} &cis already added to your global trusted list."),

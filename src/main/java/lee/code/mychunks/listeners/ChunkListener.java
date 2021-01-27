@@ -3,7 +3,6 @@ package lee.code.mychunks.listeners;
 import lee.code.mychunks.MyChunks;
 import lee.code.mychunks.database.SQLite;
 import lee.code.mychunks.files.defaults.Lang;
-import lee.code.mychunks.files.defaults.Settings;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
@@ -513,14 +512,6 @@ public class ChunkListener implements Listener {
                     plugin.getData().removePlayerAutoClaim(uuid);
                     player.sendMessage(Lang.PREFIX.getConfigValue(null) + Lang.ERROR_COMMAND_AUTO_CLAIM.getConfigValue(null));
                     return;
-                }
-
-                if (Settings.WORLD_GUARD_SUPPORT.getConfigValue()) {
-                    if (!plugin.getWorldGuardAPI().canBuild(player)) {
-                        plugin.getData().removePlayerAutoClaim(uuid);
-                        player.sendMessage(Lang.PREFIX.getConfigValue(null) + Lang.ERROR_COMMAND_AUTO_CLAIM_WORLD_GUARD_REGION.getConfigValue(null));
-                        return;
-                    }
                 }
 
                 int playerClaimAmount = SQL.getClaimedAmount(uuid);
