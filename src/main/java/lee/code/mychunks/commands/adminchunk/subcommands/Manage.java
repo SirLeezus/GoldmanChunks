@@ -28,7 +28,7 @@ public class Manage extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "mychunk.admin";
+        return "mychunk.admin.manage";
     }
 
     @Override

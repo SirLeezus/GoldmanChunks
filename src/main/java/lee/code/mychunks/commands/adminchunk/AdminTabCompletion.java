@@ -25,7 +25,7 @@ public class AdminTabCompletion implements TabCompleter {
             if (args.length == 1) {
                 List<String> hasCommand = new ArrayList<>();
                 for (String pluginCommand : subCommands)
-                    if (sender.hasPermission("mychunks.admin" + pluginCommand)) hasCommand.add(pluginCommand);
+                    if (sender.hasPermission("mychunks.admin." + pluginCommand)) hasCommand.add(pluginCommand);
                 return StringUtil.copyPartialMatches(args[0], hasCommand, new ArrayList<>());
             }
         }

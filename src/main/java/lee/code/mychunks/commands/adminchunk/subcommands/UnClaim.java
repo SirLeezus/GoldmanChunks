@@ -29,7 +29,7 @@ public class UnClaim extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "mychunks.admin";
+        return "mychunks.admin.unclaim";
     }
 
     @Override

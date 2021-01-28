@@ -27,7 +27,7 @@ public class Bypass extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "mychunks.admin";
+        return "mychunks.admin.bypass";
     }
 
     @Override
