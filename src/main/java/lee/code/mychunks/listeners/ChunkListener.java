@@ -13,10 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.*;
@@ -136,7 +133,13 @@ public class ChunkListener implements Listener {
                 e.setCancelled(true);
             }
         } else if (SQL.isAdminChunk(chunkCord)) {
-            if (!SQL.canAdminChunkBreak(chunkCord)) e.setCancelled(true);
+            if (e.getRemover() instanceof Player) {
+                Player player = (Player) e.getRemover();
+                UUID uuid = player.getUniqueId();
+                if (!plugin.getData().hasAdminBypass(uuid)) {
+                    if (!SQL.canAdminChunkBreak(chunkCord)) e.setCancelled(true);
+                }
+            }
         }
     }
 
@@ -176,7 +179,13 @@ public class ChunkListener implements Listener {
                 e.setCancelled(true);
             }
         } else if (SQL.isAdminChunk(chunkCord)) {
-            if (!SQL.canAdminChunkBreak(chunkCord)) e.setCancelled(true);
+            if (e.getAttacker() instanceof Player) {
+                Player player = (Player) e.getAttacker();
+                UUID uuid = player.getUniqueId();
+                if (!plugin.getData().hasAdminBypass(uuid)) {
+                    if (!SQL.canAdminChunkBreak(chunkCord)) e.setCancelled(true);
+                }
+            }
         }
     }
 
@@ -451,11 +460,24 @@ public class ChunkListener implements Listener {
                     }
                 } else if (projectile.getShooter() instanceof Monster) e.setCancelled(true);
             }
+            //admin chunk claim
         } else if (SQL.isAdminChunk(chunkCord)) {
-            if (!(e.getEntity() instanceof Monster)) {
-                if (e.getEntity() instanceof Player) {
+
+            if (e.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION) || e.getCause().equals(EntityDamageEvent.DamageCause.BLOCK_EXPLOSION)) {
+                e.setCancelled(true);
+                return;
+            }
+
+            if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
+                UUID uuid = e.getDamager().getUniqueId();
+                if (!plugin.getData().hasAdminBypass(uuid)) {
                     if (!SQL.canAdminChunkPVP(chunkCord)) e.setCancelled(true);
-                } else if (!SQL.canAdminChunkPVE(chunkCord)) e.setCancelled(true);
+                }
+            } else if (e.getDamager() instanceof Player) {
+                UUID uuid = e.getDamager().getUniqueId();
+                if (!plugin.getData().hasAdminBypass(uuid)) {
+                    if (!SQL.canAdminChunkPVE(chunkCord)) e.setCancelled(true);
+                }
             }
         }
     }
@@ -515,12 +537,26 @@ public class ChunkListener implements Listener {
             String chunkCord = plugin.getUtility().formatChunk(chunk);
             SQLite SQL = plugin.getSqLite();
 
-            //check if chunk is claimed or they own it
             if (SQL.isChunkClaimed(chunkCord)) {
                 if (!SQL.canChunkSpawnMonsters(chunkCord)) e.setCancelled(true);
             } else if (SQL.isAdminChunk(chunkCord)) {
                 if (!SQL.canAdminChunkSpawnMonsters(chunkCord)) e.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent e) {
+        MyChunks plugin = MyChunks.getPlugin();
+
+        Chunk chunk = e.getEntity().getLocation().getChunk();
+        String chunkCord = plugin.getUtility().formatChunk(chunk);
+        SQLite SQL = plugin.getSqLite();
+
+        if (SQL.isChunkClaimed(chunkCord) || SQL.isAdminChunk(chunkCord)) {
+            e.getDrops().clear();
+            e.setKeepInventory(true);
+            e.setKeepLevel(true);
         }
     }
 

@@ -10,21 +10,21 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-public class Claim extends SubCommand {
+public class UnClaim extends SubCommand {
 
     @Override
     public String getName() {
-        return "claim";
+        return "unclaim";
     }
 
     @Override
     public String getDescription() {
-        return "Select a group of chunks to claim.";
+        return "Unclaim a group of admin chunks.";
     }
 
     @Override
     public String getSyntax() {
-        return "/adminchunk claim";
+        return "/adminchunk unclaim";
     }
 
     @Override
@@ -34,6 +34,7 @@ public class Claim extends SubCommand {
 
     @Override
     public void perform(Player player, String[] args) {
+
         MyChunks plugin = MyChunks.getPlugin();
         SQLite SQL = plugin.getSqLite();
         Chunk chunk = player.getLocation().getChunk();
@@ -48,7 +49,7 @@ public class Claim extends SubCommand {
 
             if (!plugin.getData().hasAdminClaimSelection(player.getUniqueId())) {
                 plugin.getData().addAdminClaimSelection(player.getUniqueId(), start);
-                player.sendMessage(Lang.PREFIX.getConfigValue(null) + Lang.COMMAND_ADMIN_CLAIM_FIRST_CHUNK_SELECTED.getConfigValue(new String[] { String.format(selectedChunk, start.getX(), start.getZ()) }));
+                player.sendMessage(Lang.PREFIX.getConfigValue(null) + Lang.COMMAND_ADMIN_UNCLAIM_FIRST_CHUNK_SELECTED.getConfigValue(new String[] { String.format(selectedChunk, start.getX(), start.getZ()) }));
                 return;
             }
 
@@ -57,19 +58,19 @@ public class Claim extends SubCommand {
             Vector min = Vector.getMinimum(start, stop);
 
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                int claimed = 0;
+                int unclaimed = 0;
                 for (double x = min.getX(); x <= max.getX(); x++) {
                     for(double z = min.getZ(); z <= max.getZ(); z++) {
                         String inSelectionMessage = world + ",%.0f,%.0f";
                         String chunkCordSelected = String.format(inSelectionMessage, x, z);
-                        if (!SQL.isChunkClaimed(chunkCordSelected) && !SQL.isAdminChunk(chunkCordSelected)) {
-                            claimed++;
-                            SQL.claimAdminChunk(chunkCordSelected);
+                        if (SQL.isAdminChunk(chunkCordSelected)) {
+                            unclaimed++;
+                            SQL.unClaimAdminChunk(chunkCordSelected);
                         }
                     }
                 }
                 plugin.getData().removeAdminClaimSelection(player.getUniqueId());
-                player.sendMessage(Lang.PREFIX.getConfigValue(null) + Lang.COMMAND_ADMIN_CLAIM_SUCCESSFUL.getConfigValue(new String[] { String.valueOf(claimed) } ));
+                player.sendMessage(Lang.PREFIX.getConfigValue(null) + Lang.COMMAND_ADMIN_UNCLAIM_SUCCESSFUL.getConfigValue(new String[] { String.valueOf(unclaimed) } ));
             });
         }
     }

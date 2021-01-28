@@ -298,6 +298,10 @@ public class SQLite {
         update("INSERT INTO admin_chunks (chunk, build, break, interact, pve, pvp, monster_spawning, explosions) VALUES( '" + chunk + "', '0', '0', '0', '0', '0', '0', '0');");
     }
 
+    public void unClaimAdminChunk(String chunk) {
+        update("DELETE FROM admin_chunks WHERE chunk = '" + chunk + "';");
+    }
+
     @SneakyThrows
     public boolean isAdminChunk(String chunk) {
         ResultSet rsa = getResult("SELECT chunk FROM admin_chunks WHERE chunk = '" + chunk + "';");
