@@ -7,7 +7,6 @@ import lee.code.mychunks.menusystem.PlayerMenuUtility;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 

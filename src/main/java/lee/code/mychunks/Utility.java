@@ -130,7 +130,6 @@ public class Utility {
         else return seconds + " sec";
     }
 
-    @SneakyThrows
     public ItemStack createCustomPlayerHead(ItemStack head, String base64) {
 
         if (base64.isEmpty()) return head;

@@ -4,6 +4,7 @@ import lee.code.mychunks.MyChunks;
 import lee.code.mychunks.commands.SubCommand;
 import lee.code.mychunks.database.SQLite;
 import lee.code.mychunks.files.defaults.Lang;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -50,51 +51,55 @@ public class Map extends SubCommand {
 
         String world = chunk.getWorld().getName();
 
-        int firstX = chunk.getX() - 9;
-        int x = chunk.getX() - 9;
-        int z = chunk.getZ() - 5;
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 
-        for (int l = 1; l <= 11; l++) {
-            for (int w = 1; w <= 19; w++) {
+            int firstX = chunk.getX() - 9;
+            int x = chunk.getX() - 9;
+            int z = chunk.getZ() - 5;
 
-                String chunkSelected = world + "," + x + "," + z;
+            for (int l = 1; l <= 11; l++) {
+                for (int w = 1; w <= 19; w++) {
 
-                if ((chunkSelected).equals(chunkCord)) {
-                    chunkSquare.add("&9■");
-                } else if (SQL.isChunkOwner(chunkSelected, uuid)) {
-                    chunkSquare.add("&2■");
-                } else if (SQL.isChunkTrusted(chunkSelected, uuid)) {
-                    chunkSquare.add("&a■");
-                } else if (SQL.isChunkClaimed(chunkSelected)) {
-                    UUID owner = SQL.getChunkOwnerUUID(chunkSelected);
-                    if (SQL.isGlobalTrusted(owner, uuid)) chunkSquare.add("&a■");
-                    else chunkSquare.add("&c■");
-                } else if (SQL.isAdminChunk(chunkSelected)) {
-                    chunkSquare.add("&4■");
-                } else {
-                    chunkSquare.add("&7■");
+                    String chunkSelected = world + "," + x + "," + z;
+
+                    if ((chunkSelected).equals(chunkCord)) {
+                        chunkSquare.add("&9■");
+                    } else if (SQL.isChunkOwner(chunkSelected, uuid)) {
+                        chunkSquare.add("&2■");
+                    } else if (SQL.isChunkTrusted(chunkSelected, uuid)) {
+                        chunkSquare.add("&a■");
+                    } else if (SQL.isChunkClaimed(chunkSelected)) {
+                        UUID owner = SQL.getChunkOwnerUUID(chunkSelected);
+                        if (SQL.isGlobalTrusted(owner, uuid)) chunkSquare.add("&a■");
+                        else chunkSquare.add("&c■");
+                    } else if (SQL.isAdminChunk(chunkSelected)) {
+                        chunkSquare.add("&4■");
+                    } else {
+                        chunkSquare.add("&7■");
+                    }
+                    x++;
                 }
-                x++;
+                x = firstX;
+                z++;
+
+                String output = String.join(" ", chunkSquare);
+                chunkMap.add(output);
+                chunkSquare.clear();
             }
-            x = firstX;
-            z++;
+            for (String selectedChunk : chunkMap) player.sendMessage(plugin.getUtility().format(selectedChunk));
 
-            String output = String.join(" ", chunkSquare);
-            chunkMap.add(output);
-            chunkSquare.clear();
-        }
-        for (String selectedChunk : chunkMap) player.sendMessage(plugin.getUtility().format(selectedChunk));
+            String line1 = plugin.getUtility().format(" &e\\ &b&lN &e/ ");
+            String line2 = plugin.getUtility().format(" &b&lW &6&l• &b&lE");
+            String line3 = plugin.getUtility().format(" &e/ &b&lS &e\\");
+            player.sendMessage(Lang.COMMAND_MAP_KEY_HEADER.getConfigValue(null));
+            player.sendMessage("");
+            player.sendMessage(Lang.COMMAND_MAP_LINE_1.getConfigValue(new String[] { line1 }));
+            player.sendMessage(Lang.COMMAND_MAP_LINE_2.getConfigValue(new String[] { line2 }));
+            player.sendMessage(Lang.COMMAND_MAP_LINE_3.getConfigValue(new String[] { line3 }));
+            player.sendMessage("");
+            player.sendMessage(Lang.COMMAND_MAP_FOOTER.getConfigValue(null));
 
-        String line1 = plugin.getUtility().format(" &e\\ &b&lN &e/ ");
-        String line2 = plugin.getUtility().format(" &b&lW &6&l• &b&lE");
-        String line3 = plugin.getUtility().format(" &e/ &b&lS &e\\");
-        player.sendMessage(Lang.COMMAND_MAP_KEY_HEADER.getConfigValue(null));
-        player.sendMessage("");
-        player.sendMessage(Lang.COMMAND_MAP_LINE_1.getConfigValue(new String[] { line1 }));
-        player.sendMessage(Lang.COMMAND_MAP_LINE_2.getConfigValue(new String[] { line2 }));
-        player.sendMessage(Lang.COMMAND_MAP_LINE_3.getConfigValue(new String[] { line3 }));
-        player.sendMessage("");
-        player.sendMessage(Lang.COMMAND_MAP_FOOTER.getConfigValue(null));
+        });
     }
 
     @Override
