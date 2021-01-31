@@ -31,6 +31,7 @@ public class ChunkManager extends Menu {
     @Override
     public void handleMenu(InventoryClickEvent e) {
         MyChunks plugin = MyChunks.getPlugin();
+
         Player player = playerMenuUtility.getOwner();
 
         if (plugin.getData().getPlayerClickDelay(playerMenuUtility.getOwner().getUniqueId())) return;
