@@ -20,7 +20,6 @@ public class GoldmanChunks extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
         this.data = new Data();
         this.pU = new PU();
         this.sqLite = new SQLite();

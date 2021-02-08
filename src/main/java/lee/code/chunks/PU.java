@@ -100,18 +100,22 @@ public class PU {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
         SQLite SQL = plugin.getSqLite();
+
         scheduler.scheduleSyncRepeatingTask(plugin, () -> {
             int maxAccruedClaims = Values.ACCRUED_CLAIMS_MAX.getValue();
             int baseTimeRequired = Values.ACCRUED_CLAIMS_BASE_TIME_REQUIRED.getValue();
             int claimAmountGiven = Values.ACCRUED_CLAIMS_AMOUNT_GIVEN.getValue();
 
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                UUID uuid = player.getUniqueId();
-                int time = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / 20;
-                int accruedClaims = time / baseTimeRequired * claimAmountGiven;
-                if (accruedClaims > maxAccruedClaims) accruedClaims = maxAccruedClaims;
+            if (!Bukkit.getOnlinePlayers().isEmpty()) {
 
-                SQL.setAccruedClaims(uuid, accruedClaims);
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    UUID uuid = player.getUniqueId();
+                    int time = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / 20;
+                    int accruedClaims = time / baseTimeRequired * claimAmountGiven;
+                    if (accruedClaims > maxAccruedClaims) accruedClaims = maxAccruedClaims;
+
+                    SQL.setAccruedClaims(uuid, accruedClaims);
+                }
             }
         }, 0L, 20L * 300);
     }
