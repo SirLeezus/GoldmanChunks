@@ -1,5 +1,5 @@
-name: MyChunks
-main: lee.code.mychunks.MyChunks
+name: GoldmanChunks
+main: lee.code.chunks.GoldmanChunks
 version: ${project.version}
 api-version: 1.16
 author: Lee
