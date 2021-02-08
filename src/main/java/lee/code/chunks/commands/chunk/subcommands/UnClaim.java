@@ -37,13 +37,13 @@ public class UnClaim extends SubCommand {
         UUID uuid = player.getUniqueId();
 
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getpU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunk(chunk);
 
         if (plugin.getSqLite().isChunkClaimed(chunkCord)) {
             if (plugin.getSqLite().isChunkOwner(chunkCord, uuid)) {
                 plugin.getSqLite().unClaimChunk(chunkCord, uuid);
                 player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_UNCLAIM_SUCCESSFUL.getString(new String[] { chunkCord }));
-                plugin.getpU().renderChunkBorder(player, chunk, "unclaim");
+                plugin.getPU().renderChunkBorder(player, chunk, "unclaim");
 
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNCLAIM_OWNER.getString(new String[] { plugin.getSqLite().getChunkOwner(chunkCord) }));
         } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNCLAIMED_NOT_CLAIMED.getString(null));

@@ -29,14 +29,14 @@ public class ChunkCheckerListener implements Listener {
             if (handItem.getType().equals(Material.STICK)) {
 
                 if (plugin.getData().getPlayerClickDelay(uuid)) return;
-                else plugin.getpU().addPlayerClickDelay(uuid);
+                else plugin.getPU().addPlayerClickDelay(uuid);
 
                 Chunk chunk = e.getClickedBlock().getLocation().getChunk();
-                String chunkCord = plugin.getpU().formatChunk(chunk);
+                String chunkCord = plugin.getPU().formatChunk(chunk);
                 String owner = plugin.getSqLite().getChunkOwner(chunkCord);
                 SQLite SQL = plugin.getSqLite();
 
-                if (SQL.isAdminChunk(chunkCord)) owner = plugin.getpU().format("&4&lAdmin");
+                if (SQL.isAdminChunk(chunkCord)) owner = plugin.getPU().format("&4&lAdmin");
 
                 player.sendMessage(Lang.COMMAND_INFO_HEADER.getString(null));
                 player.sendMessage("");
@@ -45,7 +45,7 @@ public class ChunkCheckerListener implements Listener {
                 player.sendMessage("");
                 player.sendMessage(Lang.COMMAND_INFO_FOOTER.getString(null));
 
-                plugin.getpU().renderChunkBorder(player, chunk, "info");
+                plugin.getPU().renderChunkBorder(player, chunk, "info");
             }
         }
     }

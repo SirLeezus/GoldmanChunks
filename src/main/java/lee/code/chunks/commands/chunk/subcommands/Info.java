@@ -35,11 +35,11 @@ public class Info extends SubCommand {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
 
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getpU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunk(chunk);
         String owner = plugin.getSqLite().getChunkOwner(chunkCord);
         SQLite SQL = plugin.getSqLite();
 
-        if (SQL.isAdminChunk(chunkCord)) owner = plugin.getpU().format("&4&lAdmin");
+        if (SQL.isAdminChunk(chunkCord)) owner = plugin.getPU().format("&4&lAdmin");
 
         player.sendMessage(Lang.COMMAND_INFO_HEADER.getString(null));
         player.sendMessage("");
@@ -48,7 +48,7 @@ public class Info extends SubCommand {
         player.sendMessage("");
         player.sendMessage(Lang.COMMAND_INFO_FOOTER.getString(null));
 
-        plugin.getpU().renderChunkBorder(player, chunk, "info");
+        plugin.getPU().renderChunkBorder(player, chunk, "info");
     }
 
     @Override

@@ -94,9 +94,9 @@ public abstract class Menu implements InventoryHolder {
         itemMeta.setLore(lines);
         item.setItemMeta(itemMeta);
 
-        if (displayName.equals(Lang.ITEM_TRUSTED_CHUNK_SETTINGS_NAME.getString(null))) plugin.getpU().createCustomPlayerHead(item, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjE5ZTM2YTg3YmFmMGFjNzYzMTQzNTJmNTlhN2Y2M2JkYjNmNGM4NmJkOWJiYTY5Mjc3NzJjMDFkNGQxIn19fQ==");
-        else if (displayName.equals(Lang.ITEM_GLOBAL_TRUSTED_CHUNK_SETTINGS_NAME.getString(null))) plugin.getpU().createCustomPlayerHead(item, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzY5MTk2YjMzMGM2Yjg5NjJmMjNhZDU2MjdmYjZlY2NlNDcyZWFmNWM5ZDQ0Zjc5MWY2NzA5YzdkMGY0ZGVjZSJ9fX0=");
-        else if (displayName.equals(Lang.ITEM_GENERAL_CHUNK_SETTINGS_NAME.getString(null))) plugin.getpU().createCustomPlayerHead(item,"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmZhNzY0YjNjMWQ0NjJmODEyNDQ3OGZmNTQzYzc2MzNmYTE5YmFmOTkxM2VlMjI4NTEzZTgxYTM2MzNkIn19fQ==");
+        if (displayName.equals(Lang.ITEM_TRUSTED_CHUNK_SETTINGS_NAME.getString(null))) plugin.getPU().createCustomPlayerHead(item, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjE5ZTM2YTg3YmFmMGFjNzYzMTQzNTJmNTlhN2Y2M2JkYjNmNGM4NmJkOWJiYTY5Mjc3NzJjMDFkNGQxIn19fQ==");
+        else if (displayName.equals(Lang.ITEM_GLOBAL_TRUSTED_CHUNK_SETTINGS_NAME.getString(null))) plugin.getPU().createCustomPlayerHead(item, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzY5MTk2YjMzMGM2Yjg5NjJmMjNhZDU2MjdmYjZlY2NlNDcyZWFmNWM5ZDQ0Zjc5MWY2NzA5YzdkMGY0ZGVjZSJ9fX0=");
+        else if (displayName.equals(Lang.ITEM_GENERAL_CHUNK_SETTINGS_NAME.getString(null))) plugin.getPU().createCustomPlayerHead(item,"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmZhNzY0YjNjMWQ0NjJmODEyNDQ3OGZmNTQzYzc2MzNmYTE5YmFmOTkxM2VlMjI4NTEzZTgxYTM2MzNkIn19fQ==");
 
         return item;
     }

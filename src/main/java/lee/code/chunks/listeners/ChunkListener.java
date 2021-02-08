@@ -30,21 +30,21 @@ public class ChunkListener implements Listener {
         String messageType;
         String messageTrusted;
 
-        if (trusted) messageTrusted = plugin.getpU().format("&atrue");
-        else messageTrusted = plugin.getpU().format("&cfalse");
+        if (trusted) messageTrusted = plugin.getPU().format("&atrue");
+        else messageTrusted = plugin.getPU().format("&cfalse");
 
         switch (type) {
             case "build":
-                messageType = Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { plugin.getpU().format("&cfalse") });
+                messageType = Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { plugin.getPU().format("&cfalse") });
                 break;
             case "break":
-                messageType = Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { plugin.getpU().format("&cfalse") });
+                messageType = Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { plugin.getPU().format("&cfalse") });
                 break;
             case "interact":
-                messageType = Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { plugin.getpU().format("&cfalse") });
+                messageType = Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { plugin.getPU().format("&cfalse") });
                 break;
             case "pve":
-                messageType = Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getpU().format("&cfalse") });
+                messageType = Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getPU().format("&cfalse") });
                 break;
             default:
                 messageType = "ERROR";
@@ -66,7 +66,7 @@ public class ChunkListener implements Listener {
         SQLite SQL = plugin.getSqLite();
 
         Chunk chunk = e.getBlock().getLocation().getChunk();
-        String chunkCord = plugin.getpU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunk(chunk);
 
         if (!plugin.getData().hasAdminBypass(uuid)) {
             if (SQL.isChunkClaimed(chunkCord)) {
@@ -100,7 +100,7 @@ public class ChunkListener implements Listener {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         SQLite SQL = plugin.getSqLite();
         Chunk chunk = e.getEntity().getLocation().getChunk();
-        String chunkCord = plugin.getpU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunk(chunk);
 
         if (SQL.isChunkClaimed(chunkCord)) {
 
@@ -148,7 +148,7 @@ public class ChunkListener implements Listener {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         SQLite SQL = plugin.getSqLite();
         Chunk chunk = e.getVehicle().getLocation().getChunk();
-        String chunkCord = plugin.getpU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunk(chunk);
 
         if (SQL.isChunkClaimed(chunkCord)) {
             if (e.getAttacker() instanceof Player) {
@@ -197,7 +197,7 @@ public class ChunkListener implements Listener {
         SQLite SQL = plugin.getSqLite();
 
         Chunk chunk = e.getBlock().getLocation().getChunk();
-        String chunkCord = plugin.getpU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunk(chunk);
 
         if (!plugin.getData().hasAdminBypass(uuid)) {
             if (SQL.isChunkClaimed(chunkCord)) {
@@ -236,7 +236,7 @@ public class ChunkListener implements Listener {
             UUID uuid = player.getUniqueId();
             SQLite SQL = plugin.getSqLite();
             Chunk chunk = e.getClickedBlock().getLocation().getChunk();
-            String chunkCord = plugin.getpU().formatChunk(chunk);
+            String chunkCord = plugin.getPU().formatChunk(chunk);
 
             if (!plugin.getData().hasAdminBypass(uuid)) {
                 if (SQL.isChunkClaimed(chunkCord)) {
@@ -302,7 +302,7 @@ public class ChunkListener implements Listener {
         if (e.getRightClicked() instanceof ArmorStand) {
 
             Chunk chunk = e.getRightClicked().getLocation().getChunk();
-            String chunkCord = plugin.getpU().formatChunk(chunk);
+            String chunkCord = plugin.getPU().formatChunk(chunk);
 
             if (!plugin.getData().hasAdminBypass(uuid)) {
                 if (SQL.isChunkClaimed(chunkCord)) {
@@ -340,7 +340,7 @@ public class ChunkListener implements Listener {
         SQLite SQL = plugin.getSqLite();
 
         Chunk chunk = e.getRightClicked().getLocation().getChunk();
-        String chunkCord = plugin.getpU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunk(chunk);
 
         if (!(e.getRightClicked() instanceof Player)) {
 
@@ -378,7 +378,7 @@ public class ChunkListener implements Listener {
         SQLite SQL = plugin.getSqLite();
 
         Chunk chunk = e.getEntity().getLocation().getChunk();
-        String chunkCord = plugin.getpU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunk(chunk);
 
         if (SQL.isChunkClaimed(chunkCord)) {
 
@@ -490,7 +490,7 @@ public class ChunkListener implements Listener {
 
         for (Block block : new ArrayList<Block>(e.blockList())) {
             Chunk chunk = block.getLocation().getChunk();
-            String chunkCord = plugin.getpU().formatChunk(chunk);
+            String chunkCord = plugin.getPU().formatChunk(chunk);
             if (SQL.isChunkClaimed(chunkCord)) {
                 if (!SQL.canChunkExplode(chunkCord)) e.blockList().remove(block);
             } else if (SQL.isAdminChunk(chunkCord)) {
@@ -507,7 +507,7 @@ public class ChunkListener implements Listener {
 
         //check piston location
         Chunk chunk = e.getBlock().getLocation().getChunk();
-        String chunkCord = plugin.getpU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunk(chunk);
         if (!SQL.isChunkClaimed(chunkCord)) {
             e.setCancelled(true);
             return;
@@ -518,7 +518,7 @@ public class ChunkListener implements Listener {
         //check piston moved blocks
         for (Block block : new ArrayList<Block>(e.getBlocks())) {
             Chunk movedBlockChunk = block.getLocation().getChunk();
-            String movedBlockChunkCords = plugin.getpU().formatChunk(movedBlockChunk);
+            String movedBlockChunkCords = plugin.getPU().formatChunk(movedBlockChunk);
             if (!plugin.getSqLite().isChunkClaimed(movedBlockChunkCords)) {
                 e.setCancelled(true);
                 return;
@@ -534,7 +534,7 @@ public class ChunkListener implements Listener {
         if (e.getEntity() instanceof Monster) {
 
             Chunk chunk = e.getEntity().getLocation().getChunk();
-            String chunkCord = plugin.getpU().formatChunk(chunk);
+            String chunkCord = plugin.getPU().formatChunk(chunk);
             SQLite SQL = plugin.getSqLite();
 
             if (SQL.isChunkClaimed(chunkCord)) {
@@ -550,7 +550,7 @@ public class ChunkListener implements Listener {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
 
         Chunk chunk = e.getEntity().getLocation().getChunk();
-        String chunkCord = plugin.getpU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunk(chunk);
         SQLite SQL = plugin.getSqLite();
 
         if (SQL.isChunkClaimed(chunkCord) || SQL.isAdminChunk(chunkCord)) {
@@ -570,7 +570,7 @@ public class ChunkListener implements Listener {
             SQLite SQL = plugin.getSqLite();
 
             Chunk chunk = player.getLocation().getChunk();
-            String chunkCord = plugin.getpU().formatChunk(chunk);
+            String chunkCord = plugin.getPU().formatChunk(chunk);
 
             if (!SQL.isChunkClaimed(chunkCord)) {
 
@@ -580,7 +580,7 @@ public class ChunkListener implements Listener {
                     return;
                 }
 
-                Collection<Chunk> chunksAroundPlayer = plugin.getpU().getChunksAroundPlayer(player);
+                Collection<Chunk> chunksAroundPlayer = plugin.getPU().getChunksAroundPlayer(player);
                 Chunk lastChunkClaim = plugin.getData().getPlayerLastAutoClaim(uuid);
 
                 if (!chunksAroundPlayer.contains(lastChunkClaim)) {
@@ -596,11 +596,11 @@ public class ChunkListener implements Listener {
                     playerClaimAmount++;
                     SQL.claimChunk(chunkCord, uuid);
                     plugin.getData().setPlayerAutoClaim(uuid, chunk);
-                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_CLAIM_SUCCESSFUL.getString(new String[]{chunkCord, plugin.getpU().formatAmount(playerClaimAmount), plugin.getpU().formatAmount(playerMaxClaims)}));
-                    plugin.getpU().renderChunkBorder(player, chunk, "claim");
+                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_CLAIM_SUCCESSFUL.getString(new String[]{chunkCord, plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims)}));
+                    plugin.getPU().renderChunkBorder(player, chunk, "claim");
                 } else {
                     plugin.getData().removePlayerAutoClaim(uuid);
-                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_CLAIM_MAXED.getString(new String[] { plugin.getpU().formatAmount(playerClaimAmount), plugin.getpU().formatAmount(playerMaxClaims) }));
+                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_CLAIM_MAXED.getString(new String[] { plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) }));
                 }
 
             } else if (!plugin.getData().getPlayerLastAutoClaim(uuid).equals(chunk)) plugin.getData().setPlayerAutoClaim(player.getUniqueId(), chunk);

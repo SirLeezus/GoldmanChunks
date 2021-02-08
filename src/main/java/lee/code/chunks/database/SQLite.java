@@ -22,6 +22,9 @@ public class SQLite {
         connection = null;
 
         try {
+            if (!plugin.getDataFolder().exists()) {
+                plugin.getDataFolder().mkdir();
+            }
             File dbFile = new File(plugin.getDataFolder(), "database.db");
             if (!dbFile.exists()) {
                 dbFile.createNewFile();
@@ -78,6 +81,7 @@ public class SQLite {
                 "`explosions` int NOT NULL" +
                 ");");
 
+        //admin table
         update("CREATE TABLE IF NOT EXISTS admin_chunks (" +
                 "`chunk` varchar PRIMARY KEY," +
                 "`build` int NOT NULL," +

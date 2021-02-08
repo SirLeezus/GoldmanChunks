@@ -60,7 +60,7 @@ public class AdminCommandManager implements CommandExecutor {
             lines.add("&r");
             lines.add(Lang.MESSAGE_HELP_DIVIDER.getString(null));
 
-            for (String line : lines) p.sendMessage(plugin.getpU().format(line));
+            for (String line : lines) p.sendMessage(plugin.getPU().format(line));
             return true;
 
         }

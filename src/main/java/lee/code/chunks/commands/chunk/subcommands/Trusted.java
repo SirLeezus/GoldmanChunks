@@ -36,7 +36,7 @@ public class Trusted extends SubCommand {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         UUID uuid = player.getUniqueId();
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getpU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunk(chunk);
 
         String trusted;
         if (plugin.getSqLite().isChunkOwner(chunkCord, uuid)) trusted = String.join(", ", plugin.getSqLite().getTrustedToChunk(chunkCord));
@@ -51,7 +51,7 @@ public class Trusted extends SubCommand {
         player.sendMessage("");
         player.sendMessage(Lang.COMMAND_TRUSTED_FOOTER.getString(null));
 
-        plugin.getpU().renderChunkBorder(player, chunk, "info");
+        plugin.getPU().renderChunkBorder(player, chunk, "info");
     }
 
     @Override

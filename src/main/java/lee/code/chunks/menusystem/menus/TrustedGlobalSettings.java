@@ -35,7 +35,7 @@ public class TrustedGlobalSettings extends Menu {
 
         //click delay
         if (plugin.getData().getPlayerClickDelay(player.getUniqueId())) return;
-        else plugin.getpU().addPlayerClickDelay(player.getUniqueId());
+        else plugin.getPU().addPlayerClickDelay(player.getUniqueId());
 
         if (e.getClickedInventory() == player.getInventory()) return;
 
@@ -74,48 +74,48 @@ public class TrustedGlobalSettings extends Menu {
 
         //build
         if (plugin.getSqLite().canGlobalTrustedBuild(uuid)) {
-            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { plugin.getpU().format("&atrue") }));
+            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(10, allow);
 
         } else {
-            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { plugin.getpU().format("&cfalse") }));
+            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
             deny.setItemMeta(denyMeta);
             inventory.setItem(10, deny);
         }
 
         //break
         if (plugin.getSqLite().canGlobalTrustedBreak(uuid)) {
-            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { plugin.getpU().format("&atrue") }));
+            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(12, allow);
 
         } else {
-            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { plugin.getpU().format("&cfalse") }));
+            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
             deny.setItemMeta(denyMeta);
             inventory.setItem(12, deny);
         }
 
         //interact
         if (plugin.getSqLite().canGlobalTrustedInteract(uuid)) {
-            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { plugin.getpU().format("&atrue") }));
+            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(14, allow);
 
         } else {
-            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { plugin.getpU().format("&cfalse") }));
+            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
             deny.setItemMeta(denyMeta);
             inventory.setItem(14, deny);
         }
 
         //pve
         if (plugin.getSqLite().canGlobalTrustedPVE(uuid)) {
-            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getpU().format("&atrue") }));
+            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(16, allow);
 
         } else {
-            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getpU().format("&cfalse") }));
+            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
             deny.setItemMeta(denyMeta);
             inventory.setItem(16, deny);
         }
@@ -138,25 +138,25 @@ public class TrustedGlobalSettings extends Menu {
 
             switch (slot) {
                 case 10:
-                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { plugin.getpU().format("&atrue") }));
+                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
                     allow.setItemMeta(allowMeta);
                     plugin.getSqLite().setGlobalTrustedBuild(uuid, 1);
                     inventory.setItem(slot, allow);
                     break;
                 case 12:
-                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { plugin.getpU().format("&atrue") }));
+                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
                     allow.setItemMeta(allowMeta);
                     plugin.getSqLite().setGlobalTrustedBreak(uuid, 1);
                     inventory.setItem(slot, allow);
                     break;
                 case 14:
-                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { plugin.getpU().format("&atrue") }));
+                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
                     allow.setItemMeta(allowMeta);
                     plugin.getSqLite().setGlobalTrustedInteract(uuid, 1);
                     inventory.setItem(slot, allow);
                     break;
                 case 16:
-                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getpU().format("&atrue") }));
+                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
                     allow.setItemMeta(allowMeta);
                     plugin.getSqLite().setGlobalTrustedPVE(uuid, 1);
                     inventory.setItem(slot, allow);
@@ -169,25 +169,25 @@ public class TrustedGlobalSettings extends Menu {
 
             switch (slot) {
                 case 10:
-                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { plugin.getpU().format("&cfalse") }));
+                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
                     deny.setItemMeta(denyMeta);
                     plugin.getSqLite().setGlobalTrustedBuild(uuid, 0);
                     inventory.setItem(slot, deny);
                     break;
                 case 12:
-                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { plugin.getpU().format("&cfalse") }));
+                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
                     deny.setItemMeta(denyMeta);
                     plugin.getSqLite().setGlobalTrustedBreak(uuid, 0);
                     inventory.setItem(slot, deny);
                     break;
                 case 14:
-                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { plugin.getpU().format("&cfalse") }));
+                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
                     deny.setItemMeta(denyMeta);
                     plugin.getSqLite().setGlobalTrustedInteract(uuid, 0);
                     inventory.setItem(slot, deny);
                     break;
                 case 16:
-                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getpU().format("&cfalse") }));
+                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
                     deny.setItemMeta(denyMeta);
                     plugin.getSqLite().setGlobalTrustedPVE(uuid, 0);
                     inventory.setItem(slot, deny);

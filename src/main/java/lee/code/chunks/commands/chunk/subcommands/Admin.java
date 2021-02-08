@@ -44,7 +44,7 @@ public class Admin extends SubCommand {
             SQLite SQL = plugin.getSqLite();
             UUID uuid = player.getUniqueId();
             Chunk chunk = player.getLocation().getChunk();
-            String chunkCord = plugin.getpU().formatChunk(chunk);
+            String chunkCord = plugin.getPU().formatChunk(chunk);
 
             switch (command) {
 
@@ -102,7 +102,7 @@ public class Admin extends SubCommand {
                             }
 
                             Player target;
-                            if (plugin.getpU().getOnlinePlayers().contains(args[3])) {
+                            if (plugin.getPU().getOnlinePlayers().contains(args[3])) {
                                 target = Bukkit.getPlayer(args[3]);
                             } else {
                                 player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_PLAYER_NOT_ONLINE.getString(new String[]{ args[3] }));
@@ -115,15 +115,15 @@ public class Admin extends SubCommand {
 
                                 case "add":
                                     SQL.addBonusClaims(targetUUID, amount);
-                                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BONUS_CLAIMS_ADD.getString(new String[] { plugin.getpU().formatAmount(amount), target.getName() }));
+                                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BONUS_CLAIMS_ADD.getString(new String[] { plugin.getPU().formatAmount(amount), target.getName() }));
                                     break;
                                 case "remove":
                                     SQL.removeBonusClaims(targetUUID, amount);
-                                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BONUS_CLAIMS_REMOVE.getString(new String[] { plugin.getpU().formatAmount(amount), target.getName() }));
+                                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BONUS_CLAIMS_REMOVE.getString(new String[] { plugin.getPU().formatAmount(amount), target.getName() }));
                                     break;
                                 case "set":
                                     SQL.setBonusClaims(targetUUID, amount);
-                                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BONUS_CLAIMS_SET.getString(new String[] { plugin.getpU().formatAmount(amount), target.getName() }));
+                                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BONUS_CLAIMS_SET.getString(new String[] { plugin.getPU().formatAmount(amount), target.getName() }));
                                     break;
 
                                 default: player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_WRONG_ARG.getString(new String[] { args[2] }));
