@@ -37,7 +37,7 @@ public class TrustAll extends SubCommand {
 
             Player target;
 
-            if (plugin.getUtility().getOnlinePlayers().contains(args[1])) {
+            if (plugin.getpU().getOnlinePlayers().contains(args[1])) {
                 target = Bukkit.getPlayer(args[1]);
             } else {
                 player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_PLAYER_NOT_ONLINE.getString(new String[]{ args[1] }));

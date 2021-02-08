@@ -40,7 +40,7 @@ public class Claim extends SubCommand {
 
             UUID uuid = player.getUniqueId();
             Chunk chunk = player.getLocation().getChunk();
-            String chunkCord = plugin.getUtility().formatChunk(chunk);
+            String chunkCord = plugin.getpU().formatChunk(chunk);
             SQLite SQL = plugin.getSqLite();
 
             if (!SQL.isChunkClaimed(chunkCord)) {
@@ -56,9 +56,9 @@ public class Claim extends SubCommand {
                 if (playerClaimAmount < playerMaxClaims) {
                     playerClaimAmount++;
                     SQL.claimChunk(chunkCord, uuid);
-                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_CLAIM_SUCCESSFUL.getString(new String[] { chunkCord, plugin.getUtility().formatAmount(playerClaimAmount), plugin.getUtility().formatAmount(playerMaxClaims) }));
-                    plugin.getUtility().renderChunkBorder(player, chunk, "claim");
-                } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_CLAIM_MAXED.getString(new String[] { plugin.getUtility().formatAmount(playerClaimAmount), plugin.getUtility().formatAmount(playerMaxClaims) }));
+                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_CLAIM_SUCCESSFUL.getString(new String[] { chunkCord, plugin.getpU().formatAmount(playerClaimAmount), plugin.getpU().formatAmount(playerMaxClaims) }));
+                    plugin.getpU().renderChunkBorder(player, chunk, "claim");
+                } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_CLAIM_MAXED.getString(new String[] { plugin.getpU().formatAmount(playerClaimAmount), plugin.getpU().formatAmount(playerMaxClaims) }));
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_CLAIMED.getString(new String[] { plugin.getSqLite().getChunkOwner(chunkCord) }));
         }
     }

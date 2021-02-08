@@ -40,7 +40,7 @@ public class PlayerChunks extends PaginatedMenu {
 
         //click delay
         if (plugin.getData().getPlayerClickDelay(player.getUniqueId())) return;
-        else plugin.getUtility().addPlayerClickDelay(player.getUniqueId());
+        else plugin.getpU().addPlayerClickDelay(player.getUniqueId());
 
         //return if players inventory
         if (e.getClickedInventory() == player.getInventory()) return;
@@ -106,7 +106,7 @@ public class PlayerChunks extends PaginatedMenu {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Player player = playerMenuUtility.getOwner();
         Chunk playerChunk = player.getLocation().getChunk();
-        String playerChunkCord = plugin.getUtility().formatChunk(playerChunk);
+        String playerChunkCord = plugin.getpU().formatChunk(playerChunk);
 
         addMenuBorder();
 
@@ -131,7 +131,7 @@ public class PlayerChunks extends PaginatedMenu {
                 }
 
                 ItemMeta itemChunkMeta = itemChunk.getItemMeta();
-                itemChunkMeta.setDisplayName(plugin.getUtility().format("&b" + chunk));
+                itemChunkMeta.setDisplayName(plugin.getpU().format("&b" + chunk));
 
                 if (chunk.equals(playerChunkCord)) {
                     itemChunkMeta.addEnchant(Enchantment.PROTECTION_FALL, 1, false);

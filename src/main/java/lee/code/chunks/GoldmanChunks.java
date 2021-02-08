@@ -15,14 +15,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class GoldmanChunks extends JavaPlugin {
 
     @Getter private Data data;
-    @Getter private Utility utility;
+    @Getter private PU pU;
     @Getter private SQLite sqLite;
 
     @Override
     public void onEnable() {
 
         this.data = new Data();
-        this.utility = new Utility();
+        this.pU = new PU();
         this.sqLite = new SQLite();
 
         sqLite.connect();
@@ -31,7 +31,7 @@ public class GoldmanChunks extends JavaPlugin {
         registerCommands();
         registerListeners();
 
-        utility.accruedClaimTimer();
+        pU.accruedClaimTimer();
     }
 
     @Override

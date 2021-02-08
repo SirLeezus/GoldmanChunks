@@ -30,16 +30,16 @@ public class TabCompletion implements TabCompleter {
                 return StringUtil.copyPartialMatches(args[0], hasCommand, new ArrayList<>());
 
             } else if (args[0].equals("trust")) {
-                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], plugin.getUtility().getOnlinePlayers(), new ArrayList<>());
+                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], plugin.getpU().getOnlinePlayers(), new ArrayList<>());
             } else if (args[0].equals("trustall")) {
-                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], plugin.getUtility().getOnlinePlayers(), new ArrayList<>());
+                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], plugin.getpU().getOnlinePlayers(), new ArrayList<>());
             } else if (args[0].equals("untrust")) {
                 if (args.length == 2) {
                     Player player = (Player) sender;
                     UUID uuid = player.getUniqueId();
                     SQLite SQL = plugin.getSqLite();
                     Chunk chunk = player.getLocation().getChunk();
-                    String chunkCord = plugin.getUtility().formatChunk(chunk);
+                    String chunkCord = plugin.getpU().formatChunk(chunk);
                     if (SQL.isChunkOwner(chunkCord, uuid)) return StringUtil.copyPartialMatches(args[1], SQL.getTrustedToChunk(chunkCord), new ArrayList<>());
                 }
             } else if (args[0].equals("untrustall")) {
@@ -52,7 +52,7 @@ public class TabCompletion implements TabCompleter {
             } else if (args[0].equals("admin")) {
                 if (args.length == 2) return StringUtil.copyPartialMatches(args[1], Arrays.asList("unclaim", "unclaimall", "bypass", "bonusclaims"), new ArrayList<>());
                 else if (args.length == 3 && args[1].equals("bonusclaims")) return StringUtil.copyPartialMatches(args[2], Arrays.asList("add", "remove", "set"), new ArrayList<>());
-                else if (args.length == 4 && args[1].equals("bonusclaims")) return StringUtil.copyPartialMatches(args[3], plugin.getUtility().getOnlinePlayers(), new ArrayList<>());
+                else if (args.length == 4 && args[1].equals("bonusclaims")) return StringUtil.copyPartialMatches(args[3], plugin.getpU().getOnlinePlayers(), new ArrayList<>());
                 else if (args.length == 5 && args[1].equals("bonusclaims")) return StringUtil.copyPartialMatches(args[4], Collections.singletonList("<amount>") , new ArrayList<>());
             }
         }

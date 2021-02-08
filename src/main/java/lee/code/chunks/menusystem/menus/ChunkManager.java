@@ -34,12 +34,12 @@ public class ChunkManager extends Menu {
         Player player = playerMenuUtility.getOwner();
 
         if (plugin.getData().getPlayerClickDelay(playerMenuUtility.getOwner().getUniqueId())) return;
-        else plugin.getUtility().addPlayerClickDelay(playerMenuUtility.getOwner().getUniqueId());
+        else plugin.getpU().addPlayerClickDelay(playerMenuUtility.getOwner().getUniqueId());
 
         if (e.getClickedInventory() == player.getInventory()) return;
 
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getUtility().formatChunk(chunk);
+        String chunkCord = plugin.getpU().formatChunk(chunk);
         UUID uuid = player.getUniqueId();
         SQLite SQL = plugin.getSqLite();
 

@@ -45,7 +45,7 @@ public class Map extends SubCommand {
         List<String> chunkSquare = new ArrayList<>();
 
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getUtility().formatChunk(chunk);
+        String chunkCord = plugin.getpU().formatChunk(chunk);
 
         chunkMap.add(Lang.COMMAND_MAP_HEADER.getString(null));
 
@@ -86,11 +86,11 @@ public class Map extends SubCommand {
                 chunkMap.add(output);
                 chunkSquare.clear();
             }
-            for (String selectedChunk : chunkMap) player.sendMessage(plugin.getUtility().format(selectedChunk));
+            for (String selectedChunk : chunkMap) player.sendMessage(plugin.getpU().format(selectedChunk));
 
-            String line1 = plugin.getUtility().format(" &e\\ &b&lN &e/ ");
-            String line2 = plugin.getUtility().format(" &b&lW &6&l• &b&lE");
-            String line3 = plugin.getUtility().format(" &e/ &b&lS &e\\");
+            String line1 = plugin.getpU().format(" &e\\ &b&lN &e/ ");
+            String line2 = plugin.getpU().format(" &b&lW &6&l• &b&lE");
+            String line3 = plugin.getpU().format(" &e/ &b&lS &e\\");
             player.sendMessage(Lang.COMMAND_MAP_KEY_HEADER.getString(null));
             player.sendMessage("");
             player.sendMessage(Lang.COMMAND_MAP_LINE_1.getString(new String[] { line1 }));

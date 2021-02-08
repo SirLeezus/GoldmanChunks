@@ -38,7 +38,7 @@ public class Trust extends SubCommand {
 
             Player target;
 
-            if (plugin.getUtility().getOnlinePlayers().contains(args[1])) {
+            if (plugin.getpU().getOnlinePlayers().contains(args[1])) {
                 target = Bukkit.getPlayer(args[1]);
             } else {
                 player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_PLAYER_NOT_ONLINE.getString(new String[]{ args[1] }));
@@ -46,7 +46,7 @@ public class Trust extends SubCommand {
             }
 
             Chunk chunk = player.getLocation().getChunk();
-            String chunkCord = plugin.getUtility().formatChunk(chunk);
+            String chunkCord = plugin.getpU().formatChunk(chunk);
 
             if (plugin.getSqLite().isChunkTrusted(chunkCord, target.getUniqueId())) {
                 player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_TRUST_ALREADY_ADDED.getString(new String[] { target.getName(), chunkCord }));

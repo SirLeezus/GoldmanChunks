@@ -40,7 +40,7 @@ public class UnTrust extends SubCommand {
 
         if (args.length > 1) {
             Chunk chunk = player.getLocation().getChunk();
-            String chunkCord = plugin.getUtility().formatChunk(chunk);
+            String chunkCord = plugin.getpU().formatChunk(chunk);
 
             if (SQL.isChunkOwner(chunkCord, uuid)) {
                 if (SQL.getTrustedToChunk(chunkCord).contains(args[1])) {

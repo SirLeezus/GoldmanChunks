@@ -16,7 +16,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public class Utility {
+public class PU {
 
     //color formatting string
     public String format(String format) {

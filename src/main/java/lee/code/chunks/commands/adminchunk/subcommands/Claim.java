@@ -37,14 +37,14 @@ public class Claim extends SubCommand {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         SQLite SQL = plugin.getSqLite();
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getUtility().formatChunk(chunk);
+        String chunkCord = plugin.getpU().formatChunk(chunk);
 
         if (!SQL.isChunkClaimed(chunkCord)) {
 
             Vector start = new Vector(chunk.getX(), 0, chunk.getZ());
             String world = player.getWorld().getName();
             String selectedChunk = world + ",%.0f,%.0f";
-            plugin.getUtility().renderChunkBorder(player, chunk, "claim");
+            plugin.getpU().renderChunkBorder(player, chunk, "claim");
 
             if (!plugin.getData().hasAdminClaimSelection(player.getUniqueId())) {
                 plugin.getData().addAdminClaimSelection(player.getUniqueId(), start);

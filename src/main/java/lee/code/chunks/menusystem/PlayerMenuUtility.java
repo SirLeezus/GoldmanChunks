@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-@Getter
 @RequiredArgsConstructor
 public class PlayerMenuUtility {
 
