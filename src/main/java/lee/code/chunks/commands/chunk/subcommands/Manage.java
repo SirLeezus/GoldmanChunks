@@ -32,7 +32,7 @@ public class Manage extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        new ChunkManager(plugin.getData().getPlayerMenuUtil(player.getUniqueId())).open();
+        new ChunkManager(plugin.getData().getPlayerMU(player.getUniqueId())).open();
     }
 
     @Override

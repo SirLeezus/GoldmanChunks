@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import lee.code.chunks.database.SQLite;
 import lee.code.chunks.lists.Values;
+import lombok.SneakyThrows;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -87,10 +88,7 @@ public class PU {
 
     public void addPlayerClickDelay(UUID uuid) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-
-        //adds player to list for delay
         plugin.getData().addPlayerClickDelay(uuid);
-
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
         scheduler.runTaskLater(plugin, () ->
                 plugin.getData().removePlayerClickDelay(uuid), Values.CLICK_DELAY.getValue());
@@ -132,23 +130,18 @@ public class PU {
         else return seconds + " sec";
     }
 
-    public ItemStack createCustomPlayerHead(ItemStack head, String base64) {
-
-        if (base64.isEmpty()) return head;
+    @SneakyThrows
+    public void applyHeadSkin(ItemStack head, String base64) {
 
         SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
         profile.getProperties().put("textures", new Property("textures", base64));
 
-        try {
+        if (skullMeta != null) {
             Method mtd = skullMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
             mtd.setAccessible(true);
             mtd.invoke(skullMeta, profile);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-            ex.printStackTrace();
         }
-
         head.setItemMeta(skullMeta);
-        return head;
     }
 }

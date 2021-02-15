@@ -3,7 +3,7 @@ package lee.code.chunks.menusystem.menus;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.PaginatedMenu;
-import lee.code.chunks.menusystem.PlayerMenuUtility;
+import lee.code.chunks.menusystem.PlayerMU;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -14,16 +14,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class PlayerChunks extends PaginatedMenu {
 
-    public PlayerChunks(PlayerMenuUtility playerMenuUtility) {
-        super(playerMenuUtility);
+    public PlayerChunks(PlayerMU pmu) {
+        super(pmu);
     }
 
     @Override
     public String getMenuName() {
-        return Lang.MENU_PLAYER_CHUNKS_TITLE.getString(null) + (playerMenuUtility.getChunkListPage()  +  1);
+        return Lang.MENU_PLAYER_CHUNKS_TITLE.getString(null) + (pmu.getChunkListPage()  +  1);
     }
 
     @Override
@@ -38,33 +39,27 @@ public class PlayerChunks extends PaginatedMenu {
         ItemStack item = e.getCurrentItem();
         Player player = (Player) e.getWhoClicked();
 
-        //click delay
         if (plugin.getData().getPlayerClickDelay(player.getUniqueId())) return;
         else plugin.getPU().addPlayerClickDelay(player.getUniqueId());
 
-        //return if players inventory
+        if (item == null) return;
         if (e.getClickedInventory() == player.getInventory()) return;
-
-        //check for air
         if (item.getType().equals(Material.AIR)) return;
-
-        //check for filler glass
         if (item.equals(fillerGlass)) return;
 
-        //previous page
         if (item.equals(previousPageItem)) {
             if (page == 0) {
                 player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_PREVIOUS_PAGE.getString(null));
             } else {
                 page = page - 1;
-                playerMenuUtility.setChunkListPage(page);
+                pmu.setChunkListPage(page);
                 super.open();
             }
         } else if (item.equals(nextPageItem)) {
 
             if (!((index + 1) >= plugin.getSqLite().getPlayerClaimedChunks(player.getUniqueId()).size())) {
                 page = page + 1;
-                playerMenuUtility.setChunkListPage(page);
+                pmu.setChunkListPage(page);
                 super.open();
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NEXT_PAGE.getString(null));
 
@@ -73,9 +68,11 @@ public class PlayerChunks extends PaginatedMenu {
         } else {
 
             String cord = ChatColor.stripColor(item.getItemMeta().getDisplayName());
-
             String[] splitCord = cord.split(",", 3);
-            Chunk chunk = Bukkit.getWorld(splitCord[0]).getChunkAt(Integer.parseInt(splitCord[1]), Integer.parseInt(splitCord[2]));
+            World world = Bukkit.getWorld(splitCord[0]);
+            if (world == null) return;
+
+            Chunk chunk = world.getChunkAt(Integer.parseInt(splitCord[1]), Integer.parseInt(splitCord[2]));
             Location location = new Location(Bukkit.getWorld(splitCord[0]), chunk.getX() * 16, 100, chunk.getZ() * 16);
             location.getWorld().loadChunk(chunk);
 
@@ -88,8 +85,8 @@ public class PlayerChunks extends PaginatedMenu {
                 if (loc.getBlock().getType() == Material.AIR) {
                     Location ground = new Location(loc.getWorld(), loc.getX(), loc.getY() - 1, loc.getZ());
                     if (ground.getBlock().getType() != Material.AIR && ground.getBlock().getType() != Material.LAVA) {
-                        player.teleport(loc);
-                        player.sendMessage(Lang.PREFIX.getString(null) + Lang.MESSAGE_CHUNK_TELEPORT.getString(new String[] { cord }));
+                        player.teleportAsync(loc);
+                        player.sendActionBar(Lang.TELEPORT.getString(null));
                         return;
                     }
                 }
@@ -100,28 +97,30 @@ public class PlayerChunks extends PaginatedMenu {
 
     @Override
     public void setMenuItems() {
-
-        page = playerMenuUtility.getChunkListPage();
+        page = pmu.getChunkListPage();
+        addMenuBorder();
 
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Player player = playerMenuUtility.getOwner();
+        Player player = pmu.getOwner();
+        UUID uuid = player.getUniqueId();
         Chunk playerChunk = player.getLocation().getChunk();
         String playerChunkCord = plugin.getPU().formatChunk(playerChunk);
 
-        addMenuBorder();
+        List<String> chunks = plugin.getSqLite().getPlayerClaimedChunks(uuid);
 
-        List<String> chunks = plugin.getSqLite().getPlayerClaimedChunks(player.getUniqueId());
-
-        if (!chunks.contains("none")) {
+        if (!chunks.contains("n")) {
 
             List<ItemStack> items = new ArrayList<>();
             for (String chunk : chunks) {
 
-                String[] world = chunk.split(",", 2);
-                String worldName = Bukkit.getWorld(world[0]).getEnvironment().name();
+                String[] worldString = chunk.split(",", 2);
+                World world = Bukkit.getWorld(worldString[0]);
+                if (world == null) continue;
+                String name = world.getEnvironment().name();
+
                 ItemStack itemChunk = new ItemStack(Material.GRASS_BLOCK);
 
-                switch (worldName) {
+                switch (name) {
                     case "NETHER":
                         itemChunk = new ItemStack(Material.NETHERRACK);
                         break;
@@ -131,28 +130,22 @@ public class PlayerChunks extends PaginatedMenu {
                 }
 
                 ItemMeta itemChunkMeta = itemChunk.getItemMeta();
-                itemChunkMeta.setDisplayName(plugin.getPU().format("&b" + chunk));
+                itemChunkMeta.setDisplayName(plugin.getPU().format("&b&l&n" + chunk));
 
                 if (chunk.equals(playerChunkCord)) {
                     itemChunkMeta.addEnchant(Enchantment.PROTECTION_FALL, 1, false);
                     itemChunkMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 }
-
                 itemChunk.setItemMeta(itemChunkMeta);
                 items.add(itemChunk);
             }
 
-            //pagination loop
-            if(items != null && !items.isEmpty()) {
+            if(!items.isEmpty()) {
                 for(int i = 0; i < getMaxItemsPerPage(); i++) {
                     index = getMaxItemsPerPage() * page + i;
                     if(index >= items.size()) break;
                     if (items.get(index) != null) {
-
-                        //create item
                         ItemStack theItem = items.get(index);
-
-                        //add item
                         inventory.addItem(theItem);
                     }
                 }

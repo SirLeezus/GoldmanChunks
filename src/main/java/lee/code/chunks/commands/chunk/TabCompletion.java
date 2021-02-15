@@ -11,9 +11,6 @@ import org.bukkit.util.StringUtil;
 
 import java.util.*;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 public class TabCompletion implements TabCompleter {
 
     private final List<String> subCommands = Arrays.asList("trust", "trustall", "trusted", "untrust", "untrustall", "claim", "unclaim", "map", "info", "manage", "autoclaim", "list", "abandonallclaims", "admin", "maxclaims");
@@ -56,7 +53,6 @@ public class TabCompletion implements TabCompleter {
                 else if (args.length == 5 && args[1].equals("bonusclaims")) return StringUtil.copyPartialMatches(args[4], Collections.singletonList("<amount>") , new ArrayList<>());
             }
         }
-
         return blank;
     }
 }

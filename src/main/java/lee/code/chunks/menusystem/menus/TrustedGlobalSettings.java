@@ -3,8 +3,7 @@ package lee.code.chunks.menusystem.menus;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.Menu;
-import lee.code.chunks.menusystem.PlayerMenuUtility;
-import org.bukkit.Chunk;
+import lee.code.chunks.menusystem.PlayerMU;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -14,8 +13,8 @@ import java.util.UUID;
 
 public class TrustedGlobalSettings extends Menu {
 
-    public TrustedGlobalSettings(PlayerMenuUtility playerMenuUtility) {
-        super(playerMenuUtility);
+    public TrustedGlobalSettings(PlayerMU pmu) {
+        super(pmu);
     }
 
     @Override
@@ -31,30 +30,32 @@ public class TrustedGlobalSettings extends Menu {
     @Override
     public void handleMenu(InventoryClickEvent e) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Player player = playerMenuUtility.getOwner();
+        Player player = pmu.getOwner();
 
-        //click delay
         if (plugin.getData().getPlayerClickDelay(player.getUniqueId())) return;
         else plugin.getPU().addPlayerClickDelay(player.getUniqueId());
-
         if (e.getClickedInventory() == player.getInventory()) return;
 
-        switch (e.getSlot()) {
-            case 10:
-                updatePermItem(e.getCurrentItem(), 10, player.getLocation().getChunk());
-                break;
-            case 12:
-                updatePermItem(e.getCurrentItem(), 12, player.getLocation().getChunk());
-                break;
-            case 14:
-                updatePermItem(e.getCurrentItem(), 14, player.getLocation().getChunk());
-                break;
-            case 16:
-                updatePermItem(e.getCurrentItem(), 16, player.getLocation().getChunk());
-                break;
-            case 31:
-                new ChunkManager(playerMenuUtility).open();
-                break;
+        ItemStack item = e.getCurrentItem();
+
+        if (item != null) {
+            switch (e.getSlot()) {
+                case 10:
+                    updatePermItem(item, 10);
+                    break;
+                case 12:
+                    updatePermItem(item, 12);
+                    break;
+                case 14:
+                    updatePermItem(item, 14);
+                    break;
+                case 16:
+                    updatePermItem(item, 16);
+                    break;
+                case 31:
+                    new ChunkManager(pmu).open();
+                    break;
+            }
         }
     }
 
@@ -69,7 +70,7 @@ public class TrustedGlobalSettings extends Menu {
         ItemStack deny = new ItemStack(permFalseItem);
         ItemMeta denyMeta = deny.getItemMeta();
 
-        Player player = playerMenuUtility.getOwner();
+        Player player = pmu.getOwner();
         UUID uuid = player.getUniqueId();
 
         //build
@@ -124,9 +125,9 @@ public class TrustedGlobalSettings extends Menu {
         inventory.setItem(31, backItem);
     }
 
-    private void updatePermItem(ItemStack item, int slot, Chunk chunk) {
+    private void updatePermItem(ItemStack item, int slot) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Player player = playerMenuUtility.getOwner();
+        Player player = pmu.getOwner();
         UUID uuid = player.getUniqueId();
         ItemStack allow = new ItemStack(permTrueItem);
         ItemStack deny = new ItemStack(permFalseItem);

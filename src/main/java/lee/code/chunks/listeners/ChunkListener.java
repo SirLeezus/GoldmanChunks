@@ -3,8 +3,6 @@ package lee.code.chunks.listeners;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.database.SQLite;
 import lee.code.chunks.lists.Lang;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
@@ -50,12 +48,11 @@ public class ChunkListener implements Listener {
                 messageType = "ERROR";
         }
 
-        TextComponent message = new TextComponent(Lang.ERROR_NO_CLAIM_PERMISSION.getString(new String[] { messageTrusted, messageType, Bukkit.getOfflinePlayer(owner).getName() }));
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, message);
+        player.sendActionBar(Lang.ERROR_NO_CLAIM_PERMISSION.getString(new String[] { messageTrusted, messageType, Bukkit.getOfflinePlayer(owner).getName() }));
     }
 
     private void warnMessagePVP(Player player) {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(Lang.ERROR_PVP_DISABLED.getString(null)));
+        player.sendActionBar(Lang.ERROR_PVP_DISABLED.getString(null));
     }
 
     @EventHandler
@@ -488,7 +485,7 @@ public class ChunkListener implements Listener {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         SQLite SQL = plugin.getSqLite();
 
-        for (Block block : new ArrayList<Block>(e.blockList())) {
+        for (Block block : new ArrayList<>(e.blockList())) {
             Chunk chunk = block.getLocation().getChunk();
             String chunkCord = plugin.getPU().formatChunk(chunk);
             if (SQL.isChunkClaimed(chunkCord)) {
@@ -516,7 +513,7 @@ public class ChunkListener implements Listener {
         if (SQL.isAdminChunk(chunkCord)) return;
 
         //check piston moved blocks
-        for (Block block : new ArrayList<Block>(e.getBlocks())) {
+        for (Block block : new ArrayList<>(e.getBlocks())) {
             Chunk movedBlockChunk = block.getLocation().getChunk();
             String movedBlockChunkCords = plugin.getPU().formatChunk(movedBlockChunk);
             if (!plugin.getSqLite().isChunkClaimed(movedBlockChunkCords)) {

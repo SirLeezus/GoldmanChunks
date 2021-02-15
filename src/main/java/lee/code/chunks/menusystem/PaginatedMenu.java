@@ -4,20 +4,14 @@ import lombok.Getter;
 
 public abstract class PaginatedMenu extends Menu {
 
-    //keep track of what page the menu is on
-    protected int page = 0;
-    //28 is max items because with the border set below,
-    //28 empty slots are remaining.
     @Getter protected int maxItemsPerPage = 28;
-    //the index represents the index of the slot
-    //that the loop is on
+    protected int page = 0;
     protected int index = 0;
 
-    public PaginatedMenu(PlayerMenuUtility playerMenuUtility) {
+    public PaginatedMenu(PlayerMU playerMenuUtility) {
         super(playerMenuUtility);
     }
 
-    //set the border and menu buttons for the menu
     public void addMenuBorder(){
         inventory.setItem(48, super.previousPageItem);
         inventory.setItem(49, super.closeItem);

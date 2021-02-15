@@ -38,7 +38,7 @@ public class Manage extends SubCommand {
         Chunk chunk = player.getLocation().getChunk();
         String chunkCord = plugin.getPU().formatChunk(chunk);
         if (SQL.isAdminChunk(chunkCord)) {
-            new AdminChunkSettings(plugin.getData().getPlayerMenuUtil(player.getUniqueId())).open();
+            new AdminChunkSettings(plugin.getData().getPlayerMU(player.getUniqueId())).open();
         } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_MANAGE_NOT_ADMIN_CHUNK.getString(null));
     }
 

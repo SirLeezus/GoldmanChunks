@@ -7,10 +7,10 @@ import org.bukkit.ChatColor;
 @AllArgsConstructor
 public enum Lang {
     PREFIX("&e&lChunks &6➔ &r"),
+    TELEPORT("&eWhooosh!"),
     MESSAGE_HELP_DIVIDER("&e▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"),
     MESSAGE_HELP_TITLE("                      &6-== &e&l&nChunk Help&r &6==-"),
     MESSAGE_HELP_SUB_COMMAND("&3{0}&b. &e{1} &c| &7{2}"),
-    MESSAGE_CHUNK_TELEPORT("&aYou successfully teleported to chunk &e(&b{0}&e)&a!"),
     ERROR_NO_PERMISSION("&cYou sadly do not have permission for this."),
     ERROR_PVP_DISABLED("&c&lPvP is disabled in this chunk"),
     ERROR_NO_CLAIM_PERMISSION("&6&lTrusted&7: {0} &7| {1} &7| &6&lOwner&7: &2{2}"),
@@ -94,8 +94,6 @@ public enum Lang {
     MENU_TRUSTED_TITLE("&2&lTrusted Chunk Settings"),
     MENU_GLOBAL_TRUSTED_TITLE("&2&lTrusted Global Settings"),
     ITEM_TRUSTED_CHUNK_SETTINGS_NAME("&2&lTrusted Chunk Settings"),
-    ITEM_TRUSTED_CHUNK_SETTINGS_LORE_1("&7Toggle your trusted player settings"),
-    ITEM_TRUSTED_CHUNK_SETTINGS_LORE_2("&7on the chunk you are standing on."),
     ITEM_GLOBAL_TRUSTED_CHUNK_SETTINGS_NAME("&2&lTrusted Global Settings"),
     ITEM_GLOBAL_TRUSTED_CHUNK_SETTINGS_LORE_1("&7Toggle your trusted player global"),
     ITEM_GLOBAL_TRUSTED_CHUNK_SETTINGS_LORE_2("&7settings on all your claimed chunks."),
@@ -112,8 +110,6 @@ public enum Lang {
     ITEM_SETTINGS_PVE_NAME("&6&lPvE&7: {0}"),
     ITEM_SETTINGS_MONSTER_SPAWNING_NAME("&6&lMonster Spawning&7: {0}"),
     ITEM_SETTINGS_EXPLOSIONS_NAME("&6&lExplosions&7: {0}"),
-    INTERFACE_ITEM_BACK_NAME("&6&l<- Back"),
-    INTERFACE_ITEM_CLOSE_NAME("&c&lClose"),
     INTERFACE_ITEM_NEXT_PAGE_NAME("&eNext Page >"),
     INTERFACE_ITEM_PREVIOUS_PAGE_NAME("&e< Previous Page"),
     ;

@@ -1,6 +1,6 @@
 package lee.code.chunks;
 
-import lee.code.chunks.menusystem.PlayerMenuUtility;
+import lee.code.chunks.menusystem.PlayerMU;
 import org.bukkit.Chunk;
 import org.bukkit.util.Vector;
 
@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class Data {
 
-    private final HashMap<UUID, PlayerMenuUtility> playerMenuUtilityMap = new HashMap<>();
+    private final HashMap<UUID, PlayerMU> playerMUList = new HashMap<>();
     private final HashMap<UUID, Chunk> playerAutoClaimMap = new HashMap<>();
     private final HashMap<UUID, Vector> adminClaimSelection = new HashMap<>();
     private final List<UUID> adminBypassList = new ArrayList<>();
@@ -60,15 +60,13 @@ public class Data {
         return adminClaimSelection.get(uuid);
     }
 
-    public PlayerMenuUtility getPlayerMenuUtil(UUID uuid) {
-        PlayerMenuUtility playerMenuUtility;
-
-        if (playerMenuUtilityMap.containsKey(uuid)) {
-            return playerMenuUtilityMap.get(uuid);
+    public PlayerMU getPlayerMU(UUID uuid) {
+        if (playerMUList.containsKey(uuid)) {
+            return playerMUList.get(uuid);
         } else {
-            playerMenuUtility = new PlayerMenuUtility(uuid);
-            playerMenuUtilityMap.put(uuid, playerMenuUtility);
-            return playerMenuUtility;
+            PlayerMU pmu = new PlayerMU(uuid);
+            playerMUList.put(uuid, pmu);
+            return pmu;
         }
     }
 }

@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class PlayerMenuUtility {
+public class PlayerMU {
 
     private final UUID owner;
     @Getter @Setter private int chunkListPage;

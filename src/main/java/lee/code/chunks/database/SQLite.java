@@ -4,6 +4,7 @@ import lee.code.chunks.GoldmanChunks;
 import lombok.SneakyThrows;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
@@ -168,7 +169,10 @@ public class SQLite {
         List<String> playerList = new ArrayList<>();
 
         for (String trusted : split) {
-            if (!Bukkit.getOfflinePlayer(UUID.fromString(trusted)).getName().equals(untrust)) playerList.add(trusted);
+            UUID trustedUUID = UUID.fromString(trusted);
+            OfflinePlayer player = Bukkit.getOfflinePlayer(trustedUUID);
+            String name = player.getName();
+            if (name != null && name.equals(untrust)) playerList.add(trusted);
         }
 
         if (!playerList.isEmpty()) {
@@ -292,8 +296,7 @@ public class SQLite {
             chunks.add(rs.getString("chunk"));
             while (rs.next()) chunks.add(rs.getString("chunk"));
             return chunks;
-        }
-        return Collections.singletonList("");
+        } else return Collections.singletonList("n");
     }
 
     //ADMIN CHUNK DATA

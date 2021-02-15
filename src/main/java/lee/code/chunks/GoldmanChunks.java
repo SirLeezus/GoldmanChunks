@@ -41,6 +41,7 @@ public class GoldmanChunks extends JavaPlugin {
     private void registerCommands() {
         getCommand("chunk").setExecutor(new CommandManager());
         getCommand("adminchunk").setExecutor(new AdminCommandManager());
+
         getCommand("chunk").setTabCompleter(new TabCompletion());
         getCommand("adminchunk").setTabCompleter(new AdminTabCompletion());
     }

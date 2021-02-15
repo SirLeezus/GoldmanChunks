@@ -3,7 +3,7 @@ package lee.code.chunks.menusystem.menus;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.Menu;
-import lee.code.chunks.menusystem.PlayerMenuUtility;
+import lee.code.chunks.menusystem.PlayerMU;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -12,8 +12,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class TrustedChunkSettings extends Menu {
 
-    public TrustedChunkSettings(PlayerMenuUtility playerMenuUtility) {
-        super(playerMenuUtility);
+    public TrustedChunkSettings(PlayerMU pmu) {
+        super(pmu);
     }
 
     @Override
@@ -29,30 +29,33 @@ public class TrustedChunkSettings extends Menu {
     @Override
     public void handleMenu(InventoryClickEvent e) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Player player = playerMenuUtility.getOwner();
+        Player player = pmu.getOwner();
 
-        //click delay
         if (plugin.getData().getPlayerClickDelay(player.getUniqueId())) return;
         else plugin.getPU().addPlayerClickDelay(player.getUniqueId());
 
         if (e.getClickedInventory() == player.getInventory()) return;
 
-        switch (e.getSlot()) {
-            case 10:
-                updatePermItem(e.getCurrentItem(), 10, player.getLocation().getChunk());
-                break;
-            case 12:
-                updatePermItem(e.getCurrentItem(), 12, player.getLocation().getChunk());
-                break;
-            case 14:
-                updatePermItem(e.getCurrentItem(), 14, player.getLocation().getChunk());
-                break;
-            case 16:
-                updatePermItem(e.getCurrentItem(), 16, player.getLocation().getChunk());
-                break;
-            case 31:
-                new ChunkManager(playerMenuUtility).open();
-                break;
+        ItemStack item = e.getCurrentItem();
+
+        if (item != null) {
+            switch (e.getSlot()) {
+                case 10:
+                    updatePermItem(item, 10, player.getLocation().getChunk());
+                    break;
+                case 12:
+                    updatePermItem(item, 12, player.getLocation().getChunk());
+                    break;
+                case 14:
+                    updatePermItem(item, 14, player.getLocation().getChunk());
+                    break;
+                case 16:
+                    updatePermItem(item, 16, player.getLocation().getChunk());
+                    break;
+                case 31:
+                    new ChunkManager(pmu).open();
+                    break;
+            }
         }
     }
 
@@ -67,7 +70,7 @@ public class TrustedChunkSettings extends Menu {
         ItemStack deny = new ItemStack(permFalseItem);
         ItemMeta denyMeta = deny.getItemMeta();
 
-        Player player = playerMenuUtility.getOwner();
+        Player player = pmu.getOwner();
         Chunk chunk = player.getLocation().getChunk();
         String chunkCord = plugin.getPU().formatChunk(chunk);
 
