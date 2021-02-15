@@ -76,48 +76,48 @@ public class TrustedChunkSettings extends Menu {
 
         //build
         if (plugin.getSqLite().canTrustedBuild(chunkCord)) {
-            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
+            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(10, allow);
 
         } else {
-            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
+            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
             deny.setItemMeta(denyMeta);
             inventory.setItem(10, deny);
         }
 
         //break
         if (plugin.getSqLite().canTrustedBreak(chunkCord)) {
-            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
+            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(12, allow);
 
         } else {
-            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
+            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
             deny.setItemMeta(denyMeta);
             inventory.setItem(12, deny);
         }
 
         //interact
         if (plugin.getSqLite().canTrustedInteract(chunkCord)) {
-            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
+            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(14, allow);
 
         } else {
-            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
+            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
             deny.setItemMeta(denyMeta);
             inventory.setItem(14, deny);
         }
 
         //pve
         if (plugin.getSqLite().canTrustedPVE(chunkCord)) {
-            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
+            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(16, allow);
 
         } else {
-            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
+            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
             deny.setItemMeta(denyMeta);
             inventory.setItem(16, deny);
         }
@@ -139,25 +139,25 @@ public class TrustedChunkSettings extends Menu {
 
             switch (slot) {
                 case 10:
-                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
+                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
                     allow.setItemMeta(allowMeta);
                     plugin.getSqLite().setTrustedBuild(chunkCord, 1);
                     inventory.setItem(slot, allow);
                     break;
                 case 12:
-                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
+                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
                     allow.setItemMeta(allowMeta);
                     plugin.getSqLite().setTrustedBreak(chunkCord, 1);
                     inventory.setItem(slot, allow);
                     break;
                 case 14:
-                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
+                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
                     allow.setItemMeta(allowMeta);
                     plugin.getSqLite().setTrustedInteract(chunkCord, 1);
                     inventory.setItem(slot, allow);
                     break;
                 case 16:
-                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
+                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
                     allow.setItemMeta(allowMeta);
                     plugin.getSqLite().setTrustedPVE(chunkCord, 1);
                     inventory.setItem(slot, allow);
@@ -170,25 +170,25 @@ public class TrustedChunkSettings extends Menu {
 
             switch (slot) {
                 case 10:
-                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
+                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
                     deny.setItemMeta(denyMeta);
                     plugin.getSqLite().setTrustedBuild(chunkCord, 0);
                     inventory.setItem(slot, deny);
                     break;
                 case 12:
-                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
+                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
                     deny.setItemMeta(denyMeta);
                     plugin.getSqLite().setTrustedBreak(chunkCord, 0);
                     inventory.setItem(slot, deny);
                     break;
                 case 14:
-                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
+                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
                     deny.setItemMeta(denyMeta);
                     plugin.getSqLite().setTrustedInteract(chunkCord, 0);
                     inventory.setItem(slot, deny);
                     break;
                 case 16:
-                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
+                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
                     deny.setItemMeta(denyMeta);
                     plugin.getSqLite().setTrustedPVE(chunkCord, 0);
                     inventory.setItem(slot, deny);

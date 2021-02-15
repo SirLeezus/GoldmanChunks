@@ -8,6 +8,8 @@ import org.bukkit.ChatColor;
 public enum Lang {
     PREFIX("&e&lChunks &6➔ &r"),
     TELEPORT("&eWhooosh!"),
+    TRUE("&atrue"),
+    FALSE("&cfalse"),
     MESSAGE_HELP_DIVIDER("&e▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"),
     MESSAGE_HELP_TITLE("                      &6-== &e&l&nChunk Help&r &6==-"),
     MESSAGE_HELP_SUB_COMMAND("&3{0}&b. &e{1} &c| &7{2}"),

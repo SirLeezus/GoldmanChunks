@@ -28,21 +28,21 @@ public class ChunkListener implements Listener {
         String messageType;
         String messageTrusted;
 
-        if (trusted) messageTrusted = plugin.getPU().format("&atrue");
-        else messageTrusted = plugin.getPU().format("&cfalse");
+        if (trusted) messageTrusted = Lang.TRUE.getString(null);
+        else messageTrusted = Lang.FALSE.getString(null);
 
         switch (type) {
             case "build":
-                messageType = Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { plugin.getPU().format("&cfalse") });
+                messageType = Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { Lang.FALSE.getString(null) });
                 break;
             case "break":
-                messageType = Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { plugin.getPU().format("&cfalse") });
+                messageType = Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { Lang.FALSE.getString(null) });
                 break;
             case "interact":
-                messageType = Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { plugin.getPU().format("&cfalse") });
+                messageType = Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { Lang.FALSE.getString(null) });
                 break;
             case "pve":
-                messageType = Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getPU().format("&cfalse") });
+                messageType = Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.FALSE.getString(null) });
                 break;
             default:
                 messageType = "ERROR";

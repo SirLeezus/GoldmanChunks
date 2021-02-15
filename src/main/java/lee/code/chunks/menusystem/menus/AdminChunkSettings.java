@@ -80,73 +80,73 @@ public class AdminChunkSettings extends Menu {
         String chunkCord = plugin.getPU().formatChunk(chunk);
 
         if (plugin.getSqLite().canAdminChunkExplode(chunkCord)) {
-            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
+            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(10, allow);
         } else {
-            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
+            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
             deny.setItemMeta(denyMeta);
             inventory.setItem(10, deny);
         }
 
         if (plugin.getSqLite().canAdminChunkBuild(chunkCord)) {
-            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
+            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(11, allow);
         } else {
-            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
+            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
             deny.setItemMeta(denyMeta);
             inventory.setItem(11, deny);
         }
 
         if (plugin.getSqLite().canAdminChunkBreak(chunkCord)) {
-            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
+            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(12, allow);
         } else {
-            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
+            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
             deny.setItemMeta(denyMeta);
             inventory.setItem(12, deny);
         }
 
         if (plugin.getSqLite().canAdminChunkInteract(chunkCord)) {
-            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
+            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(13, allow);
         } else {
-            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
+            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
             deny.setItemMeta(denyMeta);
             inventory.setItem(13, deny);
         }
 
         if (plugin.getSqLite().canAdminChunkSpawnMonsters(chunkCord)) {
-            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
+            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(14, allow);
         } else {
-            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
+            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
             deny.setItemMeta(denyMeta);
             inventory.setItem(14, deny);
         }
 
         if (plugin.getSqLite().canAdminChunkPVP(chunkCord)) {
-            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
+            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(15, allow);
 
         } else {
-            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
+            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
             deny.setItemMeta(denyMeta);
             inventory.setItem(15, deny);
         }
 
         if (plugin.getSqLite().canAdminChunkPVE(chunkCord)) {
-            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
+            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(16, allow);
 
         } else {
-            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
+            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
             deny.setItemMeta(denyMeta);
             inventory.setItem(16, deny);
         }
@@ -164,43 +164,43 @@ public class AdminChunkSettings extends Menu {
         if (item.getType() != permTrueItem.getType()) {
             switch (slot) {
                 case 10:
-                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[]{plugin.getPU().format("&atrue")}));
+                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[]{Lang.TRUE.getString(null)}));
                     allow.setItemMeta(allowMeta);
                     plugin.getSqLite().setAdminChunkExplosion(chunkCord, 1);
                     inventory.setItem(slot, allow);
                     break;
                 case 11:
-                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{plugin.getPU().format("&atrue")}));
+                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{Lang.TRUE.getString(null)}));
                     allow.setItemMeta(allowMeta);
                     plugin.getSqLite().setAdminChunkBuild(chunkCord, 1);
                     inventory.setItem(slot, allow);
                     break;
                 case 12:
-                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{plugin.getPU().format("&atrue")}));
+                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.TRUE.getString(null)}));
                     allow.setItemMeta(allowMeta);
                     plugin.getSqLite().setAdminChunkBreak(chunkCord, 1);
                     inventory.setItem(slot, allow);
                     break;
                 case 13:
-                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{plugin.getPU().format("&atrue")}));
+                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.TRUE.getString(null)}));
                     allow.setItemMeta(allowMeta);
                     plugin.getSqLite().setAdminChunkInteract(chunkCord, 1);
                     inventory.setItem(slot, allow);
                     break;
                 case 14:
-                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{plugin.getPU().format("&atrue")}));
+                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{Lang.TRUE.getString(null)}));
                     allow.setItemMeta(allowMeta);
                     plugin.getSqLite().setAdminChunkSpawnMonsters(chunkCord, 1);
                     inventory.setItem(slot, allow);
                     break;
                 case 15:
-                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
+                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
                     allow.setItemMeta(allowMeta);
                     plugin.getSqLite().setAdminChunkPVP(chunkCord, 1);
                     inventory.setItem(slot, allow);
                     break;
                 case 16:
-                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getPU().format("&atrue") }));
+                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
                     allow.setItemMeta(allowMeta);
                     plugin.getSqLite().setAdminChunkPVE(chunkCord, 1);
                     inventory.setItem(slot, allow);
@@ -211,43 +211,43 @@ public class AdminChunkSettings extends Menu {
 
             switch (slot) {
                 case 10:
-                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[]{plugin.getPU().format("&cfalse")}));
+                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[]{Lang.FALSE.getString(null)}));
                     deny.setItemMeta(denyMeta);
                     plugin.getSqLite().setAdminChunkExplosion(chunkCord, 0);
                     inventory.setItem(slot, deny);
                     break;
                 case 11:
-                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{plugin.getPU().format("&cfalse")}));
+                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{Lang.FALSE.getString(null)}));
                     deny.setItemMeta(denyMeta);
                     plugin.getSqLite().setAdminChunkBuild(chunkCord, 0);
                     inventory.setItem(slot, deny);
                     break;
                 case 12:
-                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{plugin.getPU().format("&cfalse")}));
+                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.FALSE.getString(null)}));
                     deny.setItemMeta(denyMeta);
                     plugin.getSqLite().setAdminChunkBreak(chunkCord, 0);
                     inventory.setItem(slot, deny);
                     break;
                 case 13:
-                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{plugin.getPU().format("&cfalse")}));
+                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.FALSE.getString(null)}));
                     deny.setItemMeta(denyMeta);
                     plugin.getSqLite().setAdminChunkInteract(chunkCord, 0);
                     inventory.setItem(slot, deny);
                     break;
                 case 14:
-                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{plugin.getPU().format("&cfalse")}));
+                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{Lang.FALSE.getString(null)}));
                     deny.setItemMeta(denyMeta);
                     plugin.getSqLite().setAdminChunkSpawnMonsters(chunkCord, 0);
                     inventory.setItem(slot, deny);
                     break;
                 case 15:
-                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
+                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
                     deny.setItemMeta(denyMeta);
                     plugin.getSqLite().setAdminChunkPVP(chunkCord, 0);
                     inventory.setItem(slot, deny);
                     break;
                 case 16:
-                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { plugin.getPU().format("&cfalse") }));
+                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
                     deny.setItemMeta(denyMeta);
                     plugin.getSqLite().setAdminChunkPVE(chunkCord, 0);
                     inventory.setItem(slot, deny);
