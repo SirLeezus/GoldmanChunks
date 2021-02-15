@@ -23,7 +23,7 @@ public class TabCompletion implements TabCompleter {
         if (sender instanceof Player) {
             if (args.length == 1) {
                 List<String> hasCommand = new ArrayList<>();
-                for (String pluginCommand : subCommands) if (sender.hasPermission("mychunks.command." + pluginCommand)) hasCommand.add(pluginCommand);
+                for (String pluginCommand : subCommands) if (sender.hasPermission("chunk.command." + pluginCommand)) hasCommand.add(pluginCommand);
                 return StringUtil.copyPartialMatches(args[0], hasCommand, new ArrayList<>());
 
             } else if (args[0].equals("trust")) {

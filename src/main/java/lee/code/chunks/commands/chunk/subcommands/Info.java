@@ -27,7 +27,7 @@ public class Info extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "mychunks.command.info";
+        return "chunk.command.info";
     }
 
     @Override

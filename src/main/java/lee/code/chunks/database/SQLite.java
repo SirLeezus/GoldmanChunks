@@ -560,37 +560,21 @@ public class SQLite {
 
     public int getPlayerClaims(Player player) {
         int maxClaims = 100000000;
-        int playerMaxClaims = 1;
+        int defaultClaims = 10;
 
-        if (!player.isOp()) {
-            for (PermissionAttachmentInfo perm : player.getEffectivePermissions()) {
-                if (perm.getPermission().startsWith("chunks.")) {
-                    playerMaxClaims = Integer.parseInt(perm.getPermission().replace("chunks.", ""));
-                    if (playerMaxClaims > maxClaims) playerMaxClaims = maxClaims;
-                    return playerMaxClaims;
-                }
-            }
-            return playerMaxClaims;
-        } else return maxClaims;
+        if (!player.isOp()) return defaultClaims;
+        else return maxClaims;
     }
 
     public int getMaxPlayerClaims(Player player) {
 
         UUID uuid = player.getUniqueId();
         int maxClaims = 100000000;
+        int defaultClaims = 10;
         int bonusClaims = getBonusClaims(uuid);
         int accruedClaims = getAccruedClaims(uuid);
-        int playerMaxClaims = 1;
 
-        if (!player.isOp()) {
-            for (PermissionAttachmentInfo perm : player.getEffectivePermissions()) {
-                if (perm.getPermission().startsWith("chunks.")) {
-                    playerMaxClaims = Integer.parseInt(perm.getPermission().replace("chunks.", ""));
-                    if (playerMaxClaims > maxClaims) playerMaxClaims = maxClaims;
-                    return playerMaxClaims + bonusClaims + accruedClaims;
-                }
-            }
-            return playerMaxClaims + bonusClaims + accruedClaims;
-        } else return maxClaims;
+        if (!player.isOp()) return defaultClaims + bonusClaims + accruedClaims;
+        else return maxClaims;
     }
 }

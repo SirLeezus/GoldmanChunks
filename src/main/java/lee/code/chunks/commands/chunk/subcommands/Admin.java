@@ -31,7 +31,7 @@ public class Admin extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "mychunks.command.admin";
+        return "chunk.command.admin";
     }
 
     @Override

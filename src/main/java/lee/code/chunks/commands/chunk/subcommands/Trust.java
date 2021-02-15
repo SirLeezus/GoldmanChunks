@@ -27,7 +27,7 @@ public class Trust extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "mychunks.command.trust";
+        return "chunk.command.trust";
     }
 
     @Override

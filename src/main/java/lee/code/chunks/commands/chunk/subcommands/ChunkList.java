@@ -26,7 +26,7 @@ public class ChunkList extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "mychunks.command.list";
+        return "chunk.command.list";
     }
 
     @Override

@@ -29,7 +29,7 @@ public class UnTrust extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "mychunks.command.untrust";
+        return "chunk.command.untrust";
     }
 
     @Override

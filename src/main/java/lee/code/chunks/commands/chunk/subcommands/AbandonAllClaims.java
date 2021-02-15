@@ -28,7 +28,7 @@ public class AbandonAllClaims extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "mychunks.command.abandonallclaims";
+        return "chunk.command.abandonallclaims";
     }
 
     @Override

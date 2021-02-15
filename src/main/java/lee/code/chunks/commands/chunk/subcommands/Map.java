@@ -32,7 +32,7 @@ public class Map extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "mychunks.command.map";
+        return "chunk.command.map";
     }
 
     @Override

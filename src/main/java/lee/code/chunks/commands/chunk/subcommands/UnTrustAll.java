@@ -28,7 +28,7 @@ public class UnTrustAll extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "mychunks.command.untrustall";
+        return "chunk.command.untrustall";
     }
 
     @Override

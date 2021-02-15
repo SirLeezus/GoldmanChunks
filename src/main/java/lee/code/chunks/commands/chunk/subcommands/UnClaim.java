@@ -28,7 +28,7 @@ public class UnClaim extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "mychunks.command.unclaim";
+        return "chunk.command.unclaim";
     }
 
     @Override

@@ -28,7 +28,7 @@ public class AutoClaim extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "mychunks.command.autoclaim";
+        return "chunk.command.autoclaim";
     }
 
     @Override

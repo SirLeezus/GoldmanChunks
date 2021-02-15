@@ -29,7 +29,7 @@ public class Claim extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "mychunks.command.claim";
+        return "chunk.command.claim";
     }
 
     @Override

@@ -30,7 +30,7 @@ public class MaxClaims extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "mychunks.command.maxclaims";
+        return "chunk.command.maxclaims";
     }
 
     @Override

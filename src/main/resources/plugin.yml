@@ -6,7 +6,7 @@ author: Lee
 commands:
   chunk:
     description: Main plugin command.
-    permission: mychunks.command.use
+    permission: chunk.command.use
     aliases: [c]
   adminchunk:
     description: Admin chunk command.
