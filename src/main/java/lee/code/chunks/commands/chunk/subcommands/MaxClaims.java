@@ -57,7 +57,7 @@ public class MaxClaims extends SubCommand {
         player.sendMessage("");
         player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_4.getString(new String[] { plugin.getPU().format(timePlayed) }));
         player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_5.getString(new String[] { plugin.getPU().formatAmount(givenAmount), plugin.getPU().format(timeRequired) }));
-        player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_6.getString(new String[] { plugin.getPU().formatAmount(accruedClaims) }));
+        player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_6.getString(new String[] { plugin.getPU().formatAmount(accruedClaims), plugin.getPU().formatAmount(Values.ACCRUED_CLAIMS_MAX.getValue()) }));
         player.sendMessage("");
         player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_7.getString(new String[] { plugin.getPU().formatAmount(claimed), plugin.getPU().formatAmount(maxClaims) }));
         player.sendMessage("");

@@ -86,7 +86,7 @@ public enum Lang {
     COMMAND_MAX_CLAIMS_LINE_3("&6&lClaimed&7: &2{0}"),
     COMMAND_MAX_CLAIMS_LINE_4("&6&lTime Played&7: &e{0}"),
     COMMAND_MAX_CLAIMS_LINE_5("&6&lAccrued Timer&7: &e{0} claims every {1} played"),
-    COMMAND_MAX_CLAIMS_LINE_6("&6&lAccrued Claims&7: &2{0}"),
+    COMMAND_MAX_CLAIMS_LINE_6("&6&lAccrued Claims&7: &2{0}&7/&2{1}"),
     COMMAND_MAX_CLAIMS_LINE_7("&6&lTotal Claims&7: &2{0}&7/&2{1}"),
     COMMAND_MAX_CLAIMS_FOOTER("&2------------------------------------------------"),
     MENU_ADMIN_CHUNK_SETTINGS_TITLE("&4&lAdmin Chunk Settings"),
