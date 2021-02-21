@@ -339,31 +339,31 @@ public class SQLite {
         return rs.getInt("explosions") == 1;
     }
 
-    public void setAdminChunkBuild(String chunk, int canBuild) {
+    public void setAdminChunkBuild(String chunk, String canBuild) {
         update("UPDATE admin_chunks SET build ='" + canBuild + "' WHERE chunk ='" + chunk + "';");
     }
 
-    public void setAdminChunkBreak(String chunk, int canBreak) {
+    public void setAdminChunkBreak(String chunk, String canBreak) {
         update("UPDATE admin_chunks SET break ='" + canBreak + "' WHERE chunk ='" + chunk + "';");
     }
 
-    public void setAdminChunkInteract(String chunk, int canInteract) {
+    public void setAdminChunkInteract(String chunk, String canInteract) {
         update("UPDATE admin_chunks SET interact ='" + canInteract + "' WHERE chunk ='" + chunk + "';");
     }
 
-    public void setAdminChunkPVE(String chunk, int canPVE) {
+    public void setAdminChunkPvE(String chunk, String canPVE) {
         update("UPDATE admin_chunks SET pve ='" + canPVE + "' WHERE chunk ='" + chunk + "';");
     }
 
-    public void setAdminChunkPVP(String chunk, int canPVP) {
+    public void setAdminChunkPvP(String chunk, String canPVP) {
         update("UPDATE admin_chunks SET pvp ='" + canPVP + "' WHERE chunk ='" + chunk + "';");
     }
 
-    public void setAdminChunkSpawnMonsters(String chunk, int canSpawnMonster) {
+    public void setAdminChunkSpawnMonsters(String chunk, String canSpawnMonster) {
         update("UPDATE admin_chunks SET monster_spawning ='" + canSpawnMonster + "' WHERE chunk ='" + chunk + "';");
     }
 
-    public void setAdminChunkExplosion(String chunk, int canExplode) {
+    public void setAdminChunkExplosion(String chunk, String canExplode) {
         update("UPDATE admin_chunks SET explosions ='" + canExplode + "' WHERE chunk ='" + chunk + "';");
     }
 
@@ -557,11 +557,10 @@ public class SQLite {
     }
 
     public void loadPlayerData() {
-
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
         try {
-            ResultSet rs = getResult("SELECT * FROM chunks;");
+            ResultSet rs = getResult("SELECT * FROM player_data;");
 
             int count = 0;
             while (rs.next()) {
@@ -578,6 +577,31 @@ public class SQLite {
                 count++;
             }
             System.out.println(plugin.getPU().format("&6Players Loaded: &a" + count));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadAdminChunks() {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
+        try {
+            ResultSet rs = getResult("SELECT * FROM admin_chunks;");
+
+            int count = 0;
+            while (rs.next()) {
+                String chunk = rs.getString("chunk");
+                String canBuild = rs.getString("build");
+                String canBreak = rs.getString("break");
+                String canInteract = rs.getString("interact");
+                String canPvE = rs.getString("pve");
+                String canPvP = rs.getString("pvp");
+                String canSpawnMonsters = rs.getString("monster_spawning");
+                String canExplode = rs.getString("explosions");
+                cache.setAdminChunk(chunk, canBuild, canBreak, canInteract, canPvE, canPvP, canSpawnMonsters, canExplode);
+                count++;
+            }
+            System.out.println(plugin.getPU().format("&6Admin Chunk Claims Loaded: &a" + count));
         } catch (SQLException e) {
             e.printStackTrace();
         }

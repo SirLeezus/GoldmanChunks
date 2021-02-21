@@ -66,6 +66,7 @@ public class Data {
         SQLite SQL = plugin.getSqLite();
         SQL.loadChunks();
         SQL.loadPlayerData();
+        SQL.loadAdminChunks();
     }
 
     public PlayerMU getPlayerMU(UUID uuid) {
