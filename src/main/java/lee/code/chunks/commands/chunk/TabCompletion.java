@@ -36,7 +36,7 @@ public class TabCompletion implements TabCompleter {
                     UUID uuid = player.getUniqueId();
                     SQLite SQL = plugin.getSqLite();
                     Chunk chunk = player.getLocation().getChunk();
-                    String chunkCord = plugin.getPU().formatChunk(chunk);
+                    String chunkCord = plugin.getPU().formatChunkLocation(chunk);
                     if (SQL.isChunkOwner(chunkCord, uuid)) return StringUtil.copyPartialMatches(args[1], SQL.getTrustedToChunk(chunkCord), new ArrayList<>());
                 }
             } else if (args[0].equals("untrustall")) {

@@ -104,7 +104,7 @@ public class PlayerChunks extends PaginatedMenu {
         Player player = pmu.getOwner();
         UUID uuid = player.getUniqueId();
         Chunk playerChunk = player.getLocation().getChunk();
-        String playerChunkCord = plugin.getPU().formatChunk(playerChunk);
+        String playerChunkCord = plugin.getPU().formatChunkLocation(playerChunk);
 
         List<String> chunks = plugin.getSqLite().getPlayerClaimedChunks(uuid);
 

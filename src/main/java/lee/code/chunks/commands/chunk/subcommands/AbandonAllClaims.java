@@ -2,6 +2,7 @@ package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
+import lee.code.chunks.database.Cache;
 import lee.code.chunks.database.SQLite;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.command.CommandSender;
@@ -38,7 +39,7 @@ public class AbandonAllClaims extends SubCommand {
         UUID uuid = player.getUniqueId();
 
         if (SQL.hasClaimedChunks(uuid)) {
-            SQL.deleteAllClaimedChunks(uuid);
+            SQL.unclaimAllChunks(uuid);
             int maxClaims = SQL.getMaxPlayerClaims(player);
             int totalClaims = SQL.getClaimedAmount(uuid);
 

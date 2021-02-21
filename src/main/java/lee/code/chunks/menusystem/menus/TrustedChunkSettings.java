@@ -72,7 +72,7 @@ public class TrustedChunkSettings extends Menu {
 
         Player player = pmu.getOwner();
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
         //build
         if (plugin.getSqLite().canTrustedBuild(chunkCord)) {
@@ -128,7 +128,7 @@ public class TrustedChunkSettings extends Menu {
 
     private void updatePermItem(ItemStack item, int slot, Chunk chunk) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        String chunkCord = plugin.getPU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
         ItemStack allow = new ItemStack(permTrueItem);
         ItemStack deny = new ItemStack(permFalseItem);
         ItemMeta allowMeta = allow.getItemMeta();
@@ -141,25 +141,25 @@ public class TrustedChunkSettings extends Menu {
                 case 10:
                     allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
                     allow.setItemMeta(allowMeta);
-                    plugin.getSqLite().setTrustedBuild(chunkCord, 1);
+                    plugin.getSqLite().setChunkTrustedBuild(chunkCord, 1);
                     inventory.setItem(slot, allow);
                     break;
                 case 12:
                     allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
                     allow.setItemMeta(allowMeta);
-                    plugin.getSqLite().setTrustedBreak(chunkCord, 1);
+                    plugin.getSqLite().setChunkTrustedBreak(chunkCord, 1);
                     inventory.setItem(slot, allow);
                     break;
                 case 14:
                     allowMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
                     allow.setItemMeta(allowMeta);
-                    plugin.getSqLite().setTrustedInteract(chunkCord, 1);
+                    plugin.getSqLite().setChunkTrustedInteract(chunkCord, 1);
                     inventory.setItem(slot, allow);
                     break;
                 case 16:
                     allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
                     allow.setItemMeta(allowMeta);
-                    plugin.getSqLite().setTrustedPVE(chunkCord, 1);
+                    plugin.getSqLite().setChunkTrustedPVE(chunkCord, 1);
                     inventory.setItem(slot, allow);
                     break;
 
@@ -172,25 +172,25 @@ public class TrustedChunkSettings extends Menu {
                 case 10:
                     denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
                     deny.setItemMeta(denyMeta);
-                    plugin.getSqLite().setTrustedBuild(chunkCord, 0);
+                    plugin.getSqLite().setChunkTrustedBuild(chunkCord, 0);
                     inventory.setItem(slot, deny);
                     break;
                 case 12:
                     denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
                     deny.setItemMeta(denyMeta);
-                    plugin.getSqLite().setTrustedBreak(chunkCord, 0);
+                    plugin.getSqLite().setChunkTrustedBreak(chunkCord, 0);
                     inventory.setItem(slot, deny);
                     break;
                 case 14:
                     denyMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
                     deny.setItemMeta(denyMeta);
-                    plugin.getSqLite().setTrustedInteract(chunkCord, 0);
+                    plugin.getSqLite().setChunkTrustedInteract(chunkCord, 0);
                     inventory.setItem(slot, deny);
                     break;
                 case 16:
                     denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
                     deny.setItemMeta(denyMeta);
-                    plugin.getSqLite().setTrustedPVE(chunkCord, 0);
+                    plugin.getSqLite().setChunkTrustedPVE(chunkCord, 0);
                     inventory.setItem(slot, deny);
                     break;
             }

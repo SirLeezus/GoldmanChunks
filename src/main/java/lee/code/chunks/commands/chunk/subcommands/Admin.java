@@ -44,7 +44,7 @@ public class Admin extends SubCommand {
             SQLite SQL = plugin.getSqLite();
             UUID uuid = player.getUniqueId();
             Chunk chunk = player.getLocation().getChunk();
-            String chunkCord = plugin.getPU().formatChunk(chunk);
+            String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
             switch (command) {
 
@@ -52,7 +52,7 @@ public class Admin extends SubCommand {
 
                     if (SQL.isChunkClaimed(chunkCord)) {
                         UUID owner = SQL.getChunkOwnerUUID(chunkCord);
-                        SQL.unClaimChunk(chunkCord, owner);
+                        SQL.unclaimChunk(chunkCord, owner, 1);
                         player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_UNCLAIM.getString(new String[]{chunkCord, Bukkit.getPlayer(owner).getName()}));
                     } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_UNCLAIM.getString(new String[]{chunkCord}));
                     break;
@@ -61,7 +61,7 @@ public class Admin extends SubCommand {
 
                     if (SQL.isChunkClaimed(chunkCord)) {
                         UUID owner = SQL.getChunkOwnerUUID(chunkCord);
-                        SQL.deleteAllClaimedChunks(owner);
+                        SQL.unclaimAllChunks(owner);
                         player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_UNCLAIMALL.getString(new String[]{Bukkit.getPlayer(owner).getName()}));
                     } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_UNCLAIM.getString(new String[]{chunkCord}));
                     break;

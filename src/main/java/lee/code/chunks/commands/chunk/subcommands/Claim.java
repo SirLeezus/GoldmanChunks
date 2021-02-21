@@ -40,7 +40,7 @@ public class Claim extends SubCommand {
 
             UUID uuid = player.getUniqueId();
             Chunk chunk = player.getLocation().getChunk();
-            String chunkCord = plugin.getPU().formatChunk(chunk);
+            String chunkCord = plugin.getPU().formatChunkLocation(chunk);
             SQLite SQL = plugin.getSqLite();
 
             if (!SQL.isChunkClaimed(chunkCord)) {

@@ -36,7 +36,7 @@ public class Trusted extends SubCommand {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         UUID uuid = player.getUniqueId();
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
         String trusted;
         if (plugin.getSqLite().isChunkOwner(chunkCord, uuid)) trusted = String.join(", ", plugin.getSqLite().getTrustedToChunk(chunkCord));

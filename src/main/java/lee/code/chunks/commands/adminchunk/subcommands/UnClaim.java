@@ -38,7 +38,7 @@ public class UnClaim extends SubCommand {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         SQLite SQL = plugin.getSqLite();
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
         if (!SQL.isChunkClaimed(chunkCord)) {
 

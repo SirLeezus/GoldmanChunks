@@ -63,7 +63,7 @@ public class ChunkListener implements Listener {
         SQLite SQL = plugin.getSqLite();
 
         Chunk chunk = e.getBlock().getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
         if (!plugin.getData().hasAdminBypass(uuid)) {
             if (SQL.isChunkClaimed(chunkCord)) {
@@ -97,7 +97,7 @@ public class ChunkListener implements Listener {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         SQLite SQL = plugin.getSqLite();
         Chunk chunk = e.getEntity().getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
         if (SQL.isChunkClaimed(chunkCord)) {
 
@@ -145,7 +145,7 @@ public class ChunkListener implements Listener {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         SQLite SQL = plugin.getSqLite();
         Chunk chunk = e.getVehicle().getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
         if (SQL.isChunkClaimed(chunkCord)) {
             if (e.getAttacker() instanceof Player) {
@@ -194,7 +194,7 @@ public class ChunkListener implements Listener {
         SQLite SQL = plugin.getSqLite();
 
         Chunk chunk = e.getBlock().getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
         if (!plugin.getData().hasAdminBypass(uuid)) {
             if (SQL.isChunkClaimed(chunkCord)) {
@@ -233,7 +233,7 @@ public class ChunkListener implements Listener {
             UUID uuid = player.getUniqueId();
             SQLite SQL = plugin.getSqLite();
             Chunk chunk = e.getClickedBlock().getLocation().getChunk();
-            String chunkCord = plugin.getPU().formatChunk(chunk);
+            String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
             if (!plugin.getData().hasAdminBypass(uuid)) {
                 if (SQL.isChunkClaimed(chunkCord)) {
@@ -299,7 +299,7 @@ public class ChunkListener implements Listener {
         if (e.getRightClicked() instanceof ArmorStand) {
 
             Chunk chunk = e.getRightClicked().getLocation().getChunk();
-            String chunkCord = plugin.getPU().formatChunk(chunk);
+            String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
             if (!plugin.getData().hasAdminBypass(uuid)) {
                 if (SQL.isChunkClaimed(chunkCord)) {
@@ -337,7 +337,7 @@ public class ChunkListener implements Listener {
         SQLite SQL = plugin.getSqLite();
 
         Chunk chunk = e.getRightClicked().getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
         if (!(e.getRightClicked() instanceof Player)) {
 
@@ -375,7 +375,7 @@ public class ChunkListener implements Listener {
         SQLite SQL = plugin.getSqLite();
 
         Chunk chunk = e.getEntity().getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
         if (SQL.isChunkClaimed(chunkCord)) {
 
@@ -487,7 +487,7 @@ public class ChunkListener implements Listener {
 
         for (Block block : new ArrayList<>(e.blockList())) {
             Chunk chunk = block.getLocation().getChunk();
-            String chunkCord = plugin.getPU().formatChunk(chunk);
+            String chunkCord = plugin.getPU().formatChunkLocation(chunk);
             if (SQL.isChunkClaimed(chunkCord)) {
                 if (!SQL.canChunkExplode(chunkCord)) e.blockList().remove(block);
             } else if (SQL.isAdminChunk(chunkCord)) {
@@ -504,7 +504,7 @@ public class ChunkListener implements Listener {
 
         //check piston location
         Chunk chunk = e.getBlock().getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
         if (!SQL.isChunkClaimed(chunkCord)) {
             e.setCancelled(true);
             return;
@@ -515,7 +515,7 @@ public class ChunkListener implements Listener {
         //check piston moved blocks
         for (Block block : new ArrayList<>(e.getBlocks())) {
             Chunk movedBlockChunk = block.getLocation().getChunk();
-            String movedBlockChunkCords = plugin.getPU().formatChunk(movedBlockChunk);
+            String movedBlockChunkCords = plugin.getPU().formatChunkLocation(movedBlockChunk);
             if (!plugin.getSqLite().isChunkClaimed(movedBlockChunkCords)) {
                 e.setCancelled(true);
                 return;
@@ -531,7 +531,7 @@ public class ChunkListener implements Listener {
         if (e.getEntity() instanceof Monster) {
 
             Chunk chunk = e.getEntity().getLocation().getChunk();
-            String chunkCord = plugin.getPU().formatChunk(chunk);
+            String chunkCord = plugin.getPU().formatChunkLocation(chunk);
             SQLite SQL = plugin.getSqLite();
 
             if (SQL.isChunkClaimed(chunkCord)) {
@@ -547,7 +547,7 @@ public class ChunkListener implements Listener {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
 
         Chunk chunk = e.getEntity().getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
         SQLite SQL = plugin.getSqLite();
 
         if (SQL.isChunkClaimed(chunkCord) || SQL.isAdminChunk(chunkCord)) {
@@ -567,7 +567,7 @@ public class ChunkListener implements Listener {
             SQLite SQL = plugin.getSqLite();
 
             Chunk chunk = player.getLocation().getChunk();
-            String chunkCord = plugin.getPU().formatChunk(chunk);
+            String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
             if (!SQL.isChunkClaimed(chunkCord)) {
 

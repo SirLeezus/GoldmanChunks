@@ -1,7 +1,9 @@
 package lee.code.chunks;
 
+import lee.code.cache.CacheAPI;
 import lee.code.chunks.commands.adminchunk.AdminCommandManager;
 import lee.code.chunks.commands.adminchunk.AdminTabCompletion;
+import lee.code.chunks.database.Cache;
 import lee.code.chunks.listeners.ChunkCheckerListener;
 import lee.code.chunks.listeners.ChunkListener;
 import lee.code.chunks.commands.chunk.CommandManager;
@@ -17,15 +19,21 @@ public class GoldmanChunks extends JavaPlugin {
     @Getter private Data data;
     @Getter private PU pU;
     @Getter private SQLite sqLite;
+    @Getter private Cache cache;
+    @Getter private CacheAPI cacheAPI;
 
     @Override
     public void onEnable() {
         this.data = new Data();
         this.pU = new PU();
         this.sqLite = new SQLite();
+        this.cache = new Cache();
+        this.cacheAPI = new CacheAPI();
 
         sqLite.connect();
         sqLite.loadTables();
+
+        data.cacheDatabase();
 
         registerCommands();
         registerListeners();

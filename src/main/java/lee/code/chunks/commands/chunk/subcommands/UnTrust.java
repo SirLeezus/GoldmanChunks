@@ -40,11 +40,11 @@ public class UnTrust extends SubCommand {
 
         if (args.length > 1) {
             Chunk chunk = player.getLocation().getChunk();
-            String chunkCord = plugin.getPU().formatChunk(chunk);
-
+            String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+            //TODO fix later
             if (SQL.isChunkOwner(chunkCord, uuid)) {
                 if (SQL.getTrustedToChunk(chunkCord).contains(args[1])) {
-                    SQL.removeChunkTrusted(chunkCord, args[1]);
+                    //SQL.removeChunkTrusted(chunkCord, args[1]);
                     player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_UNTRUST_REMOVED_PLAYER.getString(new String[] { args[1], chunkCord }));
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNTRUST_PLAYER_NOT_TRUSTED.getString(new String[] { args[1], chunkCord }));
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNTRUST_NOT_CHUNK_OWNER.getString(null));

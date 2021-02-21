@@ -46,7 +46,7 @@ public class Trust extends SubCommand {
             }
 
             Chunk chunk = player.getLocation().getChunk();
-            String chunkCord = plugin.getPU().formatChunk(chunk);
+            String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
             if (plugin.getSqLite().isChunkTrusted(chunkCord, target.getUniqueId())) {
                 player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_TRUST_ALREADY_ADDED.getString(new String[] { target.getName(), chunkCord }));

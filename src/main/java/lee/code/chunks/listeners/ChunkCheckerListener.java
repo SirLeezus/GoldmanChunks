@@ -32,7 +32,7 @@ public class ChunkCheckerListener implements Listener {
                 else plugin.getPU().addPlayerClickDelay(uuid);
 
                 Chunk chunk = e.getClickedBlock().getLocation().getChunk();
-                String chunkCord = plugin.getPU().formatChunk(chunk);
+                String chunkCord = plugin.getPU().formatChunkLocation(chunk);
                 String owner = plugin.getSqLite().getChunkOwner(chunkCord);
                 SQLite SQL = plugin.getSqLite();
 

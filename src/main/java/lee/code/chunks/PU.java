@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import lee.code.chunks.database.SQLite;
 import lee.code.chunks.lists.Values;
-import lombok.SneakyThrows;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -19,23 +18,19 @@ import java.util.concurrent.TimeUnit;
 
 public class PU {
 
-    //color formatting string
     public String format(String format) {
         return ChatColor.translateAlternateColorCodes('&', format);
     }
 
-    //format chunk
-    public String formatChunk(Chunk chunk) {
+    public String formatChunkLocation(Chunk chunk) {
         return chunk.getWorld().getName() + "," + chunk.getX() + "," + chunk.getZ();
     }
 
-    //format an amount
     public String formatAmount(int value) {
         DecimalFormat formatter = new DecimalFormat("#,###");
         return formatter.format(value);
     }
 
-    //get online players
     public List<String> getOnlinePlayers() {
         List<String> players = new ArrayList<>();
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -130,7 +125,6 @@ public class PU {
         else return seconds + " sec";
     }
 
-    @SneakyThrows
     public void applyHeadSkin(ItemStack head, String base64) {
 
         SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
@@ -138,9 +132,13 @@ public class PU {
         profile.getProperties().put("textures", new Property("textures", base64));
 
         if (skullMeta != null) {
-            Method mtd = skullMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
-            mtd.setAccessible(true);
-            mtd.invoke(skullMeta, profile);
+            try {
+                Method mtd = skullMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
+                mtd.setAccessible(true);
+                mtd.invoke(skullMeta, profile);
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
         }
         head.setItemMeta(skullMeta);
     }

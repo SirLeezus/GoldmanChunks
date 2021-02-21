@@ -45,7 +45,7 @@ public class Map extends SubCommand {
         List<String> chunkSquare = new ArrayList<>();
 
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
         chunkMap.add(Lang.COMMAND_MAP_HEADER.getString(null));
 

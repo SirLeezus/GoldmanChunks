@@ -38,7 +38,7 @@ public class ChunkManager extends Menu {
         if (e.getClickedInventory() == player.getInventory()) return;
 
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunk(chunk);
+        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
         UUID uuid = player.getUniqueId();
         SQLite SQL = plugin.getSqLite();
 

@@ -1,5 +1,6 @@
 package lee.code.chunks;
 
+import lee.code.chunks.database.SQLite;
 import lee.code.chunks.menusystem.PlayerMU;
 import org.bukkit.Chunk;
 import org.bukkit.util.Vector;
@@ -58,6 +59,12 @@ public class Data {
     }
     public Vector getAdminClaimSelection(UUID uuid) {
         return adminClaimSelection.get(uuid);
+    }
+
+    public void cacheDatabase() {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        SQLite SQL = plugin.getSqLite();
+        SQL.loadChunks();
     }
 
     public PlayerMU getPlayerMU(UUID uuid) {

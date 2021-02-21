@@ -3,6 +3,7 @@ main: lee.code.chunks.GoldmanChunks
 version: ${project.version}
 api-version: 1.16
 author: Lee
+depend: [RedisCache]
 commands:
   chunk:
     description: Main plugin command.

@@ -4,9 +4,7 @@ import lee.code.chunks.GoldmanChunks;
 import lombok.SneakyThrows;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -134,19 +132,19 @@ public class SQLite {
         return rs.getInt("pve") == 1;
     }
 
-    public void setTrustedBuild(String chunk, int canBuild) {
+    public void setChunkTrustedBuild(String chunk, int canBuild) {
         update("UPDATE chunks SET build ='" + canBuild + "' WHERE chunk ='" + chunk + "';");
     }
 
-    public void setTrustedBreak(String chunk, int canBreak) {
+    public void setChunkTrustedBreak(String chunk, int canBreak) {
         update("UPDATE chunks SET break ='" + canBreak + "' WHERE chunk ='" + chunk + "';");
     }
 
-    public void setTrustedInteract(String chunk, int canInteract) {
+    public void setChunkTrustedInteract(String chunk, int canInteract) {
         update("UPDATE chunks SET interact ='" + canInteract + "' WHERE chunk ='" + chunk + "';");
     }
 
-    public void setTrustedPVE(String chunk, int canPVE) {
+    public void setChunkTrustedPVE(String chunk, int canPVE) {
         update("UPDATE chunks SET pve ='" + canPVE + "' WHERE chunk ='" + chunk + "';");
     }
 
@@ -161,24 +159,8 @@ public class SQLite {
         } else update("UPDATE chunks SET trusted ='" + trust + "' WHERE chunk ='" + chunk + "';");
     }
 
-    @SneakyThrows
-    public void removeChunkTrusted(String chunk, String untrust) {
-        ResultSet rs = getResult("SELECT * FROM chunks WHERE chunk = '" + chunk + "';");
-        String players = rs.getString("trusted");
-        String[] split = StringUtils.split(players, ',');
-        List<String> playerList = new ArrayList<>();
-
-        for (String trusted : split) {
-            UUID trustedUUID = UUID.fromString(trusted);
-            OfflinePlayer player = Bukkit.getOfflinePlayer(trustedUUID);
-            String name = player.getName();
-            if (name != null && name.equals(untrust)) playerList.add(trusted);
-        }
-
-        if (!playerList.isEmpty()) {
-            String trusted = StringUtils.join(playerList, ",");
-            update("UPDATE chunks SET trusted ='" + trusted + "' WHERE chunk ='" + chunk + "';");
-        } else update("UPDATE chunks SET trusted ='n' WHERE chunk ='" + chunk + "';");
+    public void setChunkTrusted(String chunk, String trusted) {
+        update("UPDATE chunks SET trusted ='" + trusted + "' WHERE chunk ='" + chunk + "';");
     }
 
     @SneakyThrows
@@ -218,6 +200,11 @@ public class SQLite {
     public void claimChunk(String chunk, UUID uuid) {
         update("INSERT INTO chunks (chunk, owner, trusted, build, break, interact, pve, pvp, monster_spawning, explosions) VALUES( '" + chunk + "','" + uuid + "', 'n', '1', '1', '1', '1', '0', '0', '0');");
         addClaimedAmount(uuid);
+    }
+
+    public void unclaimChunk(String chunk, UUID uuid, int claimAmount) {
+        update("DELETE FROM chunks WHERE chunk = '" + chunk + "';");
+        update("UPDATE player_data SET claimed ='" + claimAmount + "' WHERE player ='" + uuid + "';");
     }
 
     @SneakyThrows
@@ -273,16 +260,11 @@ public class SQLite {
         update("UPDATE chunks SET monster_spawning ='" + canSpawnMonster + "' WHERE chunk ='" + chunk + "';");
     }
 
-    public void setChunkExplosion(String chunk, int canExplode) {
+    public void setChunkExplode(String chunk, int canExplode) {
         update("UPDATE chunks SET explosions ='" + canExplode + "' WHERE chunk ='" + chunk + "';");
     }
 
-    public void unClaimChunk(String chunk, UUID uuid) {
-        update("DELETE FROM chunks WHERE chunk = '" + chunk + "';");
-        subtractClaimedAmount(uuid);
-    }
-
-    public void deleteAllClaimedChunks(UUID uuid) {
+    public void unclaimAllChunks(UUID uuid) {
         update("DELETE FROM chunks WHERE owner = '" + uuid + "';");
         update("UPDATE player_data SET claimed ='" + 0 + "' WHERE player ='" + uuid + "';");
     }
@@ -576,5 +558,33 @@ public class SQLite {
 
         if (!player.isOp()) return defaultClaims + bonusClaims + accruedClaims;
         else return maxClaims;
+    }
+
+    public void loadChunks() {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
+        try {
+            ResultSet rs = getResult("SELECT * FROM chunks;");
+
+            int count = 0;
+            while (rs.next()) {
+                String chunk = rs.getString("chunk");
+                String uuid = rs.getString("owner");
+                String trusted = rs.getString("trusted");
+                String canTrustedBuild = rs.getString("build");
+                String canTrustedBreak = rs.getString("break");
+                String canTrustedInteract = rs.getString("interact");
+                String canTrustedPvE = rs.getString("pve");
+                String canPvP = rs.getString("pvp");
+                String canSpawnMonsters = rs.getString("monster_spawning");
+                String canExplode = rs.getString("explosions");
+                cache.setChunk(chunk, uuid, trusted, canTrustedBuild, canTrustedBreak, canTrustedInteract, canTrustedPvE, canPvP, canSpawnMonsters, canExplode);
+                count++;
+            }
+            System.out.println(plugin.getPU().format("&6Chunk Claims Loaded: &a" + count));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }
