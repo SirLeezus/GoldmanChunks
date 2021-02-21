@@ -14,7 +14,7 @@ public class JoinQuitListener implements Listener {
     public void onJoinEvent(PlayerJoinEvent e) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         UUID uuid = e.getPlayer().getUniqueId();
-        if (!plugin.getSqLite().hasPlayerData(uuid)) plugin.getSqLite().createPlayerDataTable(uuid);
+        if (!plugin.getSqLite().hasPlayerData(uuid)) plugin.getSqLite().createPlayerData(uuid);
     }
 
     @EventHandler

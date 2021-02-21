@@ -65,6 +65,7 @@ public class Data {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         SQLite SQL = plugin.getSqLite();
         SQL.loadChunks();
+        SQL.loadPlayerData();
     }
 
     public PlayerMU getPlayerMU(UUID uuid) {

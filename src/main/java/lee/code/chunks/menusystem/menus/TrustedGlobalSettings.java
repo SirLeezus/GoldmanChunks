@@ -159,7 +159,7 @@ public class TrustedGlobalSettings extends Menu {
                 case 16:
                     allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
                     allow.setItemMeta(allowMeta);
-                    plugin.getSqLite().setGlobalTrustedPVE(uuid, 1);
+                    plugin.getSqLite().setGlobalTrustedPvE(uuid, 1);
                     inventory.setItem(slot, allow);
                     break;
 
@@ -190,7 +190,7 @@ public class TrustedGlobalSettings extends Menu {
                 case 16:
                     denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
                     deny.setItemMeta(denyMeta);
-                    plugin.getSqLite().setGlobalTrustedPVE(uuid, 0);
+                    plugin.getSqLite().setGlobalTrustedPvE(uuid, 0);
                     inventory.setItem(slot, deny);
                     break;
             }

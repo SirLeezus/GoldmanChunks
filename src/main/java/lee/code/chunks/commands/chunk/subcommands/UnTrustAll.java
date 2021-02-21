@@ -39,7 +39,7 @@ public class UnTrustAll extends SubCommand {
 
         if (args.length > 1) {
             if (SQL.getGlobalTrustedPlayers(uuid).contains(args[1])) {
-                SQL.removeGlobalTrustedPlayer(uuid, args[1]);
+                SQL.removeTrustedGlobal(uuid, args[1]);
                 player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_UNTRUSTALL_REMOVED_PLAYER.getString(new String[] { args[1] }));
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNTRUSTALL_PLAYER_NOT_TRUSTED.getString(new String[] { args[1] }));
         }

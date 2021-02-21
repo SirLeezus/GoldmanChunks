@@ -49,7 +49,7 @@ public class TrustAll extends SubCommand {
                 return;
             }
 
-            plugin.getSqLite().addGlobalTrustedPlayer(player.getUniqueId(), target.getUniqueId());
+            plugin.getSqLite().setTrustedGlobal(player.getUniqueId(), target.getUniqueId());
             player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_TRUSTALL_ADDED_PLAYER.getString(new String[] { target.getName() }));
         }
     }

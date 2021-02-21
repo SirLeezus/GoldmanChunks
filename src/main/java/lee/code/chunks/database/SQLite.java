@@ -71,38 +71,38 @@ public class SQLite {
                 "`chunk` varchar PRIMARY KEY," +
                 "`owner` varchar NOT NULL," +
                 "`trusted` varchar NOT NULL," +
-                "`build` int NOT NULL," +
-                "`break` int NOT NULL," +
-                "`interact` int NOT NULL," +
-                "`pve` int NOT NULL," +
-                "`pvp` int NOT NULL," +
-                "`monster_spawning` int NOT NULL," +
-                "`explosions` int NOT NULL" +
+                "`build` varchar NOT NULL," +
+                "`break` varchar NOT NULL," +
+                "`interact` varchar NOT NULL," +
+                "`pve` varchar NOT NULL," +
+                "`pvp` varchar NOT NULL," +
+                "`monster_spawning` varchar NOT NULL," +
+                "`explosions` varchar NOT NULL" +
                 ");");
 
         //admin table
         update("CREATE TABLE IF NOT EXISTS admin_chunks (" +
                 "`chunk` varchar PRIMARY KEY," +
-                "`build` int NOT NULL," +
-                "`break` int NOT NULL," +
-                "`interact` int NOT NULL," +
-                "`pve` int NOT NULL," +
-                "`pvp` int NOT NULL," +
-                "`monster_spawning` int NOT NULL," +
-                "`explosions` int NOT NULL" +
+                "`build` varchar NOT NULL," +
+                "`break` varchar NOT NULL," +
+                "`interact` varchar NOT NULL," +
+                "`pve` varchar NOT NULL," +
+                "`pvp` varchar NOT NULL," +
+                "`monster_spawning` varchar NOT NULL," +
+                "`explosions` varchar NOT NULL" +
                 ");");
 
         //player table
         update("CREATE TABLE IF NOT EXISTS player_data (" +
                 "`player` varchar PRIMARY KEY," +
-                "`claimed` int NOT NULL," +
-                "`bonus_claims` int NOT NULL," +
-                "`accrued_claims` int NOT NULL," +
+                "`claimed` varchar NOT NULL," +
+                "`bonus_claims` varchar NOT NULL," +
+                "`accrued_claims` varchar NOT NULL," +
                 "`trusted_global` varchar NOT NULL," +
-                "`build` int NOT NULL," +
-                "`break` int NOT NULL," +
-                "`interact` int NOT NULL," +
-                "`pve` int NOT NULL" +
+                "`build` varchar NOT NULL," +
+                "`break` varchar NOT NULL," +
+                "`interact` varchar NOT NULL," +
+                "`pve` varchar NOT NULL" +
                 ");");
     }
 
@@ -197,9 +197,9 @@ public class SQLite {
 
     //PLAYER CHUNK DATA
 
-    public void claimChunk(String chunk, UUID uuid) {
+    public void claimChunk(String chunk, UUID uuid, int amount) {
         update("INSERT INTO chunks (chunk, owner, trusted, build, break, interact, pve, pvp, monster_spawning, explosions) VALUES( '" + chunk + "','" + uuid + "', 'n', '1', '1', '1', '1', '0', '0', '0');");
-        addClaimedAmount(uuid);
+        update("UPDATE player_data SET claimed ='" + amount + "' WHERE player ='" + uuid + "';");
     }
 
     public void unclaimChunk(String chunk, UUID uuid, int claimAmount) {
@@ -381,7 +381,7 @@ public class SQLite {
         return rs.getInt("claimed") != 0;
     }
 
-    public void createPlayerDataTable(UUID uuid) {
+    public void createPlayerData(UUID uuid) {
         update("INSERT INTO player_data (player, claimed, bonus_claims, accrued_claims, trusted_global, build, break, interact, pve) VALUES( '" + uuid + "', '0', '0', '0', 'n', '1', '1', '1', '1');");
     }
 
@@ -417,7 +417,7 @@ public class SQLite {
         } else return false;
     }
 
-    public void setAccruedClaims(UUID uuid, int amount) {
+    public void setAccruedClaims(UUID uuid, String amount) {
         update("UPDATE player_data SET accrued_claims = '" + amount + "' WHERE player ='" + uuid + "';");
     }
 
@@ -437,18 +437,11 @@ public class SQLite {
         } else update("UPDATE player_data SET bonus_claims = '" + amount + "' WHERE player ='" + uuid + "';");
     }
 
-    public void setBonusClaims(UUID uuid, int amount) {
+    public void setBonusClaims(UUID uuid, String amount) {
         update("UPDATE player_data SET bonus_claims = '" + amount + "' WHERE player ='" + uuid + "';");
     }
 
-    @SneakyThrows
     public void removeBonusClaims(UUID uuid, int amount) {
-        ResultSet rs = getResult("SELECT * FROM player_data WHERE player = '" + uuid + "';");
-
-        int currentAmount = rs.getInt("bonus_claims");
-        if (amount > currentAmount) amount = 0;
-        else amount = currentAmount - amount;
-
         update("UPDATE player_data SET bonus_claims = '" + amount + "' WHERE player ='" + uuid + "';");
     }
 
@@ -458,33 +451,8 @@ public class SQLite {
         return rs.getInt("bonus_claims");
     }
 
-    @SneakyThrows
-    public void removeGlobalTrustedPlayer(UUID uuid, String untrust) {
-        ResultSet rs = getResult("SELECT * FROM player_data WHERE player = '" + uuid + "';");
-
-        String players = rs.getString("trusted_global");
-        String[] split = StringUtils.split(players, ',');
-        List<String> playerList = new ArrayList<>();
-
-        for (String trusted : split) {
-            if (!Bukkit.getOfflinePlayer(UUID.fromString(trusted)).getName().equals(untrust)) playerList.add(trusted);
-        }
-
-        if (!playerList.isEmpty()) {
-            String trusted = StringUtils.join(playerList, ",");
-            update("UPDATE player_data SET trusted_global ='" + trusted + "' WHERE player ='" + uuid + "';");
-        } else update("UPDATE player_data SET trusted_global ='n' WHERE player ='" + uuid + "';");
-    }
-
-    @SneakyThrows
-    public void addGlobalTrustedPlayer(UUID uuid, UUID trust) {
-        ResultSet rs = getResult("SELECT * FROM player_data WHERE player = '" + uuid + "';");
-
-        if (!rs.getString("trusted_global").equals("n")) {
-            String trusted = rs.getString("trusted_global") + "," + trust;
-            update("UPDATE player_data SET trusted_global ='" + trusted + "' WHERE player ='" + uuid + "';");
-
-        } else update("UPDATE player_data SET trusted_global ='" + trust + "' WHERE player ='" + uuid + "';");
+    public void setTrustedGlobal(String uuid, String trust) {
+        update("UPDATE player_data SET trusted_global ='" + trust + "' WHERE player ='" + uuid + "';");
     }
 
     @SneakyThrows
@@ -524,19 +492,19 @@ public class SQLite {
         return rs.getInt("pve") == 1;
     }
 
-    public void setGlobalTrustedBuild(UUID uuid, int canBuild) {
+    public void setGlobalTrustedBuild(String uuid, String canBuild) {
         update("UPDATE player_data SET build ='" + canBuild + "' WHERE player ='" + uuid + "';");
     }
 
-    public void setGlobalTrustedBreak(UUID uuid, int canBreak) {
+    public void setGlobalTrustedBreak(String uuid, String canBreak) {
         update("UPDATE player_data SET break ='" + canBreak + "' WHERE player ='" + uuid + "';");
     }
 
-    public void setGlobalTrustedInteract(UUID uuid, int canInteract) {
+    public void setGlobalTrustedInteract(String uuid, String canInteract) {
         update("UPDATE player_data SET interact ='" + canInteract + "' WHERE player ='" + uuid + "';");
     }
 
-    public void setGlobalTrustedPVE(UUID uuid, int canPVE) {
+    public void setGlobalTrustedPvE(String uuid, String canPVE) {
         update("UPDATE player_data SET pve ='" + canPVE + "' WHERE player ='" + uuid + "';");
     }
 
@@ -586,5 +554,32 @@ public class SQLite {
             e.printStackTrace();
         }
 
+    }
+
+    public void loadPlayerData() {
+
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
+        try {
+            ResultSet rs = getResult("SELECT * FROM chunks;");
+
+            int count = 0;
+            while (rs.next()) {
+                String uuid = rs.getString("player");
+                String claimed = rs.getString("claimed");
+                String bonusClaimed = rs.getString("bonus_claims");
+                String accruedClaims = rs.getString("accrued_claims");
+                String trustedGlobal = rs.getString("trusted_global");
+                String trustedGlobalBuild = rs.getString("build");
+                String trustedGlobalBreak = rs.getString("break");
+                String trustedGlobalInteract = rs.getString("interact");
+                String trustedGlobalPvE = rs.getString("pve");
+                cache.setPlayerData(uuid, claimed, bonusClaimed, accruedClaims, trustedGlobal, trustedGlobalBuild, trustedGlobalBreak, trustedGlobalInteract, trustedGlobalPvE);
+                count++;
+            }
+            System.out.println(plugin.getPU().format("&6Players Loaded: &a" + count));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
