@@ -44,7 +44,7 @@ public class Trusted extends SubCommand {
         if (cache.isChunkOwner(chunkCord, uuid)) trusted = String.join(", ", cache.getChunkTrustedNames(chunkCord));
         else trusted = Lang.ERROR_COMMAND_TRUSTED_NOT_CHUNK_OWNER.getString(null);
 
-        String globalTrusted = String.join(", ", cache.getTrustedGlobalNames(uuid));
+        String globalTrusted = String.join(", ", cache.getGlobalTrustedNames(uuid));
 
         player.sendMessage(Lang.COMMAND_TRUSTED_HEADER.getString(null));
         player.sendMessage("");

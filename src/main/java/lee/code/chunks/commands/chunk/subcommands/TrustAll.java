@@ -46,12 +46,12 @@ public class TrustAll extends SubCommand {
                 return;
             }
 
-            if (cache.isTrustedGlobal(player.getUniqueId(), target.getUniqueId())) {
+            if (cache.isGlobalTrusted(player.getUniqueId(), target.getUniqueId())) {
                 player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_TRUSTALL_ALREADY_ADDED.getString(new String[] { target.getName() }));
                 return;
             }
 
-            cache.addTrustedGlobal(player.getUniqueId(), target.getUniqueId());
+            cache.addGlobalTrusted(player.getUniqueId(), target.getUniqueId());
             player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_TRUSTALL_ADDED_PLAYER.getString(new String[] { target.getName() }));
         }
     }

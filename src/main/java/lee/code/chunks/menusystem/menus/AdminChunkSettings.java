@@ -1,6 +1,7 @@
 package lee.code.chunks.menusystem.menus;
 
 import lee.code.chunks.GoldmanChunks;
+import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.Menu;
 import lee.code.chunks.menusystem.PlayerMU;
@@ -67,6 +68,7 @@ public class AdminChunkSettings extends Menu {
     @Override
     public void setMenuItems() {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
         setFillerGlass();
 
         ItemStack allow = new ItemStack(permTrueItem);
@@ -79,7 +81,7 @@ public class AdminChunkSettings extends Menu {
         Chunk chunk = player.getLocation().getChunk();
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
-        if (plugin.getSqLite().canAdminChunkExplode(chunkCord)) {
+        if (cache.canAdminChunkExplode(chunkCord)) {
             allowMeta.setDisplayName(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(10, allow);
@@ -89,7 +91,7 @@ public class AdminChunkSettings extends Menu {
             inventory.setItem(10, deny);
         }
 
-        if (plugin.getSqLite().canAdminChunkBuild(chunkCord)) {
+        if (cache.canAdminChunkBuild(chunkCord)) {
             allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(11, allow);
@@ -99,7 +101,7 @@ public class AdminChunkSettings extends Menu {
             inventory.setItem(11, deny);
         }
 
-        if (plugin.getSqLite().canAdminChunkBreak(chunkCord)) {
+        if (cache.canAdminChunkBreak(chunkCord)) {
             allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(12, allow);
@@ -109,7 +111,7 @@ public class AdminChunkSettings extends Menu {
             inventory.setItem(12, deny);
         }
 
-        if (plugin.getSqLite().canAdminChunkInteract(chunkCord)) {
+        if (cache.canAdminChunkInteract(chunkCord)) {
             allowMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(13, allow);
@@ -119,7 +121,7 @@ public class AdminChunkSettings extends Menu {
             inventory.setItem(13, deny);
         }
 
-        if (plugin.getSqLite().canAdminChunkSpawnMonsters(chunkCord)) {
+        if (cache.canAdminChunkSpawnMonsters(chunkCord)) {
             allowMeta.setDisplayName(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(14, allow);
@@ -129,7 +131,7 @@ public class AdminChunkSettings extends Menu {
             inventory.setItem(14, deny);
         }
 
-        if (plugin.getSqLite().canAdminChunkPVP(chunkCord)) {
+        if (cache.canAdminChunkPvP(chunkCord)) {
             allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(15, allow);
@@ -140,7 +142,7 @@ public class AdminChunkSettings extends Menu {
             inventory.setItem(15, deny);
         }
 
-        if (plugin.getSqLite().canAdminChunkPVE(chunkCord)) {
+        if (cache.canAdminChunkPvE(chunkCord)) {
             allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(16, allow);
@@ -154,9 +156,13 @@ public class AdminChunkSettings extends Menu {
 
     private void updatePermItem(ItemStack item, int slot, Chunk chunk) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
+
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+
         ItemStack allow = new ItemStack(permTrueItem);
         ItemStack deny = new ItemStack(permFalseItem);
+
         ItemMeta allowMeta = allow.getItemMeta();
         ItemMeta denyMeta = deny.getItemMeta();
 
@@ -166,43 +172,43 @@ public class AdminChunkSettings extends Menu {
                 case 10:
                     allowMeta.setDisplayName(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[]{Lang.TRUE.getString(null)}));
                     allow.setItemMeta(allowMeta);
-                    plugin.getSqLite().setAdminChunkExplosion(chunkCord, 1);
+                    cache.setAdminChunkExplode(chunkCord, true);
                     inventory.setItem(slot, allow);
                     break;
                 case 11:
                     allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{Lang.TRUE.getString(null)}));
                     allow.setItemMeta(allowMeta);
-                    plugin.getSqLite().setAdminChunkBuild(chunkCord, 1);
+                    cache.setAdminChunkBuild(chunkCord, true);
                     inventory.setItem(slot, allow);
                     break;
                 case 12:
                     allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.TRUE.getString(null)}));
                     allow.setItemMeta(allowMeta);
-                    plugin.getSqLite().setAdminChunkBreak(chunkCord, 1);
+                    cache.setAdminChunkBreak(chunkCord, true);
                     inventory.setItem(slot, allow);
                     break;
                 case 13:
                     allowMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.TRUE.getString(null)}));
                     allow.setItemMeta(allowMeta);
-                    plugin.getSqLite().setAdminChunkInteract(chunkCord, 1);
+                    cache.setAdminChunkInteract(chunkCord, true);
                     inventory.setItem(slot, allow);
                     break;
                 case 14:
                     allowMeta.setDisplayName(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{Lang.TRUE.getString(null)}));
                     allow.setItemMeta(allowMeta);
-                    plugin.getSqLite().setAdminChunkSpawnMonsters(chunkCord, 1);
+                    cache.setAdminChunkSpawnMonsters(chunkCord, true);
                     inventory.setItem(slot, allow);
                     break;
                 case 15:
                     allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
                     allow.setItemMeta(allowMeta);
-                    plugin.getSqLite().setAdminChunkPvP(chunkCord, 1);
+                    cache.setAdminChunkPvP(chunkCord, true);
                     inventory.setItem(slot, allow);
                     break;
                 case 16:
                     allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
                     allow.setItemMeta(allowMeta);
-                    plugin.getSqLite().setAdminChunkPvE(chunkCord, 1);
+                    cache.setAdminChunkPvE(chunkCord, true);
                     inventory.setItem(slot, allow);
                     break;
             }
@@ -213,43 +219,43 @@ public class AdminChunkSettings extends Menu {
                 case 10:
                     denyMeta.setDisplayName(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[]{Lang.FALSE.getString(null)}));
                     deny.setItemMeta(denyMeta);
-                    plugin.getSqLite().setAdminChunkExplosion(chunkCord, 0);
+                    cache.setAdminChunkExplode(chunkCord, false);
                     inventory.setItem(slot, deny);
                     break;
                 case 11:
                     denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{Lang.FALSE.getString(null)}));
                     deny.setItemMeta(denyMeta);
-                    plugin.getSqLite().setAdminChunkBuild(chunkCord, 0);
+                    cache.setAdminChunkBuild(chunkCord, false);
                     inventory.setItem(slot, deny);
                     break;
                 case 12:
                     denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.FALSE.getString(null)}));
                     deny.setItemMeta(denyMeta);
-                    plugin.getSqLite().setAdminChunkBreak(chunkCord, 0);
+                    cache.setAdminChunkBreak(chunkCord, false);
                     inventory.setItem(slot, deny);
                     break;
                 case 13:
                     denyMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.FALSE.getString(null)}));
                     deny.setItemMeta(denyMeta);
-                    plugin.getSqLite().setAdminChunkInteract(chunkCord, 0);
+                    cache.setAdminChunkInteract(chunkCord, false);
                     inventory.setItem(slot, deny);
                     break;
                 case 14:
                     denyMeta.setDisplayName(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{Lang.FALSE.getString(null)}));
                     deny.setItemMeta(denyMeta);
-                    plugin.getSqLite().setAdminChunkSpawnMonsters(chunkCord, 0);
+                    cache.setAdminChunkSpawnMonsters(chunkCord, false);
                     inventory.setItem(slot, deny);
                     break;
                 case 15:
                     denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
                     deny.setItemMeta(denyMeta);
-                    plugin.getSqLite().setAdminChunkPvP(chunkCord, 0);
+                    cache.setAdminChunkPvP(chunkCord, false);
                     inventory.setItem(slot, deny);
                     break;
                 case 16:
                     denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
                     deny.setItemMeta(denyMeta);
-                    plugin.getSqLite().setAdminChunkPvE(chunkCord, 0);
+                    cache.setAdminChunkPvE(chunkCord, false);
                     inventory.setItem(slot, deny);
                     break;
             }

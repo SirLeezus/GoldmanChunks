@@ -1,6 +1,7 @@
 package lee.code.chunks.menusystem.menus;
 
 import lee.code.chunks.GoldmanChunks;
+import lee.code.chunks.database.Cache;
 import lee.code.chunks.database.SQLite;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.Menu;
@@ -30,6 +31,7 @@ public class ChunkManager extends Menu {
     @Override
     public void handleMenu(InventoryClickEvent e) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
 
         Player player = pmu.getOwner();
 
@@ -40,16 +42,15 @@ public class ChunkManager extends Menu {
         Chunk chunk = player.getLocation().getChunk();
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);
         UUID uuid = player.getUniqueId();
-        SQLite SQL = plugin.getSqLite();
 
         switch (e.getSlot()) {
             case 11:
-                if (SQL.isChunkOwner(chunkCord, uuid)) {
+                if (cache.isChunkOwner(chunkCord, uuid)) {
                     new TrustedChunkSettings(pmu).open();
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_MANAGE_NOT_CHUNK_OWNER.getString(null));
                 break;
             case 13:
-                if (SQL.isChunkOwner(chunkCord, uuid)) {
+                if (cache.isChunkOwner(chunkCord, uuid)) {
                     new GeneralChunkSettings(pmu).open();
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_MANAGE_NOT_CHUNK_OWNER.getString(null));
                 break;

@@ -2,7 +2,7 @@ package lee.code.chunks;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import lee.code.chunks.database.SQLite;
+import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Values;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -92,7 +92,7 @@ public class PU {
     public void accruedClaimTimer() {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-        SQLite SQL = plugin.getSqLite();
+        Cache cache = plugin.getCache();
 
         scheduler.scheduleSyncRepeatingTask(plugin, () -> {
             int maxAccruedClaims = Values.ACCRUED_CLAIMS_MAX.getValue();
@@ -107,7 +107,7 @@ public class PU {
                     int accruedClaims = time / baseTimeRequired * claimAmountGiven;
                     if (accruedClaims > maxAccruedClaims) accruedClaims = maxAccruedClaims;
 
-                    SQL.setAccruedClaims(uuid, accruedClaims);
+                    cache.setAccruedClaimsAmount(uuid, accruedClaims);
                 }
             }
         }, 0L, 20L * 300);

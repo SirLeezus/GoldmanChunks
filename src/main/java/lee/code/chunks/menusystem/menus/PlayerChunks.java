@@ -1,6 +1,7 @@
 package lee.code.chunks.menusystem.menus;
 
 import lee.code.chunks.GoldmanChunks;
+import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.PaginatedMenu;
 import lee.code.chunks.menusystem.PlayerMU;
@@ -34,8 +35,9 @@ public class PlayerChunks extends PaginatedMenu {
 
     @Override
     public void handleMenu(InventoryClickEvent e) {
-
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
+
         ItemStack item = e.getCurrentItem();
         Player player = (Player) e.getWhoClicked();
 
@@ -57,7 +59,7 @@ public class PlayerChunks extends PaginatedMenu {
             }
         } else if (item.equals(nextPageItem)) {
 
-            if (!((index + 1) >= plugin.getSqLite().getPlayerClaimedChunks(player.getUniqueId()).size())) {
+            if (!((index + 1) >= cache.getChunkClaims(player.getUniqueId()).size())) {
                 page = page + 1;
                 pmu.setChunkListPage(page);
                 super.open();
@@ -97,16 +99,18 @@ public class PlayerChunks extends PaginatedMenu {
 
     @Override
     public void setMenuItems() {
-        page = pmu.getChunkListPage();
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
         addMenuBorder();
 
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        page = pmu.getChunkListPage();
+
         Player player = pmu.getOwner();
         UUID uuid = player.getUniqueId();
         Chunk playerChunk = player.getLocation().getChunk();
         String playerChunkCord = plugin.getPU().formatChunkLocation(playerChunk);
 
-        List<String> chunks = plugin.getSqLite().getPlayerClaimedChunks(uuid);
+        List<String> chunks = cache.getChunkClaims(uuid);
 
         if (!chunks.contains("n")) {
 

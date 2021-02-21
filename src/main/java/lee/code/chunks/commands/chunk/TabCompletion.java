@@ -43,7 +43,7 @@ public class TabCompletion implements TabCompleter {
                 if (args.length == 2) {
                     Player player = (Player) sender;
                     UUID uuid = player.getUniqueId();
-                    return StringUtil.copyPartialMatches(args[1], cache.getTrustedGlobalNames(uuid), new ArrayList<>());
+                    return StringUtil.copyPartialMatches(args[1], cache.getGlobalTrustedNames(uuid), new ArrayList<>());
                 }
             } else if (args[0].equals("admin")) {
                 if (args.length == 2) return StringUtil.copyPartialMatches(args[1], Arrays.asList("unclaim", "unclaimall", "bypass", "bonusclaims"), new ArrayList<>());

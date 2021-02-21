@@ -43,8 +43,8 @@ public class UnTrustAll extends SubCommand {
             UUID target = Bukkit.getPlayerUniqueId(args[1]);
 
             if (target != null) {
-                if (cache.isTrustedGlobal(uuid, target)) {
-                    cache.removeTrustedGlobal(uuid, target);
+                if (cache.isGlobalTrusted(uuid, target)) {
+                    cache.removeGlobalTrusted(uuid, target);
                     player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_UNTRUSTALL_REMOVED_PLAYER.getString(new String[] { args[1] }));
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNTRUSTALL_PLAYER_NOT_TRUSTED.getString(new String[] { args[1] }));
             }

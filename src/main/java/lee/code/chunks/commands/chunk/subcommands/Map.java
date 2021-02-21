@@ -3,7 +3,6 @@ package lee.code.chunks.commands.chunk.subcommands;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
-import lee.code.chunks.database.SQLite;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -71,7 +70,7 @@ public class Map extends SubCommand {
                         chunkSquare.add("&a■");
                     } else if (cache.isChunkClaimed(chunkSelected)) {
                         UUID owner = cache.getChunkOwnerUUID(chunkSelected);
-                        if (cache.isTrustedGlobal(owner, uuid)) chunkSquare.add("&a■");
+                        if (cache.isGlobalTrusted(owner, uuid)) chunkSquare.add("&a■");
                         else chunkSquare.add("&c■");
                     } else if (cache.isAdminChunk(chunkSelected)) {
                         chunkSquare.add("&4■");

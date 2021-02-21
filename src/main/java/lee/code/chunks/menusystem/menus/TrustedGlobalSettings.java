@@ -1,6 +1,7 @@
 package lee.code.chunks.menusystem.menus;
 
 import lee.code.chunks.GoldmanChunks;
+import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.Menu;
 import lee.code.chunks.menusystem.PlayerMU;
@@ -62,6 +63,7 @@ public class TrustedGlobalSettings extends Menu {
     @Override
     public void setMenuItems() {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
         setFillerGlass();
 
         ItemStack allow = new ItemStack(permTrueItem);
@@ -74,7 +76,7 @@ public class TrustedGlobalSettings extends Menu {
         UUID uuid = player.getUniqueId();
 
         //build
-        if (plugin.getSqLite().canGlobalTrustedBuild(uuid)) {
+        if (cache.canGlobalTrustedBuild(uuid)) {
             allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(10, allow);
@@ -86,7 +88,7 @@ public class TrustedGlobalSettings extends Menu {
         }
 
         //break
-        if (plugin.getSqLite().canGlobalTrustedBreak(uuid)) {
+        if (cache.canGlobalTrustedBreak(uuid)) {
             allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(12, allow);
@@ -98,7 +100,7 @@ public class TrustedGlobalSettings extends Menu {
         }
 
         //interact
-        if (plugin.getSqLite().canGlobalTrustedInteract(uuid)) {
+        if (cache.canGlobalTrustedInteract(uuid)) {
             allowMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(14, allow);
@@ -110,7 +112,7 @@ public class TrustedGlobalSettings extends Menu {
         }
 
         //pve
-        if (plugin.getSqLite().canGlobalTrustedPVE(uuid)) {
+        if (cache.canGlobalTrustedPvE(uuid)) {
             allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
             allow.setItemMeta(allowMeta);
             inventory.setItem(16, allow);
@@ -127,10 +129,14 @@ public class TrustedGlobalSettings extends Menu {
 
     private void updatePermItem(ItemStack item, int slot) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
+
         Player player = pmu.getOwner();
         UUID uuid = player.getUniqueId();
+
         ItemStack allow = new ItemStack(permTrueItem);
         ItemStack deny = new ItemStack(permFalseItem);
+
         ItemMeta allowMeta = allow.getItemMeta();
         ItemMeta denyMeta = deny.getItemMeta();
 
@@ -141,25 +147,25 @@ public class TrustedGlobalSettings extends Menu {
                 case 10:
                     allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
                     allow.setItemMeta(allowMeta);
-                    plugin.getSqLite().setGlobalTrustedBuild(uuid, 1);
+                    cache.setGlobalTrustedBuild(uuid, true);
                     inventory.setItem(slot, allow);
                     break;
                 case 12:
                     allowMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
                     allow.setItemMeta(allowMeta);
-                    plugin.getSqLite().setGlobalTrustedBreak(uuid, 1);
+                    cache.setGlobalTrustedBreak(uuid, true);
                     inventory.setItem(slot, allow);
                     break;
                 case 14:
                     allowMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
                     allow.setItemMeta(allowMeta);
-                    plugin.getSqLite().setGlobalTrustedInteract(uuid, 1);
+                    cache.setGlobalTrustedInteract(uuid, true);
                     inventory.setItem(slot, allow);
                     break;
                 case 16:
                     allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
                     allow.setItemMeta(allowMeta);
-                    plugin.getSqLite().setGlobalTrustedPvE(uuid, 1);
+                    cache.setGlobalTrustedPvE(uuid, true);
                     inventory.setItem(slot, allow);
                     break;
 
@@ -172,25 +178,25 @@ public class TrustedGlobalSettings extends Menu {
                 case 10:
                     denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
                     deny.setItemMeta(denyMeta);
-                    plugin.getSqLite().setGlobalTrustedBuild(uuid, 0);
+                    cache.setGlobalTrustedBuild(uuid, false);
                     inventory.setItem(slot, deny);
                     break;
                 case 12:
                     denyMeta.setDisplayName(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
                     deny.setItemMeta(denyMeta);
-                    plugin.getSqLite().setGlobalTrustedBreak(uuid, 0);
+                    cache.setGlobalTrustedBreak(uuid, false);
                     inventory.setItem(slot, deny);
                     break;
                 case 14:
                     denyMeta.setDisplayName(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
                     deny.setItemMeta(denyMeta);
-                    plugin.getSqLite().setGlobalTrustedInteract(uuid, 0);
+                    cache.setGlobalTrustedInteract(uuid, false);
                     inventory.setItem(slot, deny);
                     break;
                 case 16:
                     denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
                     deny.setItemMeta(denyMeta);
-                    plugin.getSqLite().setGlobalTrustedPvE(uuid, 0);
+                    cache.setGlobalTrustedPvE(uuid, false);
                     inventory.setItem(slot, deny);
                     break;
             }

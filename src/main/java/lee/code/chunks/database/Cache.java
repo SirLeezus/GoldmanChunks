@@ -147,7 +147,7 @@ public class Cache {
     }
 
     //TODO get chunk claims when able to use scan
-    public List<String> getChunkClaims() {
+    public List<String> getChunkClaims(UUID uuid) {
         return null;
     }
 
@@ -552,7 +552,7 @@ public class Cache {
         }
     }
 
-    public boolean isTrustedGlobal(UUID uuid, UUID trusted) {
+    public boolean isGlobalTrusted(UUID uuid, UUID trusted) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
@@ -569,7 +569,7 @@ public class Cache {
         }
     }
 
-    public void addTrustedGlobal(UUID uuid, UUID trusted) {
+    public void addGlobalTrusted(UUID uuid, UUID trusted) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
         SQLite SQL = plugin.getSqLite();
@@ -589,7 +589,7 @@ public class Cache {
         }
     }
 
-    public List<String> getTrustedGlobalNames(UUID uuid) {
+    public List<String> getGlobalTrustedNames(UUID uuid) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
@@ -607,7 +607,7 @@ public class Cache {
         }
     }
 
-    public void removeTrustedGlobal(UUID uuid, UUID trusted) {
+    public void removeGlobalTrusted(UUID uuid, UUID trusted) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
         SQLite SQL = plugin.getSqLite();
@@ -630,7 +630,7 @@ public class Cache {
         }
     }
 
-    public boolean canTrustedGlobalBuild(UUID uuid) {
+    public boolean canGlobalTrustedBuild(UUID uuid) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
@@ -642,7 +642,7 @@ public class Cache {
         }
     }
 
-    public void setTrustedGlobalBuild(UUID uuid, boolean canBuild) {
+    public void setGlobalTrustedBuild(UUID uuid, boolean canBuild) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
         SQLite SQL = plugin.getSqLite();
@@ -657,7 +657,7 @@ public class Cache {
         }
     }
 
-    public boolean canTrustedGlobalBreak(UUID uuid) {
+    public boolean canGlobalTrustedBreak(UUID uuid) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
@@ -669,7 +669,7 @@ public class Cache {
         }
     }
 
-    public void setTrustedGlobalBreak(UUID uuid, boolean canBreak) {
+    public void setGlobalTrustedBreak(UUID uuid, boolean canBreak) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
         SQLite SQL = plugin.getSqLite();
@@ -684,7 +684,7 @@ public class Cache {
         }
     }
 
-    public boolean canTrustedGlobalInteract(UUID uuid) {
+    public boolean canGlobalTrustedInteract(UUID uuid) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
@@ -696,7 +696,7 @@ public class Cache {
         }
     }
 
-    public void setTrustedGlobalInteract(UUID uuid, boolean canInteract) {
+    public void setGlobalTrustedInteract(UUID uuid, boolean canInteract) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
         SQLite SQL = plugin.getSqLite();
@@ -711,7 +711,7 @@ public class Cache {
         }
     }
 
-    public boolean canTrustedGlobalPvE(UUID uuid) {
+    public boolean canGlobalTrustedPvE(UUID uuid) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
@@ -723,7 +723,7 @@ public class Cache {
         }
     }
 
-    public void setTrustedGlobalPvE(UUID uuid, boolean canPvE) {
+    public void setGlobalTrustedPvE(UUID uuid, boolean canPvE) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
         SQLite SQL = plugin.getSqLite();
