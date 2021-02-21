@@ -2,6 +2,7 @@ package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
+import lee.code.chunks.database.Cache;
 import lee.code.chunks.database.SQLite;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Bukkit;
@@ -39,7 +40,7 @@ public class Map extends SubCommand {
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         UUID uuid = player.getUniqueId();
-        SQLite SQL = plugin.getSqLite();
+        Cache cache = plugin.getCache();
 
         List<String> chunkMap = new ArrayList<>();
         List<String> chunkSquare = new ArrayList<>();
@@ -64,15 +65,15 @@ public class Map extends SubCommand {
 
                     if ((chunkSelected).equals(chunkCord)) {
                         chunkSquare.add("&9■");
-                    } else if (SQL.isChunkOwner(chunkSelected, uuid)) {
+                    } else if (cache.isChunkOwner(chunkSelected, uuid)) {
                         chunkSquare.add("&2■");
-                    } else if (SQL.isChunkTrusted(chunkSelected, uuid)) {
+                    } else if (cache.isChunkTrusted(chunkSelected, uuid)) {
                         chunkSquare.add("&a■");
-                    } else if (SQL.isChunkClaimed(chunkSelected)) {
-                        UUID owner = SQL.getChunkOwnerUUID(chunkSelected);
-                        if (SQL.isGlobalTrusted(owner, uuid)) chunkSquare.add("&a■");
+                    } else if (cache.isChunkClaimed(chunkSelected)) {
+                        UUID owner = cache.getChunkOwnerUUID(chunkSelected);
+                        if (cache.isTrustedGlobal(owner, uuid)) chunkSquare.add("&a■");
                         else chunkSquare.add("&c■");
-                    } else if (SQL.isAdminChunk(chunkSelected)) {
+                    } else if (cache.isAdminChunk(chunkSelected)) {
                         chunkSquare.add("&4■");
                     } else {
                         chunkSquare.add("&7■");

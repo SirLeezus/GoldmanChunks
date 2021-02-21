@@ -9,9 +9,6 @@ import org.bukkit.util.StringUtil;
 
 import java.util.*;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 public class AdminTabCompletion implements TabCompleter {
 
     private final List<String> subCommands = Arrays.asList("claim", "unclaim", "manage", "bypass");
@@ -19,13 +16,12 @@ public class AdminTabCompletion implements TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
 
         if (sender instanceof Player) {
             if (args.length == 1) {
                 List<String> hasCommand = new ArrayList<>();
                 for (String pluginCommand : subCommands)
-                    if (sender.hasPermission("mychunks.admin." + pluginCommand)) hasCommand.add(pluginCommand);
+                    if (sender.hasPermission("chunks.admin." + pluginCommand)) hasCommand.add(pluginCommand);
                 return StringUtil.copyPartialMatches(args[0], hasCommand, new ArrayList<>());
             }
         }

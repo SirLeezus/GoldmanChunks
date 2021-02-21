@@ -1,7 +1,7 @@
 package lee.code.chunks.commands.chunk;
 
 import lee.code.chunks.GoldmanChunks;
-import lee.code.chunks.database.SQLite;
+import lee.code.chunks.database.Cache;
 import org.bukkit.Chunk;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -19,6 +19,7 @@ public class TabCompletion implements TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
 
         if (sender instanceof Player) {
             if (args.length == 1) {
@@ -34,17 +35,15 @@ public class TabCompletion implements TabCompleter {
                 if (args.length == 2) {
                     Player player = (Player) sender;
                     UUID uuid = player.getUniqueId();
-                    SQLite SQL = plugin.getSqLite();
                     Chunk chunk = player.getLocation().getChunk();
                     String chunkCord = plugin.getPU().formatChunkLocation(chunk);
-                    if (SQL.isChunkOwner(chunkCord, uuid)) return StringUtil.copyPartialMatches(args[1], SQL.getTrustedToChunk(chunkCord), new ArrayList<>());
+                    if (cache.isChunkOwner(chunkCord, uuid)) return StringUtil.copyPartialMatches(args[1], cache.getChunkTrustedNames(chunkCord), new ArrayList<>());
                 }
             } else if (args[0].equals("untrustall")) {
                 if (args.length == 2) {
                     Player player = (Player) sender;
                     UUID uuid = player.getUniqueId();
-                    SQLite SQL = plugin.getSqLite();
-                    return StringUtil.copyPartialMatches(args[1], SQL.getGlobalTrustedPlayers(uuid), new ArrayList<>());
+                    return StringUtil.copyPartialMatches(args[1], cache.getTrustedGlobalNames(uuid), new ArrayList<>());
                 }
             } else if (args[0].equals("admin")) {
                 if (args.length == 2) return StringUtil.copyPartialMatches(args[1], Arrays.asList("unclaim", "unclaimall", "bypass", "bonusclaims"), new ArrayList<>());

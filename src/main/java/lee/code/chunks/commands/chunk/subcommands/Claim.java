@@ -2,7 +2,7 @@ package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
-import lee.code.chunks.database.SQLite;
+import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
@@ -41,21 +41,21 @@ public class Claim extends SubCommand {
             UUID uuid = player.getUniqueId();
             Chunk chunk = player.getLocation().getChunk();
             String chunkCord = plugin.getPU().formatChunkLocation(chunk);
-            SQLite SQL = plugin.getSqLite();
+            Cache cache = plugin.getCache();
 
-            if (!SQL.isChunkClaimed(chunkCord)) {
+            if (!cache.isChunkClaimed(chunkCord)) {
 
-                if (SQL.isAdminChunk(chunkCord)) {
+                if (cache.isAdminChunk(chunkCord)) {
                     player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_ADMIN_CLAIMED.getString(null));
                     return;
                 }
 
-                int playerClaimAmount = SQL.getClaimedAmount(uuid);
-                int playerMaxClaims = SQL.getMaxPlayerClaims(player);
+                int playerClaimAmount = cache.getClaimedAmount(uuid);
+                int playerMaxClaims = cache.getPlayerMaxClaimAmount(player);
 
                 if (playerClaimAmount < playerMaxClaims) {
                     playerClaimAmount++;
-                    SQL.claimChunk(chunkCord, uuid);
+                    cache.claimChunk(chunkCord, uuid);
                     player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_CLAIM_SUCCESSFUL.getString(new String[] { chunkCord, plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) }));
                     plugin.getPU().renderChunkBorder(player, chunk, "claim");
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_CLAIM_MAXED.getString(new String[] { plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) }));

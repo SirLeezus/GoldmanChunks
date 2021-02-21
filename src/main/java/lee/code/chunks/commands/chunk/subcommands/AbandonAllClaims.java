@@ -3,7 +3,6 @@ package lee.code.chunks.commands.chunk.subcommands;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
-import lee.code.chunks.database.SQLite;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -35,13 +34,13 @@ public class AbandonAllClaims extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        SQLite SQL = plugin.getSqLite();
+        Cache cache = plugin.getCache();
         UUID uuid = player.getUniqueId();
 
-        if (SQL.hasClaimedChunks(uuid)) {
-            SQL.unclaimAllChunks(uuid);
-            int maxClaims = SQL.getMaxPlayerClaims(player);
-            int totalClaims = SQL.getClaimedAmount(uuid);
+        if (cache.hasClaimedChunks(uuid)) {
+            cache.unclaimAllChunks(uuid);
+            int maxClaims = cache.getPlayerMaxClaimAmount(player);
+            int totalClaims = cache.getClaimedAmount(uuid);
 
             player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ABANDONALLCLAIMS_SUCCESSFUL.getString(new String[] { plugin.getPU().formatAmount(totalClaims), plugin.getPU().formatAmount(maxClaims) }));
         } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ABANDONALLCLAIMS_NO_CLAIMS.getString(null));

@@ -2,8 +2,9 @@ package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
-import lee.code.chunks.database.SQLite;
+import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -35,13 +36,18 @@ public class UnTrustAll extends SubCommand {
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         UUID uuid = player.getUniqueId();
-        SQLite SQL = plugin.getSqLite();
+        Cache cache = plugin.getCache();
 
         if (args.length > 1) {
-            if (SQL.getGlobalTrustedPlayers(uuid).contains(args[1])) {
-                SQL.removeTrustedGlobal(uuid, args[1]);
-                player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_UNTRUSTALL_REMOVED_PLAYER.getString(new String[] { args[1] }));
-            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNTRUSTALL_PLAYER_NOT_TRUSTED.getString(new String[] { args[1] }));
+
+            UUID target = Bukkit.getPlayerUniqueId(args[1]);
+
+            if (target != null) {
+                if (cache.isTrustedGlobal(uuid, target)) {
+                    cache.removeTrustedGlobal(uuid, target);
+                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_UNTRUSTALL_REMOVED_PLAYER.getString(new String[] { args[1] }));
+                } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNTRUSTALL_PLAYER_NOT_TRUSTED.getString(new String[] { args[1] }));
+            }
         }
     }
 

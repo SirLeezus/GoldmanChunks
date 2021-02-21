@@ -2,6 +2,7 @@ package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
+import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
@@ -35,17 +36,18 @@ public class UnClaim extends SubCommand {
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         UUID uuid = player.getUniqueId();
+        Cache cache = plugin.getCache();
 
         Chunk chunk = player.getLocation().getChunk();
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
         if (plugin.getSqLite().isChunkClaimed(chunkCord)) {
-            if (plugin.getSqLite().isChunkOwner(chunkCord, uuid)) {
-                plugin.getSqLite().unclaimChunk(chunkCord, uuid, 1);
+            if (cache.isChunkOwner(chunkCord, uuid)) {
+                cache.unclaimChunk(chunkCord, uuid);
                 player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_UNCLAIM_SUCCESSFUL.getString(new String[] { chunkCord }));
                 plugin.getPU().renderChunkBorder(player, chunk, "unclaim");
 
-            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNCLAIM_OWNER.getString(new String[] { plugin.getSqLite().getChunkOwner(chunkCord) }));
+            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNCLAIM_OWNER.getString(new String[] { cache.getChunkOwnerName(chunkCord) }));
         } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNCLAIMED_NOT_CLAIMED.getString(null));
     }
 

@@ -287,7 +287,7 @@ public class SQLite {
         update("INSERT INTO admin_chunks (chunk, build, break, interact, pve, pvp, monster_spawning, explosions) VALUES( '" + chunk + "', '0', '0', '0', '0', '0', '0', '0');");
     }
 
-    public void unClaimAdminChunk(String chunk) {
+    public void unclaimAdminChunk(String chunk) {
         update("DELETE FROM admin_chunks WHERE chunk = '" + chunk + "';");
     }
 

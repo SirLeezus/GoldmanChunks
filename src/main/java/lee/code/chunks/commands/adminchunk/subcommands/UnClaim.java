@@ -2,7 +2,7 @@ package lee.code.chunks.commands.adminchunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
-import lee.code.chunks.database.SQLite;
+import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -36,11 +36,11 @@ public class UnClaim extends SubCommand {
     public void perform(Player player, String[] args) {
 
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        SQLite SQL = plugin.getSqLite();
+        Cache cache = plugin.getCache();
         Chunk chunk = player.getLocation().getChunk();
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
-        if (!SQL.isChunkClaimed(chunkCord)) {
+        if (!cache.isChunkClaimed(chunkCord)) {
 
             Vector start = new Vector(chunk.getX(), 0, chunk.getZ());
             String world = player.getWorld().getName();
@@ -63,9 +63,9 @@ public class UnClaim extends SubCommand {
                     for(double z = min.getZ(); z <= max.getZ(); z++) {
                         String inSelectionMessage = world + ",%.0f,%.0f";
                         String chunkCordSelected = String.format(inSelectionMessage, x, z);
-                        if (SQL.isAdminChunk(chunkCordSelected)) {
+                        if (cache.isAdminChunk(chunkCordSelected)) {
                             unclaimed++;
-                            SQL.unClaimAdminChunk(chunkCordSelected);
+                            cache.unclaimAdminChunk(chunkCordSelected);
                         }
                     }
                 }

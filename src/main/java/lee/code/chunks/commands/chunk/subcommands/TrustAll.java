@@ -2,6 +2,7 @@ package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
+import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -32,6 +33,7 @@ public class TrustAll extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
 
         if (args.length > 1) {
 
@@ -44,12 +46,12 @@ public class TrustAll extends SubCommand {
                 return;
             }
 
-            if (plugin.getSqLite().isGlobalTrusted(player.getUniqueId(), target.getUniqueId())) {
+            if (cache.isTrustedGlobal(player.getUniqueId(), target.getUniqueId())) {
                 player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_TRUSTALL_ALREADY_ADDED.getString(new String[] { target.getName() }));
                 return;
             }
 
-            plugin.getSqLite().setTrustedGlobal(player.getUniqueId(), target.getUniqueId());
+            cache.addTrustedGlobal(player.getUniqueId(), target.getUniqueId());
             player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_TRUSTALL_ADDED_PLAYER.getString(new String[] { target.getName() }));
         }
     }

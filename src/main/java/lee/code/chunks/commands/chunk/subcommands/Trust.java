@@ -2,6 +2,7 @@ package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
+import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -33,6 +34,7 @@ public class Trust extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
 
         if (args.length > 1) {
 
@@ -48,14 +50,14 @@ public class Trust extends SubCommand {
             Chunk chunk = player.getLocation().getChunk();
             String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
-            if (plugin.getSqLite().isChunkTrusted(chunkCord, target.getUniqueId())) {
+            if (cache.isChunkTrusted(chunkCord, target.getUniqueId())) {
                 player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_TRUST_ALREADY_ADDED.getString(new String[] { target.getName(), chunkCord }));
                 return;
             }
 
             if (plugin.getSqLite().isChunkClaimed(chunkCord)) {
-                if (plugin.getSqLite().isChunkOwner(chunkCord, player.getUniqueId())) {
-                    plugin.getSqLite().addChunkTrusted(chunkCord, target.getUniqueId());
+                if (cache.isChunkOwner(chunkCord, player.getUniqueId())) {
+                    cache.addChunkTrusted(chunkCord, target.getUniqueId());
                     player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_TRUST_ADDED_PLAYER.getString(new String[] { target.getName(), chunkCord }));
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_TRUST_NOT_OWNER.getString(null));
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_TRUST_NOT_OWNER.getString(null));

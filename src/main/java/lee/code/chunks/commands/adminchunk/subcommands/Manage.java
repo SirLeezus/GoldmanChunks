@@ -2,7 +2,7 @@ package lee.code.chunks.commands.adminchunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
-import lee.code.chunks.database.SQLite;
+import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.menus.AdminChunkSettings;
 import org.bukkit.Chunk;
@@ -34,10 +34,10 @@ public class Manage extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        SQLite SQL = plugin.getSqLite();
+        Cache cache = plugin.getCache();
         Chunk chunk = player.getLocation().getChunk();
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);
-        if (SQL.isAdminChunk(chunkCord)) {
+        if (cache.isAdminChunk(chunkCord)) {
             new AdminChunkSettings(plugin.getData().getPlayerMU(player.getUniqueId())).open();
         } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_MANAGE_NOT_ADMIN_CHUNK.getString(null));
     }

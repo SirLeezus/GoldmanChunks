@@ -2,6 +2,7 @@ package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
+import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
@@ -37,12 +38,13 @@ public class Trusted extends SubCommand {
         UUID uuid = player.getUniqueId();
         Chunk chunk = player.getLocation().getChunk();
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+        Cache cache = plugin.getCache();
 
         String trusted;
-        if (plugin.getSqLite().isChunkOwner(chunkCord, uuid)) trusted = String.join(", ", plugin.getSqLite().getTrustedToChunk(chunkCord));
+        if (cache.isChunkOwner(chunkCord, uuid)) trusted = String.join(", ", cache.getChunkTrustedNames(chunkCord));
         else trusted = Lang.ERROR_COMMAND_TRUSTED_NOT_CHUNK_OWNER.getString(null);
 
-        String globalTrusted = String.join(", ", plugin.getSqLite().getGlobalTrustedPlayers(uuid));
+        String globalTrusted = String.join(", ", cache.getTrustedGlobalNames(uuid));
 
         player.sendMessage(Lang.COMMAND_TRUSTED_HEADER.getString(null));
         player.sendMessage("");

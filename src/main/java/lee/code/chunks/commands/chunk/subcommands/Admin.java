@@ -2,7 +2,7 @@ package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
-import lee.code.chunks.database.SQLite;
+import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -41,7 +41,7 @@ public class Admin extends SubCommand {
         if (args.length > 1) {
 
             String command = args[1];
-            SQLite SQL = plugin.getSqLite();
+            Cache cache = plugin.getCache();
             UUID uuid = player.getUniqueId();
             Chunk chunk = player.getLocation().getChunk();
             String chunkCord = plugin.getPU().formatChunkLocation(chunk);
@@ -50,18 +50,18 @@ public class Admin extends SubCommand {
 
                 case "unclaim":
 
-                    if (SQL.isChunkClaimed(chunkCord)) {
-                        UUID owner = SQL.getChunkOwnerUUID(chunkCord);
-                        SQL.unclaimChunk(chunkCord, owner, 1);
+                    if (cache.isChunkClaimed(chunkCord)) {
+                        UUID owner = cache.getChunkOwnerUUID(chunkCord);
+                        cache.unclaimChunk(chunkCord, owner);
                         player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_UNCLAIM.getString(new String[]{chunkCord, Bukkit.getPlayer(owner).getName()}));
                     } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_UNCLAIM.getString(new String[]{chunkCord}));
                     break;
 
                 case "unclaimall":
 
-                    if (SQL.isChunkClaimed(chunkCord)) {
-                        UUID owner = SQL.getChunkOwnerUUID(chunkCord);
-                        SQL.unclaimAllChunks(owner);
+                    if (cache.isChunkClaimed(chunkCord)) {
+                        UUID owner = cache.getChunkOwnerUUID(chunkCord);
+                        cache.unclaimAllChunks(owner);
                         player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_UNCLAIMALL.getString(new String[]{Bukkit.getPlayer(owner).getName()}));
                     } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_UNCLAIM.getString(new String[]{chunkCord}));
                     break;
@@ -114,15 +114,15 @@ public class Admin extends SubCommand {
                             switch (args[2]) {
 
                                 case "add":
-                                    SQL.addBonusClaims(targetUUID, amount);
+                                    cache.addBonusClaimsAmount(targetUUID, amount);
                                     player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BONUS_CLAIMS_ADD.getString(new String[] { plugin.getPU().formatAmount(amount), target.getName() }));
                                     break;
                                 case "remove":
-                                    SQL.removeBonusClaims(targetUUID, amount);
+                                    cache.removeBonusClaimsAmount(targetUUID, amount);
                                     player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BONUS_CLAIMS_REMOVE.getString(new String[] { plugin.getPU().formatAmount(amount), target.getName() }));
                                     break;
                                 case "set":
-                                    SQL.setBonusClaims(targetUUID, amount);
+                                    cache.setBonusClaimsAmount(targetUUID, amount);
                                     player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BONUS_CLAIMS_SET.getString(new String[] { plugin.getPU().formatAmount(amount), target.getName() }));
                                     break;
 

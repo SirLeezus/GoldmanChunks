@@ -4,6 +4,7 @@ import lee.code.cache.jedis.*;
 import lee.code.chunks.GoldmanChunks;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -77,7 +78,7 @@ public class Cache {
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
         try (Jedis jedis = pool.getResource()) {
-            return jedis.hexists("chunk", chunk);
+            return jedis.hexists("chunk", chunk) || jedis.hexists("adminChunk", chunk);
         }
     }
 
@@ -112,7 +113,7 @@ public class Cache {
     }
 
     //TODO test when get dedicated
-    public void removeAllChunks(UUID uuid) {
+    public void unclaimAllChunks(UUID uuid) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         SQLite SQL = plugin.getSqLite();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
@@ -430,6 +431,37 @@ public class Cache {
         }
     }
 
+    public boolean hasClaimedChunks(UUID uuid) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        String sUUID = String.valueOf(uuid);
+
+        try (Jedis jedis = pool.getResource()) {
+            int amount = Integer.parseInt(jedis.hget("claimed", sUUID));
+            return amount != 0;
+        }
+    }
+
+    public int getPlayerMaxClaimAmount(Player player) {
+        UUID uuid = player.getUniqueId();
+        int maxClaims = 100000000;
+        int defaultClaims = 10;
+        int bonusClaims = getBonusClaimsAmount(uuid);
+        int accruedClaims = getAccruedClaimsAmount(uuid);
+
+        if (!player.isOp()) return defaultClaims + bonusClaims + accruedClaims;
+        else return maxClaims;
+    }
+
+    public int getPlayerDefaultClaimAmount(Player player) {
+        int maxClaims = 100000000;
+        int defaultClaims = 10;
+
+        if (!player.isOp()) return defaultClaims;
+        else return maxClaims;
+    }
+
     public int getBonusClaimsAmount(UUID uuid) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
@@ -554,6 +586,24 @@ public class Cache {
 
             jedis.hset("trustedGlobal", sUUID, newTrusted);
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setTrustedGlobal(sUUID, newTrusted));
+        }
+    }
+
+    public List<String> getTrustedGlobalNames(UUID uuid) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        String sUUID = String.valueOf(uuid);
+
+        try (Jedis jedis = pool.getResource()) {
+            String trusted = jedis.hget("trustedGlobal", sUUID);
+
+            if (!trusted.equals("n")) {
+                List<String> players = new ArrayList<>();
+                String[] split = StringUtils.split(trusted, ',');
+                for (String player : split) players.add(Bukkit.getOfflinePlayer(UUID.fromString(player)).getName());
+                return players;
+            } else return Collections.singletonList("");
         }
     }
 
@@ -725,6 +775,17 @@ public class Cache {
             pipe.hset("adminChunkMonsters", chunk, canSpawnMonsters);
             pipe.hset("adminChunkExplode", chunk, canExplode);
             pipe.sync();
+        }
+    }
+
+    public void unclaimAdminChunk(String chunk) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        SQLite SQL = plugin.getSqLite();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        try (Jedis jedis = pool.getResource()) {
+            jedis.hdel("adminChunk", chunk);
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.unclaimAdminChunk(chunk));
         }
     }
 
