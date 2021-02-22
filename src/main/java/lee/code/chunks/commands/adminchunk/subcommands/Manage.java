@@ -35,6 +35,7 @@ public class Manage extends SubCommand {
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
+
         Chunk chunk = player.getLocation().getChunk();
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);
         if (cache.isAdminChunk(chunkCord)) {

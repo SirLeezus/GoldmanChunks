@@ -64,19 +64,17 @@ public class Map extends SubCommand {
 
                     if ((chunkSelected).equals(chunkCord)) {
                         chunkSquare.add("&9■");
-                    } else if (cache.isChunkOwner(chunkSelected, uuid)) {
-                        chunkSquare.add("&2■");
-                    } else if (cache.isChunkTrusted(chunkSelected, uuid)) {
-                        chunkSquare.add("&a■");
-                    } else if (cache.isChunkClaimed(chunkSelected)) {
-                        UUID owner = cache.getChunkOwnerUUID(chunkSelected);
-                        if (cache.isGlobalTrusted(owner, uuid)) chunkSquare.add("&a■");
-                        else chunkSquare.add("&c■");
                     } else if (cache.isAdminChunk(chunkSelected)) {
                         chunkSquare.add("&4■");
-                    } else {
-                        chunkSquare.add("&7■");
-                    }
+                    } else if (cache.isChunkClaimed(chunkSelected)) {
+                        UUID owner = cache.getChunkOwnerUUID(chunkSelected);
+
+                        if (cache.isChunkOwner(chunkSelected, uuid)) chunkSquare.add("&2■");
+                        else if (cache.isChunkTrusted(chunkSelected, uuid)) chunkSquare.add("&a■");
+                        else if (cache.isGlobalTrusted(owner, uuid)) chunkSquare.add("&a■");
+                        else chunkSquare.add("&c■");
+
+                    } else chunkSquare.add("&7■");
                     x++;
                 }
                 x = firstX;

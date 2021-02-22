@@ -1,7 +1,7 @@
 package lee.code.chunks.listeners;
 
 import lee.code.chunks.GoldmanChunks;
-import lee.code.chunks.database.SQLite;
+import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -19,6 +19,7 @@ public class ChunkCheckerListener implements Listener {
     @EventHandler
     public void onInteractEvent(PlayerInteractEvent e) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
 
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 
@@ -31,21 +32,22 @@ public class ChunkCheckerListener implements Listener {
                 if (plugin.getData().getPlayerClickDelay(uuid)) return;
                 else plugin.getPU().addPlayerClickDelay(uuid);
 
-                Chunk chunk = e.getClickedBlock().getLocation().getChunk();
-                String chunkCord = plugin.getPU().formatChunkLocation(chunk);
-                String owner = plugin.getSqLite().getChunkOwner(chunkCord);
-                SQLite SQL = plugin.getSqLite();
+                if (e.getClickedBlock() != null) {
+                    Chunk chunk = e.getClickedBlock().getLocation().getChunk();
+                    String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+                    String owner = plugin.getSqLite().getChunkOwner(chunkCord);
 
-                if (SQL.isAdminChunk(chunkCord)) owner = plugin.getPU().format("&4&lAdmin");
+                    if (cache.isAdminChunk(chunkCord)) owner = plugin.getPU().format("&4&lAdmin");
 
-                player.sendMessage(Lang.COMMAND_INFO_HEADER.getString(null));
-                player.sendMessage("");
-                player.sendMessage(Lang.COMMAND_INFO_LINE_1.getString(new String[] { owner }));
-                player.sendMessage(Lang.COMMAND_INFO_LINE_2.getString(new String[] { chunkCord }));
-                player.sendMessage("");
-                player.sendMessage(Lang.COMMAND_INFO_FOOTER.getString(null));
+                    player.sendMessage(Lang.COMMAND_INFO_HEADER.getString(null));
+                    player.sendMessage("");
+                    player.sendMessage(Lang.COMMAND_INFO_LINE_1.getString(new String[] { owner }));
+                    player.sendMessage(Lang.COMMAND_INFO_LINE_2.getString(new String[] { chunkCord }));
+                    player.sendMessage("");
+                    player.sendMessage(Lang.COMMAND_INFO_FOOTER.getString(null));
 
-                plugin.getPU().renderChunkBorder(player, chunk, "info");
+                    plugin.getPU().renderChunkBorder(player, chunk, "info");
+                }
             }
         }
     }

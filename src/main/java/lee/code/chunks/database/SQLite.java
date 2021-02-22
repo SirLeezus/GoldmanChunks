@@ -50,7 +50,7 @@ public class SQLite {
 
     public void update(String sql) {
         try {
-            statement.execute(sql);
+            statement.executeUpdate(sql);
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -284,7 +284,7 @@ public class SQLite {
     //ADMIN CHUNK DATA
 
     public void claimAdminChunk(String chunk) {
-        update("INSERT INTO admin_chunks (chunk, build, break, interact, pve, pvp, monster_spawning, explosions) VALUES( '" + chunk + "', '0', '0', '0', '0', '0', '0', '0');");
+        update("INSERT OR REPLACE INTO admin_chunks (chunk, build, break, interact, pve, pvp, monster_spawning, explosions) VALUES( '" + chunk + "', '0', '0', '0', '0', '0', '0', '0');");
     }
 
     public void unclaimAdminChunk(String chunk) {
@@ -293,8 +293,8 @@ public class SQLite {
 
     @SneakyThrows
     public boolean isAdminChunk(String chunk) {
-        ResultSet rsa = getResult("SELECT chunk FROM admin_chunks WHERE chunk = '" + chunk + "';");
-        return rsa.next();
+        ResultSet rs = getResult("SELECT chunk FROM admin_chunks WHERE chunk = '" + chunk + "';");
+        return rs.next();
     }
 
     @SneakyThrows

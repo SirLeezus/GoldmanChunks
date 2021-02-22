@@ -32,8 +32,8 @@ public class Cache {
             pipe.hset("chunkPvP", chunk, "0");
             pipe.sync();
 
-            int newClaimAmount = Integer.parseInt(jedis.hget("claimAmount", sUUID)) + 1;
-            jedis.hset("claimAmount", sUUID, String.valueOf(newClaimAmount));
+            int newClaimAmount = Integer.parseInt(jedis.hget("claimed", sUUID)) + 1;
+            jedis.hset("claimed", sUUID, String.valueOf(newClaimAmount));
 
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.claimChunk(chunk, uuid, newClaimAmount));
         }
@@ -67,8 +67,8 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             jedis.hdel("chunk", chunk);
-            int newClaimAmount = Integer.parseInt(jedis.hget("claimAmount", sUUID)) - 1;
-            jedis.hset("claimAmount", sUUID, String.valueOf(newClaimAmount));
+            int newClaimAmount = Integer.parseInt(jedis.hget("claimed", sUUID)) - 1;
+            jedis.hset("claimed", sUUID, String.valueOf(newClaimAmount));
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.unclaimChunk(chunk, uuid, newClaimAmount));
         }
     }
@@ -78,7 +78,7 @@ public class Cache {
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
         try (Jedis jedis = pool.getResource()) {
-            return jedis.hexists("chunk", chunk) || jedis.hexists("adminChunk", chunk);
+            return jedis.hexists("chunk", chunk) || jedis.hexists("adminChunkBuild", chunk) ;
         }
     }
 
