@@ -35,6 +35,7 @@ public class Cache {
             int newClaimAmount = Integer.parseInt(jedis.hget("claimed", sUUID)) + 1;
             String sNewClaimAmount = String.valueOf(newClaimAmount);
             jedis.hset("claimed", sUUID, sNewClaimAmount);
+            addToChunkClaims(sUUID, chunk);
 
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.claimChunk(chunk, uuid, sNewClaimAmount));
         }
@@ -56,6 +57,52 @@ public class Cache {
             pipe.hset("chunkMonsters", chunk, canSpawnMonsters);
             pipe.hset("chunkExplode", chunk, canExplode);
             pipe.sync();
+
+            addToChunkClaims(uuid, chunk);
+        }
+    }
+
+    public List<String> getChunkClaims(UUID uuid) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        String sUUID = String.valueOf(uuid);
+
+        try (Jedis jedis = pool.getResource()) {
+            if (jedis.hexists("playerChunkList", sUUID)) {
+                String[] split = StringUtils.split(jedis.hget("playerChunkList", sUUID), '%');
+                return new ArrayList<>(Arrays.asList(split));
+            } else return Collections.singletonList("");
+        }
+    }
+
+    private void addToChunkClaims(String uuid, String chunk) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        String sUUID = String.valueOf(uuid);
+
+        try (Jedis jedis = pool.getResource()) {
+
+            if (jedis.hexists("playerChunkList", sUUID)) {
+                String newChunkList = jedis.hget("playerChunkList", sUUID) + "%" + chunk;
+                jedis.hset("playerChunkList", sUUID, newChunkList);
+            } else jedis.hset("playerChunkList", sUUID, chunk);
+        }
+    }
+
+    private void removeFromChunkClaims(String uuid, String chunk) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        String sUUID = String.valueOf(uuid);
+
+        try (Jedis jedis = pool.getResource()) {
+            List<String> newList = new ArrayList<>();
+            String[] split = StringUtils.split(jedis.hget("playerChunkList", sUUID), '%');
+            for (String playerChunk : split) if (!playerChunk.equals(chunk)) newList.add(playerChunk);
+            String newChunkList = StringUtils.join(newList, "%");
+            jedis.hset("playerChunkList", sUUID, newChunkList);
         }
     }
 
@@ -71,6 +118,8 @@ public class Cache {
             int newClaimAmount = Integer.parseInt(jedis.hget("claimed", sUUID)) - 1;
             String sNewClaimAmount = String.valueOf(newClaimAmount);
             jedis.hset("claimed", sUUID, sNewClaimAmount);
+
+            removeFromChunkClaims(sUUID, chunk);
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.unclaimChunk(chunk, uuid, sNewClaimAmount));
         }
     }
@@ -114,7 +163,6 @@ public class Cache {
         }
     }
 
-    //TODO test when get dedicated
     public void unclaimAllChunks(UUID uuid) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         SQLite SQL = plugin.getSqLite();
@@ -123,34 +171,14 @@ public class Cache {
         String sUUID = String.valueOf(uuid);
 
         try (Jedis jedis = pool.getResource()) {
-            List<Map.Entry<String, String>> chunks = scanHSet("chunk", sUUID);
-            System.out.println(chunks);
+            jedis.hset("claimed", sUUID, "0");
+
+            List<String> chunks = getChunkClaims(uuid);
+            for (String chunk : chunks) jedis.hdel("chunk", chunk);
+
+            jedis.hdel("playerChunkList", sUUID);
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.unclaimAllChunks(sUUID));
         }
-    }
-
-    //TODO test when get dedicated
-    private List<Map.Entry<String, String>> scanHSet(String hashMap, String match) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-        try (Jedis jedis = pool.getResource()) {
-            int cursor = 0;
-
-            ScanParams scanParams = new ScanParams();
-            scanParams.match(match);
-            ScanResult<Map.Entry<String, String>> scanResult;
-            List<Map.Entry<String, String>> list = new ArrayList<>();
-            do {
-                scanResult = jedis.hscan(hashMap, String.valueOf(cursor), scanParams);
-                list.addAll(scanResult.getResult());
-                cursor = Integer.parseInt(scanResult.getCursor());
-            } while (cursor > 0);
-            return list;
-        }
-    }
-
-    //TODO get chunk claims when able to use scan
-    public List<String> getChunkClaims(UUID uuid) {
-        return null;
     }
 
     public boolean isChunkTrusted(String chunk, UUID uuid) {
