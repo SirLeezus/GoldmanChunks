@@ -39,7 +39,7 @@ public class MaxClaims extends SubCommand {
         Cache cache = plugin.getCache();
         UUID uuid = player.getUniqueId();
 
-        int claims = cache.getPlayerDefaultClaimAmount(player);
+        int defaultClaims = cache.getPlayerDefaultClaimAmount(player);
         int claimed = cache.getClaimedAmount(uuid);
         int bonusClaims = cache.getBonusClaimsAmount(uuid);
         int accruedClaims = cache.getAccruedClaimsAmount(uuid);
@@ -51,7 +51,7 @@ public class MaxClaims extends SubCommand {
 
         player.sendMessage(Lang.COMMAND_MAX_CLAIMS_HEADER.getString(null));
         player.sendMessage("");
-        player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_1.getString(new String[] { plugin.getPU().formatAmount(claims) }));
+        player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_1.getString(new String[] { plugin.getPU().formatAmount(defaultClaims) }));
         player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_2.getString(new String[] { plugin.getPU().formatAmount(bonusClaims) }));
         player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_3.getString(new String[] { plugin.getPU().formatAmount(claimed) }));
         player.sendMessage("");
