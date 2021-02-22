@@ -34,13 +34,14 @@ public class Info extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
 
         Chunk chunk = player.getLocation().getChunk();
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);
-        String owner = plugin.getSqLite().getChunkOwner(chunkCord);
-        Cache cache = plugin.getCache();
+        String owner = "";
 
         if (cache.isAdminChunk(chunkCord)) owner = plugin.getPU().format("&4&lAdmin");
+        else if (cache.isChunkClaimed(chunkCord)) owner = cache.getChunkOwnerName(chunkCord);
 
         player.sendMessage(Lang.COMMAND_INFO_HEADER.getString(null));
         player.sendMessage("");

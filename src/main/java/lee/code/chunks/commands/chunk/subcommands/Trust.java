@@ -55,7 +55,7 @@ public class Trust extends SubCommand {
                 return;
             }
 
-            if (plugin.getSqLite().isChunkClaimed(chunkCord)) {
+            if (cache.isChunkClaimed(chunkCord)) {
                 if (cache.isChunkOwner(chunkCord, player.getUniqueId())) {
                     cache.addChunkTrusted(chunkCord, target.getUniqueId());
                     player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_TRUST_ADDED_PLAYER.getString(new String[] { target.getName(), chunkCord }));

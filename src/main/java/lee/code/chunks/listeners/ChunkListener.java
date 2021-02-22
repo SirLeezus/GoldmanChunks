@@ -522,7 +522,7 @@ public class ChunkListener implements Listener {
         for (Block block : new ArrayList<>(e.getBlocks())) {
             Chunk movedBlockChunk = block.getLocation().getChunk();
             String movedBlockChunkCords = plugin.getPU().formatChunkLocation(movedBlockChunk);
-            if (!plugin.getSqLite().isChunkClaimed(movedBlockChunkCords)) {
+            if (!cache.isChunkClaimed(movedBlockChunkCords)) {
                 e.setCancelled(true);
                 return;
             }

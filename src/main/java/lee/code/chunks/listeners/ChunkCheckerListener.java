@@ -35,9 +35,10 @@ public class ChunkCheckerListener implements Listener {
                 if (e.getClickedBlock() != null) {
                     Chunk chunk = e.getClickedBlock().getLocation().getChunk();
                     String chunkCord = plugin.getPU().formatChunkLocation(chunk);
-                    String owner = plugin.getSqLite().getChunkOwner(chunkCord);
+                    String owner = "";
 
                     if (cache.isAdminChunk(chunkCord)) owner = plugin.getPU().format("&4&lAdmin");
+                    else if (cache.isChunkClaimed(chunkCord)) owner = cache.getChunkOwnerName(chunkCord);
 
                     player.sendMessage(Lang.COMMAND_INFO_HEADER.getString(null));
                     player.sendMessage("");

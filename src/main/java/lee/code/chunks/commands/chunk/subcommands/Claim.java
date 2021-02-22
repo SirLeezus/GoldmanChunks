@@ -59,7 +59,7 @@ public class Claim extends SubCommand {
                     player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_CLAIM_SUCCESSFUL.getString(new String[] { chunkCord, plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) }));
                     plugin.getPU().renderChunkBorder(player, chunk, "claim");
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_CLAIM_MAXED.getString(new String[] { plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) }));
-            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_CLAIMED.getString(new String[] { plugin.getSqLite().getChunkOwner(chunkCord) }));
+            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_CLAIMED.getString(new String[] { cache.getChunkOwnerName(chunkCord) }));
         }
     }
 

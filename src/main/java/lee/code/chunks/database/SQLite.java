@@ -2,9 +2,6 @@ package lee.code.chunks.database;
 
 import lee.code.chunks.GoldmanChunks;
 import lombok.SneakyThrows;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -106,171 +103,56 @@ public class SQLite {
                 ");");
     }
 
-    //TRUSTED DATA
+    //CHUNKS TABLE
 
-    @SneakyThrows
-    public boolean canTrustedBuild(String chunk) {
-        ResultSet rs = getResult("SELECT * FROM chunks WHERE chunk = '" + chunk + "';");
-        return rs.getInt("build") == 1;
+    public void claimChunk(String chunk, UUID uuid, String amount) {
+        update("INSERT INTO chunks (chunk, owner, trusted, build, break, interact, pve, pvp, monster_spawning, explosions) VALUES( '" + chunk + "','" + uuid + "', 'n', '1', '1', '1', '1', '0', '0', '0');");
+        update("UPDATE player_data SET claimed ='" + amount + "' WHERE player ='" + uuid + "';");
     }
 
-    @SneakyThrows
-    public boolean canTrustedBreak(String chunk) {
-        ResultSet rs = getResult("SELECT * FROM chunks WHERE chunk = '" + chunk + "';");
-        return rs.getInt("break") == 1;
+    public void unclaimChunk(String chunk, UUID uuid, String claimAmount) {
+        update("DELETE FROM chunks WHERE chunk = '" + chunk + "';");
+        update("UPDATE player_data SET claimed ='" + claimAmount + "' WHERE player ='" + uuid + "';");
     }
 
-    @SneakyThrows
-    public boolean canTrustedInteract(String chunk) {
-        ResultSet rs = getResult("SELECT * FROM chunks WHERE chunk = '" + chunk + "';");
-        return rs.getInt("interact") == 1;
-    }
-
-    @SneakyThrows
-    public boolean canTrustedPVE(String chunk) {
-        ResultSet rs = getResult("SELECT * FROM chunks WHERE chunk = '" + chunk + "';");
-        return rs.getInt("pve") == 1;
-    }
-
-    public void setChunkTrustedBuild(String chunk, int canBuild) {
+    public void setChunkTrustedBuild(String chunk, String canBuild) {
         update("UPDATE chunks SET build ='" + canBuild + "' WHERE chunk ='" + chunk + "';");
     }
 
-    public void setChunkTrustedBreak(String chunk, int canBreak) {
+    public void setChunkTrustedBreak(String chunk, String canBreak) {
         update("UPDATE chunks SET break ='" + canBreak + "' WHERE chunk ='" + chunk + "';");
     }
 
-    public void setChunkTrustedInteract(String chunk, int canInteract) {
+    public void setChunkTrustedInteract(String chunk, String canInteract) {
         update("UPDATE chunks SET interact ='" + canInteract + "' WHERE chunk ='" + chunk + "';");
     }
 
-    public void setChunkTrustedPVE(String chunk, int canPVE) {
+    public void setChunkTrustedPVE(String chunk, String canPVE) {
         update("UPDATE chunks SET pve ='" + canPVE + "' WHERE chunk ='" + chunk + "';");
-    }
-
-    @SneakyThrows
-    public void addChunkTrusted(String chunk, UUID trust) {
-        ResultSet rs = getResult("SELECT * FROM chunks WHERE chunk = '" + chunk + "';");
-
-        if (!rs.getString("trusted").equals("n")) {
-            String trusted = rs.getString("trusted") + "," + trust;
-            update("UPDATE chunks SET trusted ='" + trusted + "' WHERE chunk ='" + chunk + "';");
-
-        } else update("UPDATE chunks SET trusted ='" + trust + "' WHERE chunk ='" + chunk + "';");
     }
 
     public void setChunkTrusted(String chunk, String trusted) {
         update("UPDATE chunks SET trusted ='" + trusted + "' WHERE chunk ='" + chunk + "';");
     }
-
-    @SneakyThrows
-    public boolean isChunkTrusted(String chunk, UUID trusted) {
-        ResultSet rs = getResult("SELECT * FROM chunks WHERE chunk = '" + chunk + "';");
-        if (rs.next()) {
-            if (rs.getString("trusted").equals("n")) {
-                return false;
-            } else {
-                String players = rs.getString("trusted");
-                String[] split = StringUtils.split(players, ',');
-                for (String player : split) {
-                    if (UUID.fromString(player).equals(trusted)) return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    @SneakyThrows
-    public List<String> getTrustedToChunk(String chunk) {
-        ResultSet rs = getResult("SELECT * FROM chunks WHERE chunk = '" + chunk + "';");
-        if (rs.next()) {
-            String trusted = rs.getString("trusted");
-            if (!trusted.equals("n")) {
-                List<String> players = new ArrayList<>();
-                String[] splitUUIDs = StringUtils.split(trusted, ',');
-                for (String uuid : splitUUIDs) players.add(Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName());
-                return players;
-            }
-        }
-        return Collections.singletonList("");
-    }
-
-    //PLAYER CHUNK DATA
-
-    public void claimChunk(String chunk, UUID uuid, int amount) {
-        update("INSERT INTO chunks (chunk, owner, trusted, build, break, interact, pve, pvp, monster_spawning, explosions) VALUES( '" + chunk + "','" + uuid + "', 'n', '1', '1', '1', '1', '0', '0', '0');");
-        update("UPDATE player_data SET claimed ='" + amount + "' WHERE player ='" + uuid + "';");
-    }
-
-    public void unclaimChunk(String chunk, UUID uuid, int claimAmount) {
-        update("DELETE FROM chunks WHERE chunk = '" + chunk + "';");
-        update("UPDATE player_data SET claimed ='" + claimAmount + "' WHERE player ='" + uuid + "';");
-    }
-
-    @SneakyThrows
-    public boolean isChunkClaimed(String chunk) {
-        ResultSet rs = getResult("SELECT chunk FROM chunks WHERE chunk = '" + chunk + "';");
-        return rs.next();
-    }
-
-    @SneakyThrows
-    public String getChunkOwner(String chunk) {
-        ResultSet rs = getResult("SELECT * FROM chunks WHERE chunk = '" + chunk + "';");
-        if (rs.next()) {
-            String owner = rs.getString("owner");
-            return Bukkit.getOfflinePlayer(UUID.fromString(owner)).getName();
-        } else return "";
-    }
-
-    @SneakyThrows
-    public UUID getChunkOwnerUUID(String chunk) {
-        ResultSet rs = getResult("SELECT * FROM chunks WHERE chunk = '" + chunk + "';");
-        return UUID.fromString(rs.getString("owner"));
-    }
-
-    @SneakyThrows
-    public boolean isChunkOwner(String chunk, UUID uuid) {
-        ResultSet rs = getResult("SELECT chunk FROM chunks WHERE chunk = '" + chunk + "' AND owner = '" + uuid + "';");
-        return rs.next();
-    }
-
-    @SneakyThrows
-    public boolean canChunkSpawnMonsters(String chunk) {
-        ResultSet rs = getResult("SELECT * FROM chunks WHERE chunk = '" + chunk + "';");
-        return rs.getInt("monster_spawning") == 1;
-    }
-
-    @SneakyThrows
-    public boolean canChunkExplode(String chunk) {
-        ResultSet rs = getResult("SELECT * FROM chunks WHERE chunk = '" + chunk + "';");
-        return rs.getInt("explosions") == 1;
-    }
-
-    @SneakyThrows
-    public boolean canChunkPVP(String chunk) {
-        ResultSet rs = getResult("SELECT * FROM chunks WHERE chunk = '" + chunk + "';");
-        return rs.getInt("pvp") == 1;
-    }
-
-    public void setChunkPVP(String chunk, int canPVP) {
+    public void setChunkPVP(String chunk, String canPVP) {
         update("UPDATE chunks SET pvp ='" + canPVP + "' WHERE chunk ='" + chunk + "';");
     }
 
-    public void setChunkSpawnMonsters(String chunk, int canSpawnMonster) {
+    public void setChunkSpawnMonsters(String chunk, String canSpawnMonster) {
         update("UPDATE chunks SET monster_spawning ='" + canSpawnMonster + "' WHERE chunk ='" + chunk + "';");
     }
 
-    public void setChunkExplode(String chunk, int canExplode) {
+    public void setChunkExplode(String chunk, String canExplode) {
         update("UPDATE chunks SET explosions ='" + canExplode + "' WHERE chunk ='" + chunk + "';");
     }
 
-    public void unclaimAllChunks(UUID uuid) {
+    public void unclaimAllChunks(String uuid) {
         update("DELETE FROM chunks WHERE owner = '" + uuid + "';");
         update("UPDATE player_data SET claimed ='" + 0 + "' WHERE player ='" + uuid + "';");
     }
 
-    @SneakyThrows
-    public List<String> getPlayerClaimedChunks(UUID uuid) {
+    @SneakyThrows //TODO still workng on
+    public List<String> getPlayerClaimedChunks(String uuid) {
         ResultSet rs = getResult("SELECT * FROM chunks WHERE owner = '" + uuid + "';");
 
         if (rs.next()) {
@@ -281,7 +163,7 @@ public class SQLite {
         } else return Collections.singletonList("n");
     }
 
-    //ADMIN CHUNK DATA
+    //ADMIN CHUNKS TABLE
 
     public void claimAdminChunk(String chunk) {
         update("INSERT OR REPLACE INTO admin_chunks (chunk, build, break, interact, pve, pvp, monster_spawning, explosions) VALUES( '" + chunk + "', '0', '0', '0', '0', '0', '0', '0');");
@@ -289,54 +171,6 @@ public class SQLite {
 
     public void unclaimAdminChunk(String chunk) {
         update("DELETE FROM admin_chunks WHERE chunk = '" + chunk + "';");
-    }
-
-    @SneakyThrows
-    public boolean isAdminChunk(String chunk) {
-        ResultSet rs = getResult("SELECT chunk FROM admin_chunks WHERE chunk = '" + chunk + "';");
-        return rs.next();
-    }
-
-    @SneakyThrows
-    public boolean canAdminChunkBuild(String chunk) {
-        ResultSet rs = getResult("SELECT * FROM admin_chunks WHERE chunk = '" + chunk + "';");
-        return rs.getInt("build") == 1;
-    }
-
-    @SneakyThrows
-    public boolean canAdminChunkBreak(String chunk) {
-        ResultSet rs = getResult("SELECT * FROM admin_chunks WHERE chunk = '" + chunk + "';");
-        return rs.getInt("break") == 1;
-    }
-
-    @SneakyThrows
-    public boolean canAdminChunkInteract(String chunk) {
-        ResultSet rs = getResult("SELECT * FROM admin_chunks WHERE chunk = '" + chunk + "';");
-        return rs.getInt("interact") == 1;
-    }
-
-    @SneakyThrows
-    public boolean canAdminChunkPVE(String chunk) {
-        ResultSet rs = getResult("SELECT * FROM admin_chunks WHERE chunk = '" + chunk + "';");
-        return rs.getInt("pve") == 1;
-    }
-
-    @SneakyThrows
-    public boolean canAdminChunkPVP(String chunk) {
-        ResultSet rs = getResult("SELECT * FROM admin_chunks WHERE chunk = '" + chunk + "';");
-        return rs.getInt("pvp") == 1;
-    }
-
-    @SneakyThrows
-    public boolean canAdminChunkSpawnMonsters(String chunk) {
-        ResultSet rs = getResult("SELECT * FROM admin_chunks WHERE chunk = '" + chunk + "';");
-        return rs.getInt("monster_spawning") == 1;
-    }
-
-    @SneakyThrows
-    public boolean canAdminChunkExplode(String chunk) {
-        ResultSet rs = getResult("SELECT * FROM admin_chunks WHERE chunk = '" + chunk + "';");
-        return rs.getInt("explosions") == 1;
     }
 
     public void setAdminChunkBuild(String chunk, String canBuild) {
@@ -367,129 +201,22 @@ public class SQLite {
         update("UPDATE admin_chunks SET explosions ='" + canExplode + "' WHERE chunk ='" + chunk + "';");
     }
 
-    //PLAYER DATA
+    //PLAYER DATA TABLE
 
-    @SneakyThrows
-    public boolean hasPlayerData(UUID uuid) {
-        ResultSet rs = getResult("SELECT player FROM player_data WHERE player = '" + uuid + "';");
-        return rs.next();
-    }
-
-    @SneakyThrows
-    public boolean hasClaimedChunks(UUID uuid) {
-        ResultSet rs = getResult("SELECT * FROM player_data WHERE player = '" + uuid + "';");
-        return rs.getInt("claimed") != 0;
-    }
-
-    public void createPlayerData(UUID uuid) {
+    public void createPlayerData(String uuid) {
         update("INSERT INTO player_data (player, claimed, bonus_claims, accrued_claims, trusted_global, build, break, interact, pve) VALUES( '" + uuid + "', '0', '0', '0', 'n', '1', '1', '1', '1');");
     }
 
-    @SneakyThrows
-    private void addClaimedAmount(UUID uuid) {
-        ResultSet rs = getResult("SELECT * FROM player_data WHERE player = '" + uuid + "';");
-        int claims = rs.getInt("claimed") + 1;
-        update("UPDATE player_data SET claimed ='" + claims + "' WHERE player ='" + uuid + "';");
-    }
-
-    @SneakyThrows
-    private void subtractClaimedAmount(UUID uuid) {
-        ResultSet rs = getResult("SELECT * FROM player_data WHERE player = '" + uuid + "';");
-        int claims = rs.getInt("claimed") - 1;
-        update("UPDATE player_data SET claimed ='" + claims + "' WHERE player ='" + uuid + "';");
-    }
-
-    @SneakyThrows
-    public int getClaimedAmount(UUID uuid) {
-        ResultSet rs = getResult("SELECT * FROM player_data WHERE player = '" + uuid + "';");
-        return rs.getInt("claimed");
-    }
-
-    @SneakyThrows
-    public boolean isGlobalTrusted(UUID uuid, UUID trust) {
-        ResultSet rs = getResult("SELECT * FROM player_data WHERE player = '" + uuid + "';");
-
-        String trusted = rs.getString("trusted_global");
-        if (!trusted.equals("n")) {
-            String[] splitUUIDs = StringUtils.split(trusted, ',');
-            List<String> players = new ArrayList<>(Arrays.asList(splitUUIDs));
-            return players.contains(trust.toString());
-        } else return false;
-    }
-
-    public void setAccruedClaims(UUID uuid, String amount) {
+    public void setAccruedClaims(String uuid, String amount) {
         update("UPDATE player_data SET accrued_claims = '" + amount + "' WHERE player ='" + uuid + "';");
     }
 
-    @SneakyThrows
-    public int getAccruedClaims(UUID uuid) {
-        ResultSet rs = getResult("SELECT * FROM player_data WHERE player = '" + uuid + "';");
-        return rs.getInt("accrued_claims");
-    }
-
-    @SneakyThrows
-    public void addBonusClaims(UUID uuid, int amount) {
-        ResultSet rs = getResult("SELECT * FROM player_data WHERE player = '" + uuid + "';");
-
-        if (rs.getInt("bonus_claims") != 0) {
-            int newAmount = rs.getInt("bonus_claims") + amount;
-            update("UPDATE player_data SET bonus_claims = '" + newAmount + "' WHERE player ='" + uuid + "';");
-        } else update("UPDATE player_data SET bonus_claims = '" + amount + "' WHERE player ='" + uuid + "';");
-    }
-
-    public void setBonusClaims(UUID uuid, String amount) {
+    public void setBonusClaims(String uuid, String amount) {
         update("UPDATE player_data SET bonus_claims = '" + amount + "' WHERE player ='" + uuid + "';");
-    }
-
-    public void removeBonusClaims(UUID uuid, int amount) {
-        update("UPDATE player_data SET bonus_claims = '" + amount + "' WHERE player ='" + uuid + "';");
-    }
-
-    @SneakyThrows
-    public int getBonusClaims(UUID uuid) {
-        ResultSet rs = getResult("SELECT * FROM player_data WHERE player = '" + uuid + "';");
-        return rs.getInt("bonus_claims");
     }
 
     public void setTrustedGlobal(String uuid, String trust) {
         update("UPDATE player_data SET trusted_global ='" + trust + "' WHERE player ='" + uuid + "';");
-    }
-
-    @SneakyThrows
-    public List<String> getGlobalTrustedPlayers(UUID uuid) {
-        ResultSet rs = getResult("SELECT * FROM player_data WHERE player = '" + uuid + "';");
-
-        String trusted = rs.getString("trusted_global");
-        if (!trusted.equals("n")) {
-            List<String> players = new ArrayList<>();
-            String[] splitUUIDs = StringUtils.split(trusted, ',');
-            for (String player : splitUUIDs) players.add(Bukkit.getOfflinePlayer(UUID.fromString(player)).getName());
-            return players;
-        } else return Collections.singletonList("");
-    }
-
-    @SneakyThrows
-    public boolean canGlobalTrustedBreak(UUID uuid) {
-        ResultSet rs = getResult("SELECT * FROM player_data WHERE player = '" + uuid + "';");
-        return rs.getInt("break") == 1;
-    }
-
-    @SneakyThrows
-    public boolean canGlobalTrustedBuild(UUID uuid) {
-        ResultSet rs = getResult("SELECT * FROM player_data WHERE player = '" + uuid + "';");
-        return rs.getInt("build") == 1;
-    }
-
-    @SneakyThrows
-    public boolean canGlobalTrustedInteract(UUID uuid) {
-        ResultSet rs = getResult("SELECT * FROM player_data WHERE player = '" + uuid + "';");
-        return rs.getInt("interact") == 1;
-    }
-
-    @SneakyThrows
-    public boolean canGlobalTrustedPVE(UUID uuid) {
-        ResultSet rs = getResult("SELECT * FROM player_data WHERE player = '" + uuid + "';");
-        return rs.getInt("pve") == 1;
     }
 
     public void setGlobalTrustedBuild(String uuid, String canBuild) {
@@ -506,26 +233,6 @@ public class SQLite {
 
     public void setGlobalTrustedPvE(String uuid, String canPVE) {
         update("UPDATE player_data SET pve ='" + canPVE + "' WHERE player ='" + uuid + "';");
-    }
-
-    public int getPlayerClaims(Player player) {
-        int maxClaims = 100000000;
-        int defaultClaims = 10;
-
-        if (!player.isOp()) return defaultClaims;
-        else return maxClaims;
-    }
-
-    public int getMaxPlayerClaims(Player player) {
-
-        UUID uuid = player.getUniqueId();
-        int maxClaims = 100000000;
-        int defaultClaims = 10;
-        int bonusClaims = getBonusClaims(uuid);
-        int accruedClaims = getAccruedClaims(uuid);
-
-        if (!player.isOp()) return defaultClaims + bonusClaims + accruedClaims;
-        else return maxClaims;
     }
 
     public void loadChunks() {

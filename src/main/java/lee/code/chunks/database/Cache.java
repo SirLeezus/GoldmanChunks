@@ -33,9 +33,10 @@ public class Cache {
             pipe.sync();
 
             int newClaimAmount = Integer.parseInt(jedis.hget("claimed", sUUID)) + 1;
-            jedis.hset("claimed", sUUID, String.valueOf(newClaimAmount));
+            String sNewClaimAmount = String.valueOf(newClaimAmount);
+            jedis.hset("claimed", sUUID, sNewClaimAmount);
 
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.claimChunk(chunk, uuid, newClaimAmount));
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.claimChunk(chunk, uuid, sNewClaimAmount));
         }
     }
 
@@ -68,8 +69,9 @@ public class Cache {
         try (Jedis jedis = pool.getResource()) {
             jedis.hdel("chunk", chunk);
             int newClaimAmount = Integer.parseInt(jedis.hget("claimed", sUUID)) - 1;
-            jedis.hset("claimed", sUUID, String.valueOf(newClaimAmount));
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.unclaimChunk(chunk, uuid, newClaimAmount));
+            String sNewClaimAmount = String.valueOf(newClaimAmount);
+            jedis.hset("claimed", sUUID, sNewClaimAmount);
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.unclaimChunk(chunk, uuid, sNewClaimAmount));
         }
     }
 
@@ -240,7 +242,7 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             jedis.hset("chunkTrustedBuild", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkTrustedBuild(chunk, Integer.parseInt(result)));
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkTrustedBuild(chunk, result));
         }
     }
 
@@ -262,7 +264,7 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             jedis.hset("chunkTrustedBreak", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkTrustedBreak(chunk, Integer.parseInt(result)));
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkTrustedBreak(chunk, result));
         }
     }
 
@@ -284,7 +286,7 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             jedis.hset("chunkTrustedInteract", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkTrustedInteract(chunk, Integer.parseInt(result)));
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkTrustedInteract(chunk, result));
         }
     }
 
@@ -306,7 +308,7 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             jedis.hset("chunkTrustedPvE", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkTrustedPVE(chunk, Integer.parseInt(result)));
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkTrustedPVE(chunk, result));
         }
     }
 
@@ -328,7 +330,7 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             jedis.hset("chunkMonsters", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkSpawnMonsters(chunk, Integer.parseInt(result)));
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkSpawnMonsters(chunk, result));
         }
     }
 
@@ -350,7 +352,7 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             jedis.hset("chunkExplode", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkExplode(chunk, Integer.parseInt(result)));
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkExplode(chunk, result));
         }
     }
 
@@ -372,7 +374,7 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             jedis.hset("chunkPvP", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkPVP(chunk, Integer.parseInt(result)));
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkPVP(chunk, result));
         }
     }
 
@@ -398,7 +400,7 @@ public class Cache {
             pipe.hset("trustedGlobalPvE", sUUID, "1");
             pipe.sync();
 
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.createPlayerData(uuid));
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.createPlayerData(sUUID));
         }
     }
 
@@ -483,7 +485,7 @@ public class Cache {
             String newAmount = String.valueOf(Integer.parseInt(jedis.hget("bonusClaims", sUUID)) - amount);
             jedis.hset("bonusClaims", sUUID, newAmount);
 
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setBonusClaims(uuid, newAmount));
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setBonusClaims(sUUID, newAmount));
         }
     }
 
@@ -498,7 +500,7 @@ public class Cache {
             String newAmount = String.valueOf(Integer.parseInt(jedis.hget("bonusClaims", sUUID)) + amount);
             jedis.hset("bonusClaims", sUUID, newAmount);
 
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setBonusClaims(uuid, newAmount));
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setBonusClaims(sUUID, newAmount));
         }
     }
 
@@ -513,7 +515,7 @@ public class Cache {
         try (Jedis jedis = pool.getResource()) {
             jedis.hset("bonusClaims", sUUID, sAmount);
 
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setBonusClaims(uuid, sAmount));
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setBonusClaims(sUUID, sAmount));
         }
     }
 
@@ -538,7 +540,7 @@ public class Cache {
         try (Jedis jedis = pool.getResource()) {
             jedis.hset("accruedClaims", sUUID, sAmount);
 
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setAccruedClaims(uuid, sAmount));
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setAccruedClaims(sUUID, sAmount));
         }
     }
 
