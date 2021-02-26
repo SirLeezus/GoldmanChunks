@@ -79,8 +79,8 @@ public class PlayerChunks extends PaginatedMenu {
             location.getWorld().loadChunk(chunk);
 
             int y = location.getBlockY();
-            double x = location.getX() + 8.5;
-            double z = location.getZ() + 8.5;
+            int x = location.getBlockX() + 8;
+            int z = location.getBlockZ() + 8;
 
             for (int i = y ; i > 0; i--) {
                 Location loc = new Location(location.getWorld(), x, i, z);
