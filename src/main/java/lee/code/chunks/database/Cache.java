@@ -87,16 +87,33 @@ public class Cache {
         }
     }
 
-    public void setChunkOwner(String chunk, UUID newOwner) {
+    public void setChunkOwner(String chunk, UUID oldOwner, UUID newOwner) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
         SQLite SQL = plugin.getSqLite();
 
-        String sUUID = String.valueOf(newOwner);
+        String sNewUUID = String.valueOf(newOwner);
+        String sOldUUID = String.valueOf(oldOwner);
 
         try (Jedis jedis = pool.getResource()) {
-            jedis.hset("chunk", chunk, sUUID);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkOwner(chunk, sUUID));
+
+            int newClaimAmount = Integer.parseInt(jedis.hget("claimed", sNewUUID)) + 1;
+            String sNewClaimAmount = String.valueOf(newClaimAmount);
+            jedis.hset("claimed", sNewUUID, sNewClaimAmount);
+            addToChunkClaims(sNewUUID, chunk);
+
+            int oldClaimAmount = Integer.parseInt(jedis.hget("claimed", sOldUUID)) - 1;
+            String sOldClaimAmount = String.valueOf(oldClaimAmount);
+            jedis.hset("claimed", sOldUUID, sOldClaimAmount);
+            removeFromChunkClaims(sOldUUID, chunk);
+
+            jedis.hset("chunk", chunk, sNewUUID);
+            jedis.hset("chunkPrice", chunk, "0");
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                SQL.setChunkOwner(chunk, sNewUUID);
+                SQL.setClaimedAmount(sNewUUID, sNewClaimAmount);
+                SQL.setClaimedAmount(sOldUUID, sOldClaimAmount);
+            });
         }
     }
 

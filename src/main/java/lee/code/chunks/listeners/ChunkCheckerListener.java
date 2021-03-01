@@ -44,6 +44,7 @@ public class ChunkCheckerListener implements Listener {
                     player.sendMessage("");
                     player.sendMessage(Lang.COMMAND_INFO_LINE_1.getString(new String[] { owner }));
                     player.sendMessage(Lang.COMMAND_INFO_LINE_2.getString(new String[] { chunkCord }));
+                    if (cache.isChunkClaimed(chunkCord)) if (cache.isChunkForSale(chunkCord))player.sendMessage(Lang.COMMAND_INFO_LINE_3.getString(new String[] { plugin.getPU().formatAmount(cache.getChunkPrice(chunkCord)) }));
                     player.sendMessage("");
                     player.sendMessage(Lang.COMMAND_INFO_FOOTER.getString(null));
 

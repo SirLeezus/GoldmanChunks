@@ -31,7 +31,8 @@ public class CommandManager implements CommandExecutor {
         subCommands.add(new Info());
         subCommands.add(new Manage());
         subCommands.add(new ChunkList());
-        subCommands.add(new Sell());
+        subCommands.add(new SetPrice());
+        subCommands.add(new Buy());
         subCommands.add(new Admin());
     }
 

@@ -204,6 +204,10 @@ public class SQLite {
         update("INSERT OR REPLACE INTO player_data (player, claimed, bonus_claims, accrued_claims, trusted_global, build, break, interact, pve) VALUES( '" + uuid + "', '0', '0', '0', 'n', '1', '1', '1', '1');");
     }
 
+    public void setClaimedAmount(String uuid, String amount) {
+        update("UPDATE player_data SET claimed = '" + amount + "' WHERE player ='" + uuid + "';");
+    }
+
     public void setAccruedClaims(String uuid, String amount) {
         update("UPDATE player_data SET accrued_claims = '" + amount + "' WHERE player ='" + uuid + "';");
     }

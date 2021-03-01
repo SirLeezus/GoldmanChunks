@@ -40,8 +40,14 @@ public class PU {
     public void renderChunkBorder(Player player, Chunk chunk, String type) {
 
         Particle particle = Particle.VILLAGER_HAPPY;
-        if (type.equals("unclaim")) particle = Particle.FLAME;
-        else if (type.equals("info")) particle = Particle.CLOUD;
+        switch (type) {
+            case "unclaim":
+                particle = Particle.FLAME;
+                break;
+            case "info":
+                particle = Particle.END_ROD;
+                break;
+        }
 
         int minX = chunk.getX() * 16;
         int minZ = chunk.getZ() * 16;
@@ -50,10 +56,10 @@ public class PU {
         for (int y = minY - 2; y < minY + 7; y++) {
             for (int x = minX; x < minX + 17; x++) {
                 for (int z = minZ; z < minZ + 17; z++) {
-                    chunk.getWorld().spawnParticle(particle, minX, y + 1, z, 0);
-                    chunk.getWorld().spawnParticle(particle, x, y + 1, minZ, 0);
-                    chunk.getWorld().spawnParticle(particle, minX + 16, y + 1, z, 0);
-                    chunk.getWorld().spawnParticle(particle, x, y + 1, minZ + 16, 0);
+                    player.spawnParticle(particle, minX, y + 1, z, 0);
+                    player.spawnParticle(particle, x, y + 1, minZ, 0);
+                    player.spawnParticle(particle, minX + 16, y + 1, z, 0);
+                    player.spawnParticle(particle, x, y + 1, minZ + 16, 0);
                 }
             }
         }

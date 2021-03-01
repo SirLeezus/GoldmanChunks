@@ -11,6 +11,7 @@ import lee.code.chunks.commands.chunk.TabCompletion;
 import lee.code.chunks.database.SQLite;
 import lee.code.chunks.listeners.JoinQuitListener;
 import lee.code.chunks.listeners.MenuListener;
+import lee.code.essentials.EssentialsAPI;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,6 +22,7 @@ public class GoldmanChunks extends JavaPlugin {
     @Getter private SQLite sqLite;
     @Getter private Cache cache;
     @Getter private CacheAPI cacheAPI;
+    @Getter private EssentialsAPI essentialsAPI;
 
     @Override
     public void onEnable() {
@@ -29,6 +31,7 @@ public class GoldmanChunks extends JavaPlugin {
         this.sqLite = new SQLite();
         this.cache = new Cache();
         this.cacheAPI = new CacheAPI();
+        this.essentialsAPI = new EssentialsAPI();
 
         sqLite.connect();
         sqLite.loadTables();
