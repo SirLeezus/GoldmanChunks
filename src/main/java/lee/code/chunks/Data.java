@@ -13,12 +13,12 @@ import java.util.UUID;
 public class Data {
 
     private final HashMap<UUID, PlayerMU> playerMUList = new HashMap<>();
-    private final HashMap<UUID, Chunk> playerAutoClaimMap = new HashMap<>();
+    private final HashMap<UUID, String> playerAutoClaimMap = new HashMap<>();
     private final HashMap<UUID, Vector> adminClaimSelection = new HashMap<>();
     private final List<UUID> adminBypassList = new ArrayList<>();
     private final List<UUID> playerClickDelay = new ArrayList<>();
 
-    public boolean getPlayerClickDelay(UUID uuid) {
+    public boolean hasPlayerClickDelay(UUID uuid) {
         return playerClickDelay.contains(uuid);
     }
     public void addPlayerClickDelay(UUID uuid) {
@@ -27,13 +27,13 @@ public class Data {
     public void removePlayerClickDelay(UUID uuid) {
         playerClickDelay.remove(uuid);
     }
-    public void setPlayerAutoClaim(UUID uuid, Chunk chunk) {
+    public void setPlayerAutoClaim(UUID uuid, String chunk) {
         playerAutoClaimMap.put(uuid, chunk);
     }
     public void removePlayerAutoClaim(UUID uuid) {
         playerAutoClaimMap.remove(uuid);
     }
-    public Chunk getPlayerLastAutoClaim(UUID uuid) {
+    public String getPlayerLastAutoClaim(UUID uuid) {
         return playerAutoClaimMap.get(uuid);
     }
     public boolean isPlayerAutoClaiming(UUID uuid) {

@@ -25,7 +25,7 @@ public class PlayerChunks extends PaginatedMenu {
 
     @Override
     public String getMenuName() {
-        return Lang.MENU_PLAYER_CHUNKS_TITLE.getString(null) + (pmu.getChunkListPage()  +  1);
+        return Lang.MENU_PLAYER_CHUNKS_TITLE.getString(new String[] { String.valueOf(pmu.getChunkListPage()  +  1) }) ;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class PlayerChunks extends PaginatedMenu {
         ItemStack item = e.getCurrentItem();
         Player player = (Player) e.getWhoClicked();
 
-        if (plugin.getData().getPlayerClickDelay(player.getUniqueId())) return;
+        if (plugin.getData().hasPlayerClickDelay(player.getUniqueId())) return;
         else plugin.getPU().addPlayerClickDelay(player.getUniqueId());
 
         if (item == null) return;
@@ -56,6 +56,7 @@ public class PlayerChunks extends PaginatedMenu {
                 page = page - 1;
                 pmu.setChunkListPage(page);
                 super.open();
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
             }
         } else if (item.equals(nextPageItem)) {
 
@@ -63,12 +64,15 @@ public class PlayerChunks extends PaginatedMenu {
                 page = page + 1;
                 pmu.setChunkListPage(page);
                 super.open();
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NEXT_PAGE.getString(null));
 
         } else if (item.equals(closeItem)) {
             player.closeInventory();
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
         } else {
 
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
             String cord = ChatColor.stripColor(item.getItemMeta().getDisplayName());
             String[] splitCord = cord.split(",", 3);
             World world = Bukkit.getWorld(splitCord[0]);
@@ -144,7 +148,7 @@ public class PlayerChunks extends PaginatedMenu {
                 items.add(itemChunk);
             }
 
-            if(!items.isEmpty()) {
+            if (!items.isEmpty()) {
                 for(int i = 0; i < getMaxItemsPerPage(); i++) {
                     index = getMaxItemsPerPage() * page + i;
                     if(index >= items.size()) break;

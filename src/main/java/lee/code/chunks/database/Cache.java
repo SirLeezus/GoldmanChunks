@@ -4,6 +4,7 @@ import lee.code.cache.jedis.*;
 import lee.code.chunks.GoldmanChunks;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -30,6 +31,7 @@ public class Cache {
             pipe.hset("chunkMonsters", chunk, "0");
             pipe.hset("chunkExplode", chunk, "0");
             pipe.hset("chunkPvP", chunk, "0");
+            pipe.hset("chunkPrice", chunk, "0");
             pipe.sync();
 
             int newClaimAmount = Integer.parseInt(jedis.hget("claimed", sUUID)) + 1;
@@ -41,7 +43,7 @@ public class Cache {
         }
     }
 
-    public void setChunk(String chunk, String uuid, String trusted, String canTrustedBuild, String canTrustedBreak, String canTrustedInteract, String canTrustedPvE, String canPvP, String canSpawnMonsters, String canExplode) {
+    public void setChunk(String chunk, String uuid, String trusted, String canTrustedBuild, String canTrustedBreak, String canTrustedInteract, String canTrustedPvE, String canPvP, String canSpawnMonsters, String canExplode, String chunkPrice) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
@@ -56,9 +58,54 @@ public class Cache {
             pipe.hset("chunkPvP", chunk, canPvP);
             pipe.hset("chunkMonsters", chunk, canSpawnMonsters);
             pipe.hset("chunkExplode", chunk, canExplode);
+            pipe.hset("chunkPrice", chunk, chunkPrice);
             pipe.sync();
 
             addToChunkClaims(uuid, chunk);
+        }
+    }
+
+    public boolean isChunkForSale(String chunk) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        try (Jedis jedis = pool.getResource()) {
+            return !jedis.hget("chunkPrice", chunk).equals("0");
+        }
+    }
+
+    public void setChunkPrice(String chunk, int price) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+        SQLite SQL = plugin.getSqLite();
+
+        String sPrice = String.valueOf(price);
+
+        try (Jedis jedis = pool.getResource()) {
+            jedis.hset("chunkPrice", chunk, sPrice);
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkPrice(chunk, sPrice));
+        }
+    }
+
+    public void setChunkOwner(String chunk, UUID newOwner) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+        SQLite SQL = plugin.getSqLite();
+
+        String sUUID = String.valueOf(newOwner);
+
+        try (Jedis jedis = pool.getResource()) {
+            jedis.hset("chunk", chunk, sUUID);
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkOwner(chunk, sUUID));
+        }
+    }
+
+    public int getChunkPrice(String chunk) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        try (Jedis jedis = pool.getResource()) {
+            return Integer.parseInt(jedis.hget("chunkPrice", chunk));
         }
     }
 
@@ -473,13 +520,13 @@ public class Cache {
         }
     }
 
-    public int getPlayerMaxClaimAmount(Player player) {
-        UUID uuid = player.getUniqueId();
+    public int getPlayerMaxClaimAmount(UUID uuid) {
         int maxClaims = 100000000;
         int defaultClaims = 10;
         int bonusClaims = getBonusClaimsAmount(uuid);
         int accruedClaims = getAccruedClaimsAmount(uuid);
 
+        OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
         if (!player.isOp()) return defaultClaims + bonusClaims + accruedClaims;
         else return maxClaims;
     }

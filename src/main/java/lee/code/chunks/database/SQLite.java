@@ -74,7 +74,8 @@ public class SQLite {
                 "`pve` varchar NOT NULL," +
                 "`pvp` varchar NOT NULL," +
                 "`monster_spawning` varchar NOT NULL," +
-                "`explosions` varchar NOT NULL" +
+                "`explosions` varchar NOT NULL," +
+                "`price` varchar NOT NULL" +
                 ");");
 
         //admin table
@@ -106,7 +107,7 @@ public class SQLite {
     //CHUNKS TABLE
 
     public void claimChunk(String chunk, UUID uuid, String amount) {
-        update("INSERT OR REPLACE INTO chunks (chunk, owner, trusted, build, break, interact, pve, pvp, monster_spawning, explosions) VALUES( '" + chunk + "','" + uuid + "', 'n', '1', '1', '1', '1', '0', '0', '0');");
+        update("INSERT OR REPLACE INTO chunks (chunk, owner, trusted, build, break, interact, pve, pvp, monster_spawning, explosions, price) VALUES( '" + chunk + "','" + uuid + "', 'n', '1', '1', '1', '1', '0', '0', '0', '0');");
         update("UPDATE player_data SET claimed ='" + amount + "' WHERE player ='" + uuid + "';");
     }
 
@@ -151,16 +152,12 @@ public class SQLite {
         update("UPDATE player_data SET claimed ='" + 0 + "' WHERE player ='" + uuid + "';");
     }
 
-    @SneakyThrows //TODO still workng on
-    public List<String> getPlayerClaimedChunks(String uuid) {
-        ResultSet rs = getResult("SELECT * FROM chunks WHERE owner = '" + uuid + "';");
+    public void setChunkPrice(String chunk, String price) {
+        update("UPDATE chunks SET price ='" + price + "' WHERE chunk ='" + chunk + "';");
+    }
 
-        if (rs.next()) {
-            List<String> chunks = new ArrayList<>();
-            chunks.add(rs.getString("chunk"));
-            while (rs.next()) chunks.add(rs.getString("chunk"));
-            return chunks;
-        } else return Collections.singletonList("n");
+    public void setChunkOwner(String chunk, String uuid) {
+        update("UPDATE chunks SET owner ='" + uuid + "' WHERE chunk ='" + chunk + "';");
     }
 
     //ADMIN CHUNKS TABLE
@@ -253,7 +250,8 @@ public class SQLite {
                 String canPvP = rs.getString("pvp");
                 String canSpawnMonsters = rs.getString("monster_spawning");
                 String canExplode = rs.getString("explosions");
-                cache.setChunk(chunk, uuid, trusted, canTrustedBuild, canTrustedBreak, canTrustedInteract, canTrustedPvE, canPvP, canSpawnMonsters, canExplode);
+                String chunkPrice = rs.getString("price");
+                cache.setChunk(chunk, uuid, trusted, canTrustedBuild, canTrustedBreak, canTrustedInteract, canTrustedPvE, canPvP, canSpawnMonsters, canExplode, chunkPrice);
                 count++;
             }
             System.out.println(plugin.getPU().format("&6Chunk Claims Loaded: &a" + count));

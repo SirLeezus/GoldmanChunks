@@ -33,20 +33,15 @@ public class PU {
 
     public List<String> getOnlinePlayers() {
         List<String> players = new ArrayList<>();
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            players.add(player.getName());
-        }
+        for (Player player : Bukkit.getOnlinePlayers()) players.add(player.getName());
         return players;
     }
 
     public void renderChunkBorder(Player player, Chunk chunk, String type) {
 
         Particle particle = Particle.VILLAGER_HAPPY;
-        if (type.equals("unclaim")) {
-            particle = Particle.FLAME;
-        } else if (type.equals("info")) {
-            particle = Particle.CLOUD;
-        }
+        if (type.equals("unclaim")) particle = Particle.FLAME;
+        else if (type.equals("info")) particle = Particle.CLOUD;
 
         int minX = chunk.getX() * 16;
         int minZ = chunk.getZ() * 16;
@@ -55,27 +50,27 @@ public class PU {
         for (int y = minY - 2; y < minY + 7; y++) {
             for (int x = minX; x < minX + 17; x++) {
                 for (int z = minZ; z < minZ + 17; z++) {
-                    player.spawnParticle(particle, minX, y + 1, z, 0);
-                    player.spawnParticle(particle, x, y + 1, minZ, 0);
-                    player.spawnParticle(particle, minX + 16, y + 1, z, 0);
-                    player.spawnParticle(particle, x, y + 1, minZ + 16, 0);
+                    chunk.getWorld().spawnParticle(particle, minX, y + 1, z, 0);
+                    chunk.getWorld().spawnParticle(particle, x, y + 1, minZ, 0);
+                    chunk.getWorld().spawnParticle(particle, minX + 16, y + 1, z, 0);
+                    chunk.getWorld().spawnParticle(particle, x, y + 1, minZ + 16, 0);
                 }
             }
         }
     }
 
-    public Collection<Chunk> getChunksAroundPlayer(Player player) {
+    public List<String> getChunksAroundPlayer(Player player) {
         int[] offset = {-1, 0, 1};
 
         World world = player.getWorld();
         int baseX = player.getLocation().getChunk().getX();
         int baseZ = player.getLocation().getChunk().getZ();
 
-        Collection<Chunk> chunksAroundPlayer = new HashSet<>();
+        List<String> chunksAroundPlayer = new ArrayList<>();
         for (int x : offset) {
             for (int z : offset) {
                 Chunk chunk = world.getChunkAt(baseX + x, baseZ + z);
-                chunksAroundPlayer.add(chunk);
+                chunksAroundPlayer.add(formatChunkLocation(chunk));
             }
         }
         return chunksAroundPlayer;
@@ -85,8 +80,7 @@ public class PU {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         plugin.getData().addPlayerClickDelay(uuid);
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-        scheduler.runTaskLater(plugin, () ->
-                plugin.getData().removePlayerClickDelay(uuid), Values.CLICK_DELAY.getValue());
+        scheduler.runTaskLater(plugin, () -> plugin.getData().removePlayerClickDelay(uuid), Values.CLICK_DELAY.getValue());
     }
 
     public void accruedClaimTimer() {

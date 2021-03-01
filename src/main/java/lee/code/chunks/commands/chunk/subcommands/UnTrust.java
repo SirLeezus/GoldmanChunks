@@ -6,6 +6,7 @@ import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -40,19 +41,18 @@ public class UnTrust extends SubCommand {
         Cache cache = plugin.getCache();
 
         if (args.length > 1) {
-            Chunk chunk = player.getLocation().getChunk();
-            String chunkCord = plugin.getPU().formatChunkLocation(chunk);
-
-            UUID target = Bukkit.getPlayerUniqueId(args[1]);
-
+            OfflinePlayer target = Bukkit.getOfflinePlayerIfCached(args[1]);
             if (target != null) {
+                Chunk chunk = player.getLocation().getChunk();
+                String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+                UUID targetUUID = target.getUniqueId();
                 if (cache.isChunkOwner(chunkCord, uuid)) {
-                    if (cache.isChunkTrusted(chunkCord, target)) {
-                        cache.removeChunkTrusted(chunkCord, target);
-                        player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_UNTRUST_REMOVED_PLAYER.getString(new String[] { args[1], chunkCord }));
-                    } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNTRUST_PLAYER_NOT_TRUSTED.getString(new String[] { args[1], chunkCord }));
+                    if (cache.isChunkTrusted(chunkCord, targetUUID)) {
+                        cache.removeChunkTrusted(chunkCord, targetUUID);
+                        player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_UNTRUST_REMOVED_PLAYER.getString(new String[] { target.getName(), chunkCord }));
+                    } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNTRUST_PLAYER_NOT_TRUSTED.getString(new String[] { target.getName(), chunkCord }));
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNTRUST_NOT_CHUNK_OWNER.getString(null));
-            }
+            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_PLAYER_NOT_FOUND.getString(new String[]{args[1]}));
         }
     }
 

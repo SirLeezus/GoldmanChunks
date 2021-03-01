@@ -37,12 +37,13 @@ public class AutoClaim extends SubCommand {
 
         UUID uuid = player.getUniqueId();
         Chunk chunk = player.getLocation().getChunk();
+        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
         if (plugin.getData().isPlayerAutoClaiming(uuid)) {
             plugin.getData().removePlayerAutoClaim(uuid);
             player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_AUTO_CLAIM_DISABLED.getString(null));
         } else {
-            plugin.getData().setPlayerAutoClaim(uuid, chunk);
+            plugin.getData().setPlayerAutoClaim(uuid, chunkCord);
             player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_AUTO_CLAIM_ENABLED.getString(null));
         }
     }

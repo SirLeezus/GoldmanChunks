@@ -29,7 +29,7 @@ public class ChunkCheckerListener implements Listener {
 
             if (handItem.getType().equals(Material.STICK)) {
 
-                if (plugin.getData().getPlayerClickDelay(uuid)) return;
+                if (plugin.getData().hasPlayerClickDelay(uuid)) return;
                 else plugin.getPU().addPlayerClickDelay(uuid);
 
                 if (e.getClickedBlock() != null) {

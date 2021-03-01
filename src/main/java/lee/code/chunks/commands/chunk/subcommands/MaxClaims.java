@@ -43,7 +43,7 @@ public class MaxClaims extends SubCommand {
         int claimed = cache.getClaimedAmount(uuid);
         int bonusClaims = cache.getBonusClaimsAmount(uuid);
         int accruedClaims = cache.getAccruedClaimsAmount(uuid);
-        int maxClaims = cache.getPlayerMaxClaimAmount(player);
+        int maxClaims = cache.getPlayerMaxClaimAmount(uuid);
         int time = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / 20;
         String timePlayed = plugin.getPU().formatTime(time);
         String timeRequired = plugin.getPU().formatTime(Values.ACCRUED_CLAIMS_BASE_TIME_REQUIRED.getValue());

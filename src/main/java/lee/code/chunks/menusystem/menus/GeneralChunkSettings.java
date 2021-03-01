@@ -32,7 +32,7 @@ public class GeneralChunkSettings extends Menu {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Player player = pmu.getOwner();
 
-        if (plugin.getData().getPlayerClickDelay(player.getUniqueId())) return;
+        if (plugin.getData().hasPlayerClickDelay(player.getUniqueId())) return;
         else plugin.getPU().addPlayerClickDelay(player.getUniqueId());
         if (e.getClickedInventory() == player.getInventory()) return;
 

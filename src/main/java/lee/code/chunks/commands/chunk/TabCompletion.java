@@ -13,7 +13,7 @@ import java.util.*;
 
 public class TabCompletion implements TabCompleter {
 
-    private final List<String> subCommands = Arrays.asList("trust", "trustall", "trusted", "untrust", "untrustall", "claim", "unclaim", "map", "info", "manage", "autoclaim", "list", "abandonallclaims", "admin", "maxclaims");
+    private final List<String> subCommands = Arrays.asList("trust", "trustall", "trusted", "untrust", "untrustall", "claim", "unclaim", "map", "info", "manage", "autoclaim", "list", "abandonallclaims", "admin", "maxclaims", "sell");
     private final List<String> blank = new ArrayList<>();
 
     @Override

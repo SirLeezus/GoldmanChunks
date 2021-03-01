@@ -34,7 +34,7 @@ public class ChunkManager extends Menu {
 
         Player player = pmu.getOwner();
 
-        if (plugin.getData().getPlayerClickDelay(pmu.getOwner().getUniqueId())) return;
+        if (plugin.getData().hasPlayerClickDelay(pmu.getOwner().getUniqueId())) return;
         else plugin.getPU().addPlayerClickDelay(pmu.getOwner().getUniqueId());
         if (e.getClickedInventory() == player.getInventory()) return;
 

@@ -5,6 +5,7 @@ import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -39,15 +40,14 @@ public class UnTrustAll extends SubCommand {
         Cache cache = plugin.getCache();
 
         if (args.length > 1) {
-
-            UUID target = Bukkit.getPlayerUniqueId(args[1]);
-
+            OfflinePlayer target = Bukkit.getOfflinePlayerIfCached(args[1]);
             if (target != null) {
-                if (cache.isGlobalTrusted(uuid, target)) {
-                    cache.removeGlobalTrusted(uuid, target);
-                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_UNTRUSTALL_REMOVED_PLAYER.getString(new String[] { args[1] }));
-                } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNTRUSTALL_PLAYER_NOT_TRUSTED.getString(new String[] { args[1] }));
-            }
+                UUID targetUUID = target.getUniqueId();
+                if (cache.isGlobalTrusted(uuid, targetUUID)) {
+                    cache.removeGlobalTrusted(uuid, targetUUID);
+                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_UNTRUSTALL_REMOVED_PLAYER.getString(new String[] { target.getName() }));
+                } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNTRUSTALL_PLAYER_NOT_TRUSTED.getString(new String[] { target.getName() }));
+            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_PLAYER_NOT_FOUND.getString(new String[]{args[1]}));
         }
     }
 

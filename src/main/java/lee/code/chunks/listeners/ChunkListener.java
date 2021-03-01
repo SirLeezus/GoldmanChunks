@@ -19,6 +19,7 @@ import org.bukkit.event.vehicle.VehicleDestroyEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public class ChunkListener implements Listener {
@@ -565,7 +566,7 @@ public class ChunkListener implements Listener {
 
     //auto claim handler
     @EventHandler
-    public void onChunkChange(PlayerMoveEvent e) {
+    public void onAutoClaim(PlayerMoveEvent e) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
 
@@ -577,37 +578,33 @@ public class ChunkListener implements Listener {
             String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
             if (!cache.isChunkClaimed(chunkCord)) {
+                if (!cache.isAdminChunk(chunkCord)) {
+                    List<String> chunksAroundPlayer = plugin.getPU().getChunksAroundPlayer(player);
+                    String lastChunkClaim = plugin.getData().getPlayerLastAutoClaim(uuid);
+                    if (chunksAroundPlayer.contains(lastChunkClaim)) {
 
-                if (cache.isAdminChunk(chunkCord)) {
-                    plugin.getData().removePlayerAutoClaim(uuid);
-                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_ADMIN_CLAIMED.getString(null));
-                    return;
-                }
+                        int playerClaimAmount = cache.getClaimedAmount(uuid);
+                        int playerMaxClaims = cache.getPlayerMaxClaimAmount(uuid);
 
-                Collection<Chunk> chunksAroundPlayer = plugin.getPU().getChunksAroundPlayer(player);
-                Chunk lastChunkClaim = plugin.getData().getPlayerLastAutoClaim(uuid);
-
-                if (!chunksAroundPlayer.contains(lastChunkClaim)) {
-                    plugin.getData().removePlayerAutoClaim(uuid);
-                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_AUTO_CLAIM.getString(null));
-                    return;
-                }
-
-                int playerClaimAmount = cache.getClaimedAmount(uuid);
-                int playerMaxClaims = cache.getPlayerMaxClaimAmount(player);
-
-                if (playerClaimAmount < playerMaxClaims) {
-                    playerClaimAmount++;
-                    cache.claimChunk(chunkCord, uuid);
-                    plugin.getData().setPlayerAutoClaim(uuid, chunk);
-                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_CLAIM_SUCCESSFUL.getString(new String[]{chunkCord, plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims)}));
-                    plugin.getPU().renderChunkBorder(player, chunk, "claim");
+                        if (playerClaimAmount < playerMaxClaims) {
+                            playerClaimAmount++;
+                            cache.claimChunk(chunkCord, uuid);
+                            plugin.getData().setPlayerAutoClaim(uuid,chunkCord);
+                            player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_CLAIM_SUCCESSFUL.getString(new String[]{chunkCord, plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims)}));
+                            plugin.getPU().renderChunkBorder(player, chunk, "claim");
+                        } else {
+                            plugin.getData().removePlayerAutoClaim(uuid);
+                            player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_CLAIM_MAXED.getString(new String[] { plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) }));
+                        }
+                    } else {
+                        plugin.getData().removePlayerAutoClaim(uuid);
+                        player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_AUTO_CLAIM.getString(null));
+                    }
                 } else {
                     plugin.getData().removePlayerAutoClaim(uuid);
-                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_CLAIM_MAXED.getString(new String[] { plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) }));
+                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_ADMIN_CLAIMED.getString(null));
                 }
-
-            } else if (!plugin.getData().getPlayerLastAutoClaim(uuid).equals(chunk)) plugin.getData().setPlayerAutoClaim(player.getUniqueId(), chunk);
+            } else if (!plugin.getData().getPlayerLastAutoClaim(uuid).equals(chunkCord)) plugin.getData().setPlayerAutoClaim(uuid, chunkCord);
         }
     }
 }

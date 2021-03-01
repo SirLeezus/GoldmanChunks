@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandManager implements CommandExecutor {
-    @Getter public final ArrayList<SubCommand> subCommands = new ArrayList<>();
+    @Getter private final ArrayList<SubCommand> subCommands = new ArrayList<>();
 
     public CommandManager() {
         subCommands.add(new Claim());
@@ -31,6 +31,7 @@ public class CommandManager implements CommandExecutor {
         subCommands.add(new Info());
         subCommands.add(new Manage());
         subCommands.add(new ChunkList());
+        subCommands.add(new Sell());
         subCommands.add(new Admin());
     }
 
@@ -45,7 +46,6 @@ public class CommandManager implements CommandExecutor {
             if (args.length > 0) {
                 for (int i = 0; i < getSubCommands().size(); i++) {
                     if (args[0].equalsIgnoreCase(getSubCommands().get(i).getName())){
-                        //perm check for sub command
                         if (p.hasPermission(getSubCommands().get(i).getPermission())) getSubCommands().get(i).perform(p, args);
                         else p.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NO_PERMISSION.getString(null));
                         return true;
@@ -53,7 +53,6 @@ public class CommandManager implements CommandExecutor {
                 }
             }
 
-            //plugin info
             int number = 1;
             List<String> lines = new ArrayList<>();
             lines.add(Lang.MESSAGE_HELP_DIVIDER.getString(null));
@@ -61,9 +60,7 @@ public class CommandManager implements CommandExecutor {
             lines.add("&r");
 
             for (int i = 0; i < getSubCommands().size(); i++) {
-                //perm check
                 if (p.hasPermission(getSubCommands().get(i).getPermission())) {
-                    //add command to list
                     lines.add(Lang.MESSAGE_HELP_SUB_COMMAND.getString(new String [] { String.valueOf(number), getSubCommands().get(i).getSyntax(), getSubCommands().get(i).getDescription() }));
                     number++;
                 }
@@ -75,7 +72,7 @@ public class CommandManager implements CommandExecutor {
             return true;
 
         }
-        //console command
+
         if (args.length > 0) {
             for (int i = 0; i < getSubCommands().size(); i++) {
                 if (args[0].equalsIgnoreCase(getSubCommands().get(i).getName())) {
