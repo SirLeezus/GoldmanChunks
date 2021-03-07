@@ -43,9 +43,9 @@ public class Buy extends SubCommand {
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
         if (cache.isChunkClaimed(chunkCord)) {
+            UUID ownerUUID = cache.getChunkOwnerUUID(chunkCord);
+            String ownerName = Bukkit.getOfflinePlayer(ownerUUID).getName();
             if (cache.isChunkForSale(chunkCord)) {
-                UUID ownerUUID = cache.getChunkOwnerUUID(chunkCord);
-                String ownerName = Bukkit.getOfflinePlayer(ownerUUID).getName();
                 if (!uuid.equals(ownerUUID)) {
                     int playerClaimAmount = cache.getClaimedAmount(uuid);
                     int playerMaxClaims = cache.getPlayerMaxClaimAmount(uuid);
@@ -69,11 +69,11 @@ public class Buy extends SubCommand {
                                 Player owner = Bukkit.getPlayer(ownerUUID);
                                 if (owner != null) owner.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_BUY_SUCCESSFUL_OWNER.getString(new String[] { player.getName(), chunkCord, plugin.getPU().formatAmount(price), plugin.getPU().formatAmount(ownerClaimAmount), plugin.getPU().formatAmount(ownerMaxClaims) }));
                             }
-                        }
+                        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_BUY_BALANCE.getString(new String[] { String.valueOf(price), chunkCord, ownerName, String.valueOf(balance) }));
                     } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_CLAIM_MAXED.getString(new String[] { plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) }));
-                }
-            }
-        }
+                } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_BUY_OWNER.getString(null));
+            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_BUY_NOT_FOR_SALE.getString(new String[] { chunkCord, ownerName }));
+        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_BUY_NOT_CLAIMED.getString(new String[] { chunkCord }));
     }
 
     @Override

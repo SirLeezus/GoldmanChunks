@@ -2,7 +2,6 @@ package lee.code.chunks;
 
 import lee.code.chunks.database.SQLite;
 import lee.code.chunks.menusystem.PlayerMU;
-import org.bukkit.Chunk;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;

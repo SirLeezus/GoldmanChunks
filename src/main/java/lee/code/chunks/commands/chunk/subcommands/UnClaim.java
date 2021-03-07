@@ -46,7 +46,6 @@ public class UnClaim extends SubCommand {
                 cache.unclaimChunk(chunkCord, uuid);
                 player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_UNCLAIM_SUCCESSFUL.getString(new String[] { chunkCord }));
                 plugin.getPU().renderChunkBorder(player, chunk, "unclaim");
-
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNCLAIM_OWNER.getString(new String[] { cache.getChunkOwnerName(chunkCord) }));
         } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNCLAIMED_NOT_CLAIMED.getString(null));
     }

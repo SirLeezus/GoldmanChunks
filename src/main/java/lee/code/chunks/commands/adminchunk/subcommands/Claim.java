@@ -10,8 +10,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-
 public class Claim extends SubCommand {
 
     @Override
@@ -42,7 +40,6 @@ public class Claim extends SubCommand {
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
         if (!cache.isChunkClaimed(chunkCord)) {
-
             Vector start = new Vector(chunk.getX(), 0, chunk.getZ());
             String world = player.getWorld().getName();
             String selectedChunk = world + ",%.0f,%.0f";
@@ -64,7 +61,7 @@ public class Claim extends SubCommand {
                     for(double z = min.getZ(); z <= max.getZ(); z++) {
                         String inSelectionMessage = world + ",%.0f,%.0f";
                         String chunkCordSelected = String.format(inSelectionMessage, x, z);
-                        if (!cache.isChunkClaimed(chunkCordSelected)) {
+                        if (!cache.isChunkClaimed(chunkCordSelected) && !cache.isAdminChunk(chunkCordSelected)) {
                             claimed++;
                             cache.claimAdminChunk(chunkCordSelected);
                         }
@@ -73,7 +70,7 @@ public class Claim extends SubCommand {
                 plugin.getData().removeAdminClaimSelection(player.getUniqueId());
                 player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_CLAIM_SUCCESSFUL.getString(new String[] { String.valueOf(claimed) } ));
             });
-        }
+        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_ADMIN_CLAIM_PLAYER_CLAIMED.getString(null));
     }
 
     @Override

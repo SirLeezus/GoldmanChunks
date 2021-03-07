@@ -1,7 +1,6 @@
 package lee.code.chunks.database;
 
 import lee.code.chunks.GoldmanChunks;
-import lombok.SneakyThrows;
 
 import java.io.File;
 import java.io.IOException;

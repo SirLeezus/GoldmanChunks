@@ -4,6 +4,7 @@ import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -53,7 +54,12 @@ public class Claim extends SubCommand {
                     plugin.getPU().renderChunkBorder(player, chunk, "claim");
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_CLAIM_MAXED.getString(new String[] { plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) }));
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_ADMIN_CLAIMED.getString(null));
-        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_CLAIMED.getString(new String[] { cache.getChunkOwnerName(chunkCord) }));
+        } else {
+            UUID ownerUUID = cache.getChunkOwnerUUID(chunkCord);
+            String ownerName = Bukkit.getOfflinePlayer(ownerUUID).getName();
+            if (!uuid.equals(ownerUUID)) player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_CLAIMED.getString(new String[] { ownerName }));
+            else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_CLAIMED_OWNER.getString(null));
+        }
     }
 
     @Override

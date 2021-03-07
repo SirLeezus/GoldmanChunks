@@ -5,6 +5,7 @@ import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.PaginatedMenu;
 import lee.code.chunks.menusystem.PlayerMU;
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -71,33 +72,35 @@ public class PlayerChunks extends PaginatedMenu {
             player.closeInventory();
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
         } else {
-
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
-            String cord = ChatColor.stripColor(item.getItemMeta().getDisplayName());
-            String[] splitCord = cord.split(",", 3);
-            World world = Bukkit.getWorld(splitCord[0]);
-            if (world == null) return;
+            if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
+                String cord = ChatColor.stripColor(item.getItemMeta().getDisplayName());
+                System.out.println(cord);
+                String[] splitCord = cord.split(",", 3);
+                World world = Bukkit.getWorld(splitCord[0]);
+                if (world == null) return;
 
-            Chunk chunk = world.getChunkAt(Integer.parseInt(splitCord[1]), Integer.parseInt(splitCord[2]));
-            Location location = new Location(Bukkit.getWorld(splitCord[0]), chunk.getX() * 16, 100, chunk.getZ() * 16);
-            location.getWorld().loadChunk(chunk);
+                Chunk chunk = world.getChunkAt(Integer.parseInt(splitCord[1]), Integer.parseInt(splitCord[2]));
+                Location location = new Location(Bukkit.getWorld(splitCord[0]), chunk.getX() * 16, 100, chunk.getZ() * 16);
+                location.getWorld().loadChunk(chunk);
 
-            int y = location.getBlockY();
-            int x = location.getBlockX() + 8;
-            int z = location.getBlockZ() + 8;
+                int y = location.getBlockY();
+                int x = location.getBlockX() + 8;
+                int z = location.getBlockZ() + 8;
 
-            for (int i = y ; i > 0; i--) {
-                Location loc = new Location(location.getWorld(), x, i, z);
-                if (loc.getBlock().getType() == Material.AIR) {
-                    Location ground = new Location(loc.getWorld(), loc.getX(), loc.getY() - 1, loc.getZ());
-                    if (ground.getBlock().getType() != Material.AIR && ground.getBlock().getType() != Material.LAVA) {
-                        player.teleportAsync(loc);
-                        player.sendActionBar(Lang.TELEPORT.getString(null));
-                        return;
+                for (int i = y ; i > 0; i--) {
+                    Location loc = new Location(location.getWorld(), x, i, z);
+                    if (loc.getBlock().getType() == Material.AIR) {
+                        Location ground = new Location(loc.getWorld(), loc.getX(), loc.getY() - 1, loc.getZ());
+                        if (ground.getBlock().getType() != Material.AIR && ground.getBlock().getType() != Material.LAVA) {
+                            player.teleportAsync(loc);
+                            player.sendActionBar(Component.text(Lang.TELEPORT.getString(null)));
+                            return;
+                        }
                     }
                 }
+                player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_LIST_TELEPORT_UNSAFE.getString(null));
             }
-            player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_LIST_TELEPORT_UNSAFE.getString(null));
         }
     }
 
@@ -138,7 +141,7 @@ public class PlayerChunks extends PaginatedMenu {
                 }
 
                 ItemMeta itemChunkMeta = itemChunk.getItemMeta();
-                itemChunkMeta.setDisplayName(plugin.getPU().format("&b&l&n" + chunk));
+                itemChunkMeta.displayName(Component.text(plugin.getPU().format("&b&l&n" + chunk)));
 
                 if (chunk.equals(playerChunkCord)) {
                     itemChunkMeta.addEnchant(Enchantment.PROTECTION_FALL, 1, false);

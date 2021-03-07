@@ -5,7 +5,9 @@ import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.Menu;
 import lee.code.chunks.menusystem.PlayerMU;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Chunk;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -41,16 +43,17 @@ public class GeneralChunkSettings extends Menu {
         if (item != null) {
             switch (e.getSlot()) {
                 case 11:
-                    updatePermItem(item, 11, player.getLocation().getChunk());
+                    updatePermItem(player, item, 11, player.getLocation().getChunk());
                     break;
                 case 13:
-                    updatePermItem(item, 13, player.getLocation().getChunk());
+                    updatePermItem(player, item, 13, player.getLocation().getChunk());
                     break;
                 case 15:
-                    updatePermItem(item, 15, player.getLocation().getChunk());
+                    updatePermItem(player, item, 15, player.getLocation().getChunk());
                     break;
                 case 31:
                     new ChunkManager(pmu).open();
+                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
                     break;
             }
         }
@@ -74,34 +77,34 @@ public class GeneralChunkSettings extends Menu {
 
         //chunk monster spawning
         if (cache.canChunkSpawnMonsters(chunkCord)) {
-            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
+            allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
             allow.setItemMeta(allowMeta);
             inventory.setItem(11, allow);
         } else {
-            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
+            denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[] { Lang.FALSE.getString(null) })));
             deny.setItemMeta(denyMeta);
             inventory.setItem(11, deny);
         }
 
         //chunk pvp
         if (cache.canChunkPvP(chunkCord)) {
-            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
+            allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
             allow.setItemMeta(allowMeta);
             inventory.setItem(13, allow);
 
         } else {
-            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
+            denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.FALSE.getString(null) })));
             deny.setItemMeta(denyMeta);
             inventory.setItem(13, deny);
         }
 
         //chunk explosions
         if (cache.canChunkExplode(chunkCord)) {
-            allowMeta.setDisplayName(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
+            allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
             allow.setItemMeta(allowMeta);
             inventory.setItem(15, allow);
         } else {
-            denyMeta.setDisplayName(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
+            denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[] { Lang.FALSE.getString(null) })));
             deny.setItemMeta(denyMeta);
             inventory.setItem(15, deny);
         }
@@ -110,7 +113,7 @@ public class GeneralChunkSettings extends Menu {
         inventory.setItem(31, backItem);
     }
 
-    private void updatePermItem(ItemStack item, int slot, Chunk chunk) {
+    private void updatePermItem(Player player, ItemStack item, int slot, Chunk chunk) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
 
@@ -126,22 +129,25 @@ public class GeneralChunkSettings extends Menu {
         if (item.getType() != permTrueItem.getType()) {
             switch (slot) {
                 case 11:
-                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{Lang.TRUE.getString(null)}));
+                    allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
                     cache.setChunkSpawnMonsters(chunkCord, true);
                     inventory.setItem(slot, allow);
+                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 1);
                     break;
                 case 13:
-                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.TRUE.getString(null) }));
+                    allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
                     allow.setItemMeta(allowMeta);
                     cache.setChunkPvP(chunkCord, true);
                     inventory.setItem(slot, allow);
+                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 1);
                     break;
                 case 15:
-                    allowMeta.setDisplayName(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[]{Lang.TRUE.getString(null)}));
+                    allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
                     cache.setChunkExplode(chunkCord, true);
                     inventory.setItem(slot, allow);
+                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 1);
                     break;
             }
             //deny
@@ -149,22 +155,25 @@ public class GeneralChunkSettings extends Menu {
 
             switch (slot) {
                 case 11:
-                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{Lang.FALSE.getString(null)}));
+                    denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
                     cache.setChunkSpawnMonsters(chunkCord, false);
                     inventory.setItem(slot, deny);
+                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1, 1);
                     break;
                 case 13:
-                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.FALSE.getString(null) }));
+                    denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.FALSE.getString(null) })));
                     deny.setItemMeta(denyMeta);
                     cache.setChunkPvP(chunkCord, false);
                     inventory.setItem(slot, deny);
+                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1, 1);
                     break;
                 case 15:
-                    denyMeta.setDisplayName(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[]{Lang.FALSE.getString(null)}));
+                    denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
                     cache.setChunkExplode(chunkCord, false);
                     inventory.setItem(slot, deny);
+                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1, 1);
                     break;
             }
         }

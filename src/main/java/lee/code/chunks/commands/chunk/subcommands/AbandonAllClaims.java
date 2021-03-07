@@ -41,7 +41,6 @@ public class AbandonAllClaims extends SubCommand {
             cache.unclaimAllChunks(uuid);
             int maxClaims = cache.getPlayerMaxClaimAmount(uuid);
             int totalClaims = cache.getClaimedAmount(uuid);
-
             player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ABANDONALLCLAIMS_SUCCESSFUL.getString(new String[] { plugin.getPU().formatAmount(totalClaims), plugin.getPU().formatAmount(maxClaims) }));
         } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ABANDONALLCLAIMS_NO_CLAIMS.getString(null));
     }

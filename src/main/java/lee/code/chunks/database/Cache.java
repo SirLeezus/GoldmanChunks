@@ -193,7 +193,7 @@ public class Cache {
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
         try (Jedis jedis = pool.getResource()) {
-            return jedis.hexists("chunk", chunk) || jedis.hexists("adminChunkBuild", chunk) ;
+            return jedis.hexists("chunk", chunk);
         }
     }
 

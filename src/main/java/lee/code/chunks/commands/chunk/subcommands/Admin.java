@@ -6,6 +6,7 @@ import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -91,43 +92,31 @@ public class Admin extends SubCommand {
                             break;
 
                         default:
-
-                            int amount;
                             Scanner sellScanner = new Scanner(args[4]);
                             if (sellScanner.hasNextInt()) {
-                                amount = Integer.parseInt(args[4]);
-                            } else {
-                                player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_BONUS_CLAIMS_AMOUNT.getString(new String[]{ args[4] }));
-                                return;
-                            }
+                                int amount = Integer.parseInt(args[4]);
+                                OfflinePlayer target = Bukkit.getOfflinePlayerIfCached(args[3]);
+                                if (target != null) {
+                                    UUID targetUUID = target.getUniqueId();
 
-                            Player target;
-                            if (plugin.getPU().getOnlinePlayers().contains(args[3])) {
-                                target = Bukkit.getPlayer(args[3]);
-                            } else {
-                                player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_PLAYER_NOT_ONLINE.getString(new String[]{ args[3] }));
-                                return;
-                            }
-
-                            UUID targetUUID = target.getUniqueId();
-
-                            switch (args[2]) {
-
-                                case "add":
-                                    cache.addBonusClaimsAmount(targetUUID, amount);
-                                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BONUS_CLAIMS_ADD.getString(new String[] { plugin.getPU().formatAmount(amount), target.getName() }));
-                                    break;
-                                case "remove":
-                                    cache.removeBonusClaimsAmount(targetUUID, amount);
-                                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BONUS_CLAIMS_REMOVE.getString(new String[] { plugin.getPU().formatAmount(amount), target.getName() }));
-                                    break;
-                                case "set":
-                                    cache.setBonusClaimsAmount(targetUUID, amount);
-                                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BONUS_CLAIMS_SET.getString(new String[] { plugin.getPU().formatAmount(amount), target.getName() }));
-                                    break;
-
-                                default: player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_WRONG_ARG.getString(new String[] { args[2] }));
-                            }
+                                    switch (args[2]) {
+                                        case "add":
+                                            cache.addBonusClaimsAmount(targetUUID, amount);
+                                            player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BONUS_CLAIMS_ADD.getString(new String[]{plugin.getPU().formatAmount(amount), target.getName()}));
+                                            break;
+                                        case "remove":
+                                            cache.removeBonusClaimsAmount(targetUUID, amount);
+                                            player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BONUS_CLAIMS_REMOVE.getString(new String[]{plugin.getPU().formatAmount(amount), target.getName()}));
+                                            break;
+                                        case "set":
+                                            cache.setBonusClaimsAmount(targetUUID, amount);
+                                            player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BONUS_CLAIMS_SET.getString(new String[]{plugin.getPU().formatAmount(amount), target.getName()}));
+                                            break;
+                                        default:
+                                            player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_WRONG_ARG.getString(new String[]{args[2]}));
+                                    }
+                                } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_PLAYER_NOT_FOUND.getString(new String[]{args[3]}));
+                            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_BONUS_CLAIMS_AMOUNT.getString(new String[]{args[4]}));
                     }
             }
         } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_ARGS.getString(null));

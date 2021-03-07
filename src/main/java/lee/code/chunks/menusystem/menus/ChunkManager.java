@@ -6,6 +6,7 @@ import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.Menu;
 import lee.code.chunks.menusystem.PlayerMU;
 import org.bukkit.Chunk;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
@@ -46,15 +47,18 @@ public class ChunkManager extends Menu {
             case 11:
                 if (cache.isChunkClaimed(chunkCord) && cache.isChunkOwner(chunkCord, uuid)) {
                     new TrustedChunkSettings(pmu).open();
+                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_MANAGE_NOT_CHUNK_OWNER.getString(null));
                 break;
             case 13:
                 if (cache.isChunkClaimed(chunkCord) && cache.isChunkOwner(chunkCord, uuid)) {
                     new GeneralChunkSettings(pmu).open();
+                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_MANAGE_NOT_CHUNK_OWNER.getString(null));
                 break;
             case 15:
                 new TrustedGlobalSettings(pmu).open();
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
                 break;
         }
     }

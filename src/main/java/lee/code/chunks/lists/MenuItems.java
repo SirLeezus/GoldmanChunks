@@ -3,6 +3,7 @@ package lee.code.chunks.lists;
 import lee.code.chunks.GoldmanChunks;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -36,12 +37,12 @@ public enum MenuItems {
         ItemStack item = new ItemStack(type);
         ItemMeta itemMeta = item.getItemMeta();
         if (itemMeta != null) {
-            if (name != null) itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+            if (name != null) itemMeta.displayName(Component.text(ChatColor.translateAlternateColorCodes('&', name)));
             if (lore != null) {
                 String[] split = StringUtils.split(lore, "\n");
-                List<String> lines = new ArrayList<>();
-                for (String line : split) lines.add(ChatColor.translateAlternateColorCodes('&', line));
-                itemMeta.setLore(lines);
+                List<Component> lines = new ArrayList<>();
+                for (String line : split) lines.add(Component.text(ChatColor.translateAlternateColorCodes('&', line)));
+                itemMeta.lore(lines);
             }
             item.setItemMeta(itemMeta);
             if (skin != null) plugin.getPU().applyHeadSkin(item, skin);

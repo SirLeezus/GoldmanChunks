@@ -56,7 +56,7 @@ public class Trust extends SubCommand {
                     } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_TRUST_NOT_OWNER.getString(null));
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_TRUST_ALREADY_ADDED.getString(new String[] { target.getName(), chunkCord }));
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_PLAYER_NOT_FOUND.getString(new String[]{args[1]}));
-        }
+        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_TRUST_NO_TARGET_PLAYER.getString(null));
     }
 
     @Override

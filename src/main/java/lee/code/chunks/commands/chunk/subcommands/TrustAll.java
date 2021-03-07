@@ -46,8 +46,8 @@ public class TrustAll extends SubCommand {
                     cache.addGlobalTrusted(player.getUniqueId(), targetUUID);
                     player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_TRUSTALL_ADDED_PLAYER.getString(new String[] { target.getName() }));
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_TRUSTALL_ALREADY_ADDED.getString(new String[] { target.getName() }));
-            }
-        }
+            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_PLAYER_NOT_FOUND.getString(new String[]{args[1]}));
+        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_TRUSTALL_NO_TARGET_PLAYER.getString(null));
     }
 
     @Override

@@ -45,10 +45,10 @@ public class UnTrustAll extends SubCommand {
                 UUID targetUUID = target.getUniqueId();
                 if (cache.isGlobalTrusted(uuid, targetUUID)) {
                     cache.removeGlobalTrusted(uuid, targetUUID);
-                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_UNTRUSTALL_REMOVED_PLAYER.getString(new String[] { target.getName() }));
-                } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNTRUSTALL_PLAYER_NOT_TRUSTED.getString(new String[] { target.getName() }));
+                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_UNTRUSTALL_REMOVED_PLAYER.getString(new String[]{target.getName()}));
+                } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNTRUSTALL_PLAYER_NOT_TRUSTED.getString(new String[]{target.getName()}));
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_PLAYER_NOT_FOUND.getString(new String[]{args[1]}));
-        }
+        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNTRUSTALL_NO_TARGET_PLAYER.getString(null));
     }
 
     @Override

@@ -53,7 +53,7 @@ public class UnTrust extends SubCommand {
                     } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNTRUST_PLAYER_NOT_TRUSTED.getString(new String[] { target.getName(), chunkCord }));
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNTRUST_NOT_CHUNK_OWNER.getString(null));
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_PLAYER_NOT_FOUND.getString(new String[]{args[1]}));
-        }
+        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNTRUST_NO_TARGET_PLAYER.getString(null));
     }
 
     @Override

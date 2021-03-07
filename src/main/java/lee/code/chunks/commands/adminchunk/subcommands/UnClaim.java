@@ -41,7 +41,6 @@ public class UnClaim extends SubCommand {
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
         if (!cache.isChunkClaimed(chunkCord)) {
-
             Vector start = new Vector(chunk.getX(), 0, chunk.getZ());
             String world = player.getWorld().getName();
             String selectedChunk = world + ",%.0f,%.0f";
@@ -72,7 +71,7 @@ public class UnClaim extends SubCommand {
                 plugin.getData().removeAdminClaimSelection(player.getUniqueId());
                 player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_UNCLAIM_SUCCESSFUL.getString(new String[] { String.valueOf(unclaimed) } ));
             });
-        }
+        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_ADMIN_UNCLAIM_PLAYER_CLAIMED.getString(null));
     }
 
     @Override
