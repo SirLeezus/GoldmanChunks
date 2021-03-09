@@ -75,7 +75,6 @@ public class PlayerChunks extends PaginatedMenu {
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
             if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
                 String cord = ChatColor.stripColor(item.getItemMeta().getDisplayName());
-                System.out.println(cord);
                 String[] splitCord = cord.split(",", 3);
                 World world = Bukkit.getWorld(splitCord[0]);
                 if (world == null) return;
