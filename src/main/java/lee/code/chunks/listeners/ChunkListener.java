@@ -5,6 +5,8 @@ import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.block.data.type.WallSign;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -244,7 +246,6 @@ public class ChunkListener implements Listener {
                         if (!cache.isChunkOwner(chunkCord, uuid)) {
                             UUID owner = cache.getChunkOwnerUUID(chunkCord);
                             if (e.getClickedBlock().getType().isInteractable() || e.getAction() == Action.PHYSICAL) {
-
                                 //chunk trusted check
                                 if (cache.isChunkTrusted(chunkCord, uuid)) {
                                     if (!cache.canChunkTrustedInteract(chunkCord)) {

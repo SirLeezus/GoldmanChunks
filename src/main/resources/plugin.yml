@@ -7,9 +7,9 @@ depend: [GoldmanEssentials, RedisCache]
 commands:
   chunk:
     description: Main plugin command.
-    permission: chunk.command.use
+    permission: chunk.command.chunk
     aliases: [c]
   adminchunk:
     description: Admin chunk command.
-    permission: mychunks.admin
+    permission: mychunks.adminchunk
     aliases: [ac]

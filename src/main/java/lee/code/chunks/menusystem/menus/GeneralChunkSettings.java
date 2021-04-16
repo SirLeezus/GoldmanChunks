@@ -126,7 +126,7 @@ public class GeneralChunkSettings extends Menu {
         ItemMeta denyMeta = deny.getItemMeta();
 
         //allow
-        if (item.getType() != permTrueItem.getType()) {
+        if (item.getType() == permFalseItem.getType()) {
             switch (slot) {
                 case 11:
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
@@ -151,7 +151,7 @@ public class GeneralChunkSettings extends Menu {
                     break;
             }
             //deny
-        } else if (item.getType() != permFalseItem.getType()) {
+        } else if (item.getType() == permTrueItem.getType()) {
 
             switch (slot) {
                 case 11:

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
-public enum Values {
+public enum Settings {
 
     CLICK_DELAY(5),
     ACCRUED_CLAIMS_MAX(300),

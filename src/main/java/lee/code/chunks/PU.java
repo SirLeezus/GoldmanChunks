@@ -3,7 +3,7 @@ package lee.code.chunks;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import lee.code.chunks.database.Cache;
-import lee.code.chunks.lists.Values;
+import lee.code.chunks.lists.Settings;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -86,7 +86,7 @@ public class PU {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         plugin.getData().addPlayerClickDelay(uuid);
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-        scheduler.runTaskLater(plugin, () -> plugin.getData().removePlayerClickDelay(uuid), Values.CLICK_DELAY.getValue());
+        scheduler.runTaskLater(plugin, () -> plugin.getData().removePlayerClickDelay(uuid), Settings.CLICK_DELAY.getValue());
     }
 
     public void accruedClaimTimer() {
@@ -95,9 +95,9 @@ public class PU {
         Cache cache = plugin.getCache();
 
         scheduler.scheduleSyncRepeatingTask(plugin, () -> {
-            int maxAccruedClaims = Values.ACCRUED_CLAIMS_MAX.getValue();
-            int baseTimeRequired = Values.ACCRUED_CLAIMS_BASE_TIME_REQUIRED.getValue();
-            int claimAmountGiven = Values.ACCRUED_CLAIMS_AMOUNT_GIVEN.getValue();
+            int maxAccruedClaims = Settings.ACCRUED_CLAIMS_MAX.getValue();
+            int baseTimeRequired = Settings.ACCRUED_CLAIMS_BASE_TIME_REQUIRED.getValue();
+            int claimAmountGiven = Settings.ACCRUED_CLAIMS_AMOUNT_GIVEN.getValue();
 
             if (!Bukkit.getOnlinePlayers().isEmpty()) {
 

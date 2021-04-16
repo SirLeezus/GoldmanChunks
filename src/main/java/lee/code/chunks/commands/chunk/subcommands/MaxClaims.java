@@ -4,7 +4,7 @@ import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
-import lee.code.chunks.lists.Values;
+import lee.code.chunks.lists.Settings;
 import org.bukkit.Statistic;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -46,8 +46,8 @@ public class MaxClaims extends SubCommand {
         int maxClaims = cache.getPlayerMaxClaimAmount(uuid);
         int time = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / 20;
         String timePlayed = plugin.getPU().formatTime(time);
-        String timeRequired = plugin.getPU().formatTime(Values.ACCRUED_CLAIMS_BASE_TIME_REQUIRED.getValue());
-        int givenAmount = Values.ACCRUED_CLAIMS_AMOUNT_GIVEN.getValue();
+        String timeRequired = plugin.getPU().formatTime(Settings.ACCRUED_CLAIMS_BASE_TIME_REQUIRED.getValue());
+        int givenAmount = Settings.ACCRUED_CLAIMS_AMOUNT_GIVEN.getValue();
 
         player.sendMessage(Lang.COMMAND_MAX_CLAIMS_HEADER.getString(null));
         player.sendMessage("");
@@ -57,7 +57,7 @@ public class MaxClaims extends SubCommand {
         player.sendMessage("");
         player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_4.getString(new String[] { timePlayed }));
         player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_5.getString(new String[] { plugin.getPU().formatAmount(givenAmount), timeRequired }));
-        player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_6.getString(new String[] { plugin.getPU().formatAmount(accruedClaims), plugin.getPU().formatAmount(Values.ACCRUED_CLAIMS_MAX.getValue()) }));
+        player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_6.getString(new String[] { plugin.getPU().formatAmount(accruedClaims), plugin.getPU().formatAmount(Settings.ACCRUED_CLAIMS_MAX.getValue()) }));
         player.sendMessage("");
         player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_7.getString(new String[] { plugin.getPU().formatAmount(claimed), plugin.getPU().formatAmount(maxClaims) }));
         player.sendMessage("");
