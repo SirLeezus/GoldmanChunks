@@ -1,6 +1,8 @@
 package lee.code.chunks.database;
 
-import lee.code.cache.jedis.*;
+import jedis.Jedis;
+import jedis.JedisPool;
+import jedis.Pipeline;
 import lee.code.chunks.GoldmanChunks;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;

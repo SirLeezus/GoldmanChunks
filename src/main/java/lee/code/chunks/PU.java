@@ -49,13 +49,13 @@ public class PU {
                 break;
         }
 
-        int minX = chunk.getX() * 16;
-        int minZ = chunk.getZ() * 16;
-        int minY = player.getLocation().getBlockY();
+        long minX = chunk.getX() * 16L;
+        long minZ = chunk.getZ() * 16L;
+        long minY = player.getLocation().getBlockY();
 
-        for (int y = minY - 2; y < minY + 7; y++) {
-            for (int x = minX; x < minX + 17; x++) {
-                for (int z = minZ; z < minZ + 17; z++) {
+        for (long y = minY - 2; y < minY + 7; y++) {
+            for (long x = minX; x < minX + 17; x++) {
+                for (long z = minZ; z < minZ + 17; z++) {
                     player.spawnParticle(particle, minX, y + 1, z, 0);
                     player.spawnParticle(particle, x, y + 1, minZ, 0);
                     player.spawnParticle(particle, minX + 16, y + 1, z, 0);
