@@ -31,6 +31,11 @@ public class PU {
         return formatter.format(value);
     }
 
+    public String formatAmount(double value) {
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        return formatter.format(value);
+    }
+
     public List<String> getOnlinePlayers() {
         List<String> players = new ArrayList<>();
         for (Player player : Bukkit.getOnlinePlayers()) players.add(player.getName());

@@ -42,7 +42,7 @@ public class SetPrice extends SubCommand {
         if (args.length > 1) {
             Scanner valueScanner = new Scanner(args[1]);
             if (valueScanner.hasNextInt()) {
-                int value = Integer.parseInt(args[1]);
+                long value = Long.parseLong(args[1]);
                 if (value < Settings.CHUNK_SELL_PRICE_MAX.getValue()) {
                     UUID uuid = player.getUniqueId();
                     Chunk chunk = player.getLocation().getChunk();

@@ -76,7 +76,7 @@ public class Cache {
         }
     }
 
-    public void setChunkPrice(String chunk, int price) {
+    public void setChunkPrice(String chunk, long price) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
         SQLite SQL = plugin.getSqLite();
@@ -119,12 +119,12 @@ public class Cache {
         }
     }
 
-    public int getChunkPrice(String chunk) {
+    public long getChunkPrice(String chunk) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
         try (Jedis jedis = pool.getResource()) {
-            return Integer.parseInt(jedis.hget("chunkPrice", chunk));
+            return Long.parseLong(jedis.hget("chunkPrice", chunk));
         }
     }
 

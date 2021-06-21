@@ -55,8 +55,8 @@ public class Buy extends SubCommand {
                     if (playerClaimAmount < playerMaxClaims) {
                         playerClaimAmount++;
                         ownerClaimAmount = ownerClaimAmount - 1;
-                        int balance = plugin.getEssentialsAPI().getBalance(uuid);
-                        int price = cache.getChunkPrice(chunkCord);
+                        long balance = plugin.getEssentialsAPI().getBalance(uuid);
+                        long price = cache.getChunkPrice(chunkCord);
 
                         if (balance >= price) {
                             plugin.getEssentialsAPI().withdraw(uuid, price);
