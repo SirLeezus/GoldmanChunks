@@ -1,6 +1,7 @@
 package lee.code.chunks.menusystem;
 
 import lee.code.chunks.lists.MenuItems;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -26,7 +27,7 @@ public abstract class Menu implements InventoryHolder {
         this.pmu = playerMenuUtility;
     }
 
-    public abstract String getMenuName();
+    public abstract Component getMenuName();
     public abstract int getSlots();
     public abstract void handleMenu(InventoryClickEvent e);
     public abstract void setMenuItems();

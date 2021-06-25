@@ -54,8 +54,8 @@ public class Admin extends SubCommand {
                     if (cache.isChunkClaimed(chunkCord)) {
                         UUID owner = cache.getChunkOwnerUUID(chunkCord);
                         cache.unclaimChunk(chunkCord, owner);
-                        player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_UNCLAIM.getString(new String[]{chunkCord, Bukkit.getPlayer(owner).getName()}));
-                    } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_UNCLAIM.getString(new String[]{chunkCord}));
+                        player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_UNCLAIM.getComponent(new String[]{chunkCord, cache.getChunkOwnerName(chunkCord)})));
+                    } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_ADMIN_UNCLAIM.getComponent(new String[]{chunkCord})));
                     break;
 
                 case "unclaimall":
@@ -63,35 +63,29 @@ public class Admin extends SubCommand {
                     if (cache.isChunkClaimed(chunkCord)) {
                         UUID owner = cache.getChunkOwnerUUID(chunkCord);
                         cache.unclaimAllChunks(owner);
-                        player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_UNCLAIMALL.getString(new String[]{Bukkit.getPlayer(owner).getName()}));
-                    } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_UNCLAIM.getString(new String[]{chunkCord}));
+                        player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_UNCLAIMALL.getComponent(new String[]{cache.getChunkOwnerName(chunkCord)})));
+                    } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_ADMIN_UNCLAIM.getComponent(new String[]{chunkCord})));
                     break;
 
                 case "bypass":
 
                     if (plugin.getData().hasAdminBypass(uuid)) {
                         plugin.getData().removeAdminBypass(uuid);
-                        player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BYPASS_DISABLED.getString(null));
+                        player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_BYPASS_DISABLED.getComponent(null)));
                     } else {
                         plugin.getData().addAdminBypass(uuid);
-                        player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BYPASS_ENABLED.getString(null));
+                        player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_BYPASS_ENABLED.getComponent(null)));
                     }
                     break;
 
                 case "bonusclaims":
 
                     switch (args.length) {
-                        case 2:
-                            player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_BONUS_CLAIMS_ARG_2.getString(null));
-                            break;
-                        case 3:
-                            player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_BONUS_CLAIMS_ARG_3.getString(null));
-                            break;
-                        case 4:
-                            player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_BONUS_CLAIMS_ARG_4.getString(null));
-                            break;
+                        case 2 -> player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_ADMIN_BONUS_CLAIMS_ARG_2.getComponent(null)));
+                        case 3 -> player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_ADMIN_BONUS_CLAIMS_ARG_3.getComponent(null)));
+                        case 4 -> player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_ADMIN_BONUS_CLAIMS_ARG_4.getComponent(null)));
 
-                        default:
+                        default -> {
                             Scanner sellScanner = new Scanner(args[4]);
                             if (sellScanner.hasNextInt()) {
                                 int amount = Integer.parseInt(args[4]);
@@ -100,30 +94,30 @@ public class Admin extends SubCommand {
                                     UUID targetUUID = target.getUniqueId();
 
                                     switch (args[2]) {
-                                        case "add":
+                                        case "add" -> {
                                             cache.addBonusClaimsAmount(targetUUID, amount);
-                                            player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BONUS_CLAIMS_ADD.getString(new String[]{plugin.getPU().formatAmount(amount), target.getName()}));
-                                            break;
-                                        case "remove":
+                                            player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_BONUS_CLAIMS_ADD.getComponent(new String[]{plugin.getPU().formatAmount(amount), target.getName()})));
+                                        }
+                                        case "remove" -> {
                                             cache.removeBonusClaimsAmount(targetUUID, amount);
-                                            player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BONUS_CLAIMS_REMOVE.getString(new String[]{plugin.getPU().formatAmount(amount), target.getName()}));
-                                            break;
-                                        case "set":
+                                            player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_BONUS_CLAIMS_REMOVE.getComponent(new String[]{plugin.getPU().formatAmount(amount), target.getName()})));
+                                        }
+                                        case "set" -> {
                                             cache.setBonusClaimsAmount(targetUUID, amount);
-                                            player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_BONUS_CLAIMS_SET.getString(new String[]{plugin.getPU().formatAmount(amount), target.getName()}));
-                                            break;
-                                        default:
-                                            player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_WRONG_ARG.getString(new String[]{args[2]}));
+                                            player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_BONUS_CLAIMS_SET.getComponent(new String[]{plugin.getPU().formatAmount(amount), target.getName()})));
+                                        }
+                                        default -> player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_ADMIN_WRONG_ARG.getComponent(new String[]{args[2]})));
                                     }
-                                } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_PLAYER_NOT_FOUND.getString(new String[]{args[3]}));
-                            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_BONUS_CLAIMS_AMOUNT.getString(new String[]{args[4]}));
+                                } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_PLAYER_NOT_FOUND.getComponent(new String[]{args[3]})));
+                            } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_ADMIN_BONUS_CLAIMS_AMOUNT.getComponent(new String[]{args[4]})));
+                        }
                     }
             }
-        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_ARGS.getString(null));
+        } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_ADMIN_ARGS.getComponent(null)));
     }
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
+        console.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NOT_A_CONSOLE_COMMAND.getComponent(null)));
     }
 }

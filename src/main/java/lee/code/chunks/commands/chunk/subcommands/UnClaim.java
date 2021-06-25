@@ -44,14 +44,14 @@ public class UnClaim extends SubCommand {
         if (cache.isChunkClaimed(chunkCord)) {
             if (cache.isChunkOwner(chunkCord, uuid)) {
                 cache.unclaimChunk(chunkCord, uuid);
-                player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_UNCLAIM_SUCCESSFUL.getString(new String[] { chunkCord }));
+                player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_UNCLAIM_SUCCESSFUL.getComponent(new String[] { chunkCord })));
                 plugin.getPU().renderChunkBorder(player, chunk, "unclaim");
-            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNCLAIM_OWNER.getString(new String[] { cache.getChunkOwnerName(chunkCord) }));
-        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_UNCLAIMED_NOT_CLAIMED.getString(null));
+            } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_UNCLAIM_OWNER.getComponent(new String[] { cache.getChunkOwnerName(chunkCord) })));
+        } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_UNCLAIMED_NOT_CLAIMED.getComponent(null)));
     }
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
+        console.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NOT_A_CONSOLE_COMMAND.getComponent(null)));
     }
 }

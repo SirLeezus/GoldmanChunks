@@ -5,6 +5,7 @@ import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.Menu;
 import lee.code.chunks.menusystem.PlayerMU;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Chunk;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -19,8 +20,8 @@ public class ChunkManager extends Menu {
     }
 
     @Override
-    public String getMenuName() {
-        return Lang.MENU_CHUNK_MANAGER_TITLE.getString(null);
+    public Component getMenuName() {
+        return Lang.MENU_CHUNK_MANAGER_TITLE.getComponent(null);
     }
 
     @Override

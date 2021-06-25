@@ -5,8 +5,8 @@ import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.block.data.type.WallSign;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,9 +18,9 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,27 +33,18 @@ public class ChunkListener implements Listener {
         if (trusted) messageTrusted = Lang.TRUE.getString(null);
         else messageTrusted = Lang.FALSE.getString(null);
 
-        switch (type) {
-            case "build":
-                messageType = Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { Lang.FALSE.getString(null) });
-                break;
-            case "break":
-                messageType = Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { Lang.FALSE.getString(null) });
-                break;
-            case "interact":
-                messageType = Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { Lang.FALSE.getString(null) });
-                break;
-            case "pve":
-                messageType = Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.FALSE.getString(null) });
-                break;
-            default:
-                messageType = "ERROR";
-        }
-        player.sendActionBar(Lang.ERROR_NO_CLAIM_PERMISSION.getString(new String[] { messageTrusted, messageType, Bukkit.getOfflinePlayer(owner).getName() }));
+        messageType = switch (type) {
+            case "build" -> Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{Lang.FALSE.getString(null)});
+            case "break" -> Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.FALSE.getString(null)});
+            case "interact" -> Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.FALSE.getString(null)});
+            case "pve" -> Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[]{Lang.FALSE.getString(null)});
+            default -> "ERROR";
+        };
+        player.sendActionBar(Lang.ERROR_NO_CLAIM_PERMISSION.getComponent(new String[] { messageTrusted, messageType, Bukkit.getOfflinePlayer(owner).getName() }));
     }
 
     private void warnMessagePVP(Player player) {
-        player.sendActionBar(Lang.ERROR_PVP_DISABLED.getString(null));
+        player.sendActionBar(Lang.ERROR_PVP_DISABLED.getComponent(null));
     }
 
     @EventHandler
@@ -104,8 +95,7 @@ public class ChunkListener implements Listener {
 
         if (cache.isChunkClaimed(chunkCord)) {
 
-            if (e.getRemover() instanceof Player) {
-                Player player = (Player) e.getRemover();
+            if (e.getRemover() instanceof Player player) {
                 UUID uuid = player.getUniqueId();
 
                 if (!plugin.getData().hasAdminBypass(uuid)) {
@@ -133,8 +123,7 @@ public class ChunkListener implements Listener {
                 e.setCancelled(true);
             }
         } else if (cache.isAdminChunk(chunkCord)) {
-            if (e.getRemover() instanceof Player) {
-                Player player = (Player) e.getRemover();
+            if (e.getRemover() instanceof Player player) {
                 UUID uuid = player.getUniqueId();
                 if (!plugin.getData().hasAdminBypass(uuid)) {
                     if (!cache.canAdminChunkBreak(chunkCord)) e.setCancelled(true);
@@ -152,8 +141,7 @@ public class ChunkListener implements Listener {
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
         if (cache.isChunkClaimed(chunkCord)) {
-            if (e.getAttacker() instanceof Player) {
-                Player player = (Player) e.getAttacker();
+            if (e.getAttacker() instanceof Player player) {
                 UUID uuid = player.getUniqueId();
                 UUID owner = cache.getChunkOwnerUUID(chunkCord);
 
@@ -180,8 +168,7 @@ public class ChunkListener implements Listener {
                 e.setCancelled(true);
             }
         } else if (cache.isAdminChunk(chunkCord)) {
-            if (e.getAttacker() instanceof Player) {
-                Player player = (Player) e.getAttacker();
+            if (e.getAttacker() instanceof Player player) {
                 UUID uuid = player.getUniqueId();
                 if (!plugin.getData().hasAdminBypass(uuid)) {
                     if (!cache.canAdminChunkBreak(chunkCord)) e.setCancelled(true);
@@ -237,7 +224,10 @@ public class ChunkListener implements Listener {
             Player player = e.getPlayer();
             UUID uuid = player.getUniqueId();
 
-            if (e.getClickedBlock() != null) {
+            Block block = e.getClickedBlock();
+
+            if (block != null) {
+                BlockState blockState = block.getState();
                 Chunk chunk = e.getClickedBlock().getLocation().getChunk();
                 String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
@@ -246,23 +236,27 @@ public class ChunkListener implements Listener {
                         if (!cache.isChunkOwner(chunkCord, uuid)) {
                             UUID owner = cache.getChunkOwnerUUID(chunkCord);
                             if (e.getClickedBlock().getType().isInteractable() || e.getAction() == Action.PHYSICAL) {
-                                //chunk trusted check
-                                if (cache.isChunkTrusted(chunkCord, uuid)) {
-                                    if (!cache.canChunkTrustedInteract(chunkCord)) {
+                                if (!(blockState instanceof Sign)) {
+                                    //chunk trusted check
+                                    if (cache.isChunkTrusted(chunkCord, uuid)) {
+                                        if (!cache.canChunkTrustedInteract(chunkCord)) {
+                                            e.setCancelled(true);
+                                            warnMessage(player, true, owner, "interact");
+                                        }
+                                        //global trusted check
+                                    } else if (cache.isGlobalTrusted(owner, uuid)) {
+                                        if (!cache.canGlobalTrustedInteract(owner)) {
+                                            e.setCancelled(true);
+                                            warnMessage(player, true, owner, "interact");
+                                        }
+                                    } else {
                                         e.setCancelled(true);
-                                        warnMessage(player, true, owner, "interact");
-                                    }
-                                    //global trusted check
-                                } else if (cache.isGlobalTrusted(owner, uuid)) {
-                                    if (!cache.canGlobalTrustedInteract(owner)) {
-                                        e.setCancelled(true);
-                                        warnMessage(player, true, owner, "interact");
+                                        warnMessage(player, false, owner, "interact");
                                     }
                                 } else {
-                                    e.setCancelled(true);
-                                    warnMessage(player, false, owner, "interact");
+                                    ItemStack handItem = player.getInventory().getItemInMainHand();
+                                    if (handItem.getType().name().contains("DYE")) e.setCancelled(true);
                                 }
-
                             } else {
 
                                 //chunk trusted check
@@ -284,8 +278,14 @@ public class ChunkListener implements Listener {
                             }
                         }
                     } else if (cache.isAdminChunk(chunkCord)) {
-                        if (e.getClickedBlock().getType().isInteractable() || e.getAction() == Action.PHYSICAL) {
-                            if (!cache.canAdminChunkInteract(chunkCord)) e.setCancelled(true);
+                        if (block.getType().isInteractable() || e.getAction() == Action.PHYSICAL) {
+                            if (!cache.canAdminChunkInteract(chunkCord)) {
+                                if (!(blockState instanceof Sign)) e.setCancelled(true);
+                                else {
+                                    ItemStack handItem = player.getInventory().getItemInMainHand();
+                                    if (handItem.getType().name().contains("DYE")) e.setCancelled(true);
+                                }
+                            }
                         } else {
                             if (!cache.canAdminChunkBuild(chunkCord)) e.setCancelled(true);
                         }
@@ -393,8 +393,7 @@ public class ChunkListener implements Listener {
             }
 
             //pvp
-            if (e.getDamager() instanceof Player) {
-                Player player = (Player) e.getDamager();
+            if (e.getDamager() instanceof Player player) {
                 UUID uuid = player.getUniqueId();
 
                 if (!plugin.getData().hasAdminBypass(uuid)) {
@@ -425,13 +424,10 @@ public class ChunkListener implements Listener {
                         }
                     }
                 }
-            } else if (e.getDamager() instanceof Projectile) {
-
-                Projectile projectile = (Projectile) e.getDamager();
+            } else if (e.getDamager() instanceof Projectile projectile) {
 
                 //projectile pvp & pve
-                if (projectile.getShooter() instanceof Player) {
-                    Player player = (Player) projectile.getShooter();
+                if (projectile.getShooter() instanceof Player player) {
                     UUID uuid = player.getUniqueId();
 
                     if (!plugin.getData().hasAdminBypass(uuid)) {
@@ -473,13 +469,16 @@ public class ChunkListener implements Listener {
                 return;
             }
 
+            //pvp
             if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
                 UUID uuid = e.getDamager().getUniqueId();
                 if (!plugin.getData().hasAdminBypass(uuid)) {
                     if (!cache.canAdminChunkPvP(chunkCord)) e.setCancelled(true);
                 }
-            } else if (e.getDamager() instanceof Player) {
-                UUID uuid = e.getDamager().getUniqueId();
+
+                //evp
+            } else if (!(e.getDamager() instanceof Player) && e.getEntity() instanceof Player) {
+                UUID uuid = e.getEntity().getUniqueId();
                 if (!plugin.getData().hasAdminBypass(uuid)) {
                     if (!cache.canAdminChunkPvE(chunkCord)) e.setCancelled(true);
                 }
@@ -537,7 +536,7 @@ public class ChunkListener implements Listener {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
 
-        if (e.getEntity() instanceof Monster) {
+        if (e.getEntity() instanceof Monster || e.getEntity() instanceof Phantom) {
 
             Chunk chunk = e.getEntity().getLocation().getChunk();
             String chunkCord = plugin.getPU().formatChunkLocation(chunk);

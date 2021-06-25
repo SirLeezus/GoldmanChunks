@@ -5,10 +5,13 @@ import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.lists.Settings;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Statistic;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class MaxClaims extends SubCommand {
@@ -44,28 +47,31 @@ public class MaxClaims extends SubCommand {
         int bonusClaims = cache.getBonusClaimsAmount(uuid);
         int accruedClaims = cache.getAccruedClaimsAmount(uuid);
         int maxClaims = cache.getPlayerMaxClaimAmount(uuid);
-        int time = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / 20;
-        String timePlayed = plugin.getPU().formatTime(time);
-        String timeRequired = plugin.getPU().formatTime(Settings.ACCRUED_CLAIMS_BASE_TIME_REQUIRED.getValue());
+        long time = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / 20;
+        String timePlayed = plugin.getPU().formatSeconds(time);
+        String timeRequired = plugin.getPU().formatSeconds(Settings.ACCRUED_CLAIMS_BASE_TIME_REQUIRED.getValue());
         int givenAmount = Settings.ACCRUED_CLAIMS_AMOUNT_GIVEN.getValue();
 
-        player.sendMessage(Lang.COMMAND_MAX_CLAIMS_HEADER.getString(null));
-        player.sendMessage("");
-        player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_1.getString(new String[] { plugin.getPU().formatAmount(defaultClaims) }));
-        player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_2.getString(new String[] { plugin.getPU().formatAmount(bonusClaims) }));
-        player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_3.getString(new String[] { plugin.getPU().formatAmount(claimed) }));
-        player.sendMessage("");
-        player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_4.getString(new String[] { timePlayed }));
-        player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_5.getString(new String[] { plugin.getPU().formatAmount(givenAmount), timeRequired }));
-        player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_6.getString(new String[] { plugin.getPU().formatAmount(accruedClaims), plugin.getPU().formatAmount(Settings.ACCRUED_CLAIMS_MAX.getValue()) }));
-        player.sendMessage("");
-        player.sendMessage(Lang.COMMAND_MAX_CLAIMS_LINE_7.getString(new String[] { plugin.getPU().formatAmount(claimed), plugin.getPU().formatAmount(maxClaims) }));
-        player.sendMessage("");
-        player.sendMessage(Lang.COMMAND_MAX_CLAIMS_FOOTER.getString(null));
+        List<Component> lines = new ArrayList<>();
+        lines.add(Lang.COMMAND_MAX_CLAIMS_HEADER.getComponent(null));
+        lines.add(Component.text(""));
+        lines.add(Lang.COMMAND_MAX_CLAIMS_LINE_1.getComponent(new String[] { plugin.getPU().formatAmount(defaultClaims) }));
+        lines.add(Lang.COMMAND_MAX_CLAIMS_LINE_2.getComponent(new String[] { plugin.getPU().formatAmount(bonusClaims) }));
+        lines.add(Lang.COMMAND_MAX_CLAIMS_LINE_3.getComponent(new String[] { plugin.getPU().formatAmount(claimed) }));
+        lines.add(Component.text(""));
+        lines.add(Lang.COMMAND_MAX_CLAIMS_LINE_4.getComponent(new String[] { timePlayed }));
+        lines.add(Lang.COMMAND_MAX_CLAIMS_LINE_5.getComponent(new String[] { plugin.getPU().formatAmount(givenAmount), timeRequired }));
+        lines.add(Lang.COMMAND_MAX_CLAIMS_LINE_6.getComponent(new String[] { plugin.getPU().formatAmount(accruedClaims), plugin.getPU().formatAmount(Settings.ACCRUED_CLAIMS_MAX.getValue()) }));
+        lines.add(Component.text(""));
+        lines.add(Lang.COMMAND_MAX_CLAIMS_LINE_7.getComponent(new String[] { plugin.getPU().formatAmount(claimed), plugin.getPU().formatAmount(maxClaims) }));
+        lines.add(Component.text(""));
+        lines.add(Lang.COMMAND_MAX_CLAIMS_FOOTER.getComponent(null));
+
+        for (Component line : lines) player.sendMessage(line);
     }
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
+        console.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NOT_A_CONSOLE_COMMAND.getComponent(null)));
     }
 }

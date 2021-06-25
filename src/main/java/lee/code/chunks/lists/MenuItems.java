@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -37,11 +36,11 @@ public enum MenuItems {
         ItemStack item = new ItemStack(type);
         ItemMeta itemMeta = item.getItemMeta();
         if (itemMeta != null) {
-            if (name != null) itemMeta.displayName(Component.text(ChatColor.translateAlternateColorCodes('&', name)));
+            if (name != null) itemMeta.displayName(plugin.getPU().formatC(name));
             if (lore != null) {
                 String[] split = StringUtils.split(lore, "\n");
                 List<Component> lines = new ArrayList<>();
-                for (String line : split) lines.add(Component.text(ChatColor.translateAlternateColorCodes('&', line)));
+                for (String line : split) lines.add(plugin.getPU().formatC(line));
                 itemMeta.lore(lines);
             }
             item.setItemMeta(itemMeta);

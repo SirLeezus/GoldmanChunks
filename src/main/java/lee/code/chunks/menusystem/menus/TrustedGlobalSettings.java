@@ -21,8 +21,8 @@ public class TrustedGlobalSettings extends Menu {
     }
 
     @Override
-    public String getMenuName() {
-        return Lang.MENU_GLOBAL_TRUSTED_TITLE.getString(null);
+    public Component getMenuName() {
+        return Lang.MENU_GLOBAL_TRUSTED_TITLE.getComponent(null);
     }
 
     @Override
@@ -43,22 +43,14 @@ public class TrustedGlobalSettings extends Menu {
 
         if (item != null) {
             switch (e.getSlot()) {
-                case 10:
-                    updatePermItem(player, item, 10);
-                    break;
-                case 12:
-                    updatePermItem(player, item, 12);
-                    break;
-                case 14:
-                    updatePermItem(player, item, 14);
-                    break;
-                case 16:
-                    updatePermItem(player, item, 16);
-                    break;
-                case 31:
+                case 10 -> updatePermItem(player, item, 10);
+                case 12 -> updatePermItem(player, item, 12);
+                case 14 -> updatePermItem(player, item, 14);
+                case 16 -> updatePermItem(player, item, 16);
+                case 31 -> {
                     new ChunkManager(pmu).open();
                     player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
-                    break;
+                }
             }
         }
     }
@@ -146,69 +138,67 @@ public class TrustedGlobalSettings extends Menu {
         if (item.getType() != permTrueItem.getType()) {
 
             switch (slot) {
-                case 10:
-                    allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
+                case 10 -> {
+                    allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
                     cache.setGlobalTrustedBuild(uuid, true);
                     inventory.setItem(slot, allow);
                     player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 1);
-                    break;
-                case 12:
-                    allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
+                }
+                case 12 -> {
+                    allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
                     cache.setGlobalTrustedBreak(uuid, true);
                     inventory.setItem(slot, allow);
                     player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 1);
-                    break;
-                case 14:
-                    allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
+                }
+                case 14 -> {
+                    allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
                     cache.setGlobalTrustedInteract(uuid, true);
                     inventory.setItem(slot, allow);
                     player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 1);
-                    break;
-                case 16:
-                    allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
+                }
+                case 16 -> {
+                    allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
                     cache.setGlobalTrustedPvE(uuid, true);
                     inventory.setItem(slot, allow);
                     player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 1);
-                    break;
-
-
+                }
             }
             //deny
         } else if (item.getType() != permFalseItem.getType()) {
 
             switch (slot) {
-                case 10:
-                    denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { Lang.FALSE.getString(null) })));
+                case 10 -> {
+                    denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
                     cache.setGlobalTrustedBuild(uuid, false);
                     inventory.setItem(slot, deny);
                     player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1, 1);
-                    break;
-                case 12:
-                    denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { Lang.FALSE.getString(null) })));
+                }
+                case 12 -> {
+                    denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
                     cache.setGlobalTrustedBreak(uuid, false);
                     inventory.setItem(slot, deny);
                     player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1, 1);
-                    break;
-                case 14:
-                    denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { Lang.FALSE.getString(null) })));
+                }
+                case 14 -> {
+                    denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
                     cache.setGlobalTrustedInteract(uuid, false);
                     inventory.setItem(slot, deny);
                     player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1, 1);
-                    break;
-                case 16:
-                    denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.FALSE.getString(null) })));
+                }
+                case 16 -> {
+                    denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
                     cache.setGlobalTrustedPvE(uuid, false);
                     inventory.setItem(slot, deny);
                     player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1, 1);
-                    break;
+                }
             }
         }
     }

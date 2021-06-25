@@ -44,14 +44,14 @@ public class TrustAll extends SubCommand {
                 UUID targetUUID = target.getUniqueId();
                 if (!cache.isGlobalTrusted(player.getUniqueId(), targetUUID)) {
                     cache.addGlobalTrusted(player.getUniqueId(), targetUUID);
-                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_TRUSTALL_ADDED_PLAYER.getString(new String[] { target.getName() }));
-                } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_TRUSTALL_ALREADY_ADDED.getString(new String[] { target.getName() }));
-            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_PLAYER_NOT_FOUND.getString(new String[]{args[1]}));
-        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_TRUSTALL_NO_TARGET_PLAYER.getString(null));
+                    player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_TRUSTALL_ADDED_PLAYER.getComponent(new String[] { target.getName() })));
+                } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_TRUSTALL_ALREADY_ADDED.getComponent(new String[] { target.getName() })));
+            } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_PLAYER_NOT_FOUND.getComponent(new String[]{args[1]})));
+        } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_TRUSTALL_NO_TARGET_PLAYER.getComponent(null)));
     }
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
+        console.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NOT_A_CONSOLE_COMMAND.getComponent(null)));
     }
 }

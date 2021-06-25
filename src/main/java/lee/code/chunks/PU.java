@@ -3,7 +3,11 @@ package lee.code.chunks;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import lee.code.chunks.database.Cache;
+import lee.code.chunks.lists.Lang;
 import lee.code.chunks.lists.Settings;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,8 +26,23 @@ public class PU {
         return ChatColor.translateAlternateColorCodes('&', format);
     }
 
+    public Component formatC(String message) {
+        LegacyComponentSerializer serializer = LegacyComponentSerializer.legacyAmpersand();
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(serializer.deserialize(message));
+    }
+
+    public String unFormatC(Component message) {
+        LegacyComponentSerializer serializer = LegacyComponentSerializer.legacyAmpersand();
+        return serializer.serialize(message);
+    }
+
     public String formatChunkLocation(Chunk chunk) {
         return chunk.getWorld().getName() + "," + chunk.getX() + "," + chunk.getZ();
+    }
+
+    public Location unFormatChunkLocation(String chunk) {
+        String[] split = chunk.split(",", 3);
+        return new Location(Bukkit.getWorld(split[0]), Double.parseDouble(split[1]) * 16, 100, Double.parseDouble(split[2]) * 16, (float) 180.0, (float) 0.0);
     }
 
     public String formatAmount(int value) {
@@ -44,15 +63,11 @@ public class PU {
 
     public void renderChunkBorder(Player player, Chunk chunk, String type) {
 
-        Particle particle = Particle.VILLAGER_HAPPY;
-        switch (type) {
-            case "unclaim":
-                particle = Particle.FLAME;
-                break;
-            case "info":
-                particle = Particle.END_ROD;
-                break;
-        }
+        Particle particle = switch (type) {
+            case "unclaim" -> Particle.FLAME;
+            case "info" -> Particle.END_ROD;
+            default -> Particle.VILLAGER_HAPPY;
+        };
 
         long minX = chunk.getX() * 16L;
         long minZ = chunk.getZ() * 16L;
@@ -68,6 +83,33 @@ public class PU {
                 }
             }
         }
+    }
+
+    public void teleportPlayerToChunk(Player player, Location location) {
+
+        World world = location.getWorld();
+
+        int y = location.getBlockY();
+        int x = location.getBlockX() + 8;
+        int z = location.getBlockZ() + 8;
+        float yaw = location.getYaw();
+        float pitch = location.getPitch();
+
+        if (world.getWorldBorder().isInside(location)) {
+            world.loadChunk(location.getChunk());
+            for (int i = y; i > 0; i--) {
+                Location loc = new Location(player.getWorld(), x, i, z, yaw, pitch);
+                if (loc.getBlock().getType() == Material.AIR) {
+                    Location ground = new Location(loc.getWorld(), loc.getX(), loc.getY() - 1, loc.getZ());
+                    if (ground.getBlock().getType() != Material.AIR && ground.getBlock().getType() != Material.LAVA) {
+                        player.teleportAsync(loc);
+                        player.sendActionBar(Lang.TELEPORT.getComponent(null));
+                        return;
+                    }
+                }
+            }
+        }
+        player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_TELEPORT_UNSAFE.getComponent(null)));
     }
 
     public List<String> getChunksAroundPlayer(Player player) {
@@ -118,16 +160,16 @@ public class PU {
         }, 0L, 20L * 300);
     }
 
-    public String formatTime(int time) {
-        int days = (int) TimeUnit.SECONDS.toDays(time);
-        int hours = (int) (TimeUnit.SECONDS.toHours(time) - TimeUnit.DAYS.toHours(days));
-        int minutes = (int) (TimeUnit.SECONDS.toMinutes(time) - TimeUnit.HOURS.toMinutes(hours) - TimeUnit.DAYS.toMinutes(days));
-        int seconds = (int) (TimeUnit.SECONDS.toSeconds(time) - TimeUnit.MINUTES.toSeconds(minutes) - TimeUnit.HOURS.toSeconds(hours) - TimeUnit.DAYS.toSeconds(days));
+    public String formatSeconds(long time) {
+        long days = TimeUnit.SECONDS.toDays(time);
+        long hours = (TimeUnit.SECONDS.toHours(time) - TimeUnit.DAYS.toHours(days));
+        long minutes = (TimeUnit.SECONDS.toMinutes(time) - TimeUnit.HOURS.toMinutes(hours) - TimeUnit.DAYS.toMinutes(days));
+        long seconds = (TimeUnit.SECONDS.toSeconds(time) - TimeUnit.MINUTES.toSeconds(minutes) - TimeUnit.HOURS.toSeconds(hours) - TimeUnit.DAYS.toSeconds(days));
 
-        if (days != 0) return days + " day, " + hours + " hours, " + minutes + " min, " + seconds + " sec";
-        else if (hours != 0) return hours + " hour, " + minutes + " min, " + seconds + " sec";
-        else if (minutes != 0) return minutes + " min, " + seconds + " sec";
-        else return seconds + " sec";
+        if (days != 0) return "&e" + days + "&6d&e, " + hours + "&6h&e, " + minutes + "&6m&e, " + seconds + "&6s";
+        else if (hours != 0) return "&e" + hours + "&6h&e, " + minutes + "&6m&e, " + seconds + "&6s";
+        else if (minutes != 0) return "&e" + minutes + "&6m&e, " + seconds + "&6s";
+        else return "&e" + seconds + "&6s";
     }
 
     public void applyHeadSkin(ItemStack head, String base64) {

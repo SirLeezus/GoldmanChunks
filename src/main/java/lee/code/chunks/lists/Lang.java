@@ -1,7 +1,9 @@
 package lee.code.chunks.lists;
 
+import lee.code.essentials.GoldmanEssentials;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 
 @AllArgsConstructor
@@ -34,7 +36,7 @@ public enum Lang {
     ERROR_COMMAND_TRUST_NO_TARGET_PLAYER("&cYou need to enter a player you want to trust to the chunk you're standing on."),
     ERROR_COMMAND_TRUSTALL_ALREADY_ADDED("&cThe player &6{0} &cis already added to your global trusted list."),
     ERROR_COMMAND_TRUSTALL_NO_TARGET_PLAYER("&cYou need to enter a player you want to trust globally."),
-    ERROR_COMMAND_LIST_TELEPORT_UNSAFE("&cSadly there wasn't a safe place to teleport so it was canceled."),
+    ERROR_TELEPORT_UNSAFE("&cSadly there wasn't a safe place to teleport so it was canceled."),
     ERROR_COMMAND_UNTRUST_PLAYER_NOT_TRUSTED("&cThe player &6{0} &cis not trusted to the chunk &e(&b{1}&e)&c."),
     ERROR_COMMAND_UNTRUSTALL_PLAYER_NOT_TRUSTED("&cThe player &6{0} &cis not listed on your global trust list."),
     ERROR_COMMAND_UNTRUSTALL_NO_TARGET_PLAYER("&cYou need to enter a player you want to untrust globally."),
@@ -107,7 +109,7 @@ public enum Lang {
     COMMAND_MAX_CLAIMS_LINE_2("&6&lBonus Claims&7: &2{0}"),
     COMMAND_MAX_CLAIMS_LINE_3("&6&lClaimed&7: &2{0}"),
     COMMAND_MAX_CLAIMS_LINE_4("&6&lTime Played&7: &e{0}"),
-    COMMAND_MAX_CLAIMS_LINE_5("&6&lAccrued Timer&7: &e{0} claims every {1} played"),
+    COMMAND_MAX_CLAIMS_LINE_5("&6&lAccrued Timer&7: &2{0} claim every {1} &2played"),
     COMMAND_MAX_CLAIMS_LINE_6("&6&lAccrued Claims&7: &2{0}&7/&2{1}"),
     COMMAND_MAX_CLAIMS_LINE_7("&6&lTotal Claims&7: &2{0}&7/&2{1}"),
     COMMAND_MAX_CLAIMS_FOOTER("&2------------------------------------------------"),
@@ -146,5 +148,13 @@ public enum Lang {
         else if (variables.length == 0) return value;
         for (int i = 0; i < variables.length; i++) value = value.replace("{" + i + "}", variables[i]);
         return ChatColor.translateAlternateColorCodes('&', value);
+    }
+
+    public Component getComponent(String[] variables) {
+        GoldmanEssentials plugin = GoldmanEssentials.getPlugin();
+        String value = string;
+        if (variables == null || variables.length == 0) return plugin.getPU().formatC(value);
+        for (int i = 0; i < variables.length; i++) value = value.replace("{" + i + "}", variables[i]);
+        return plugin.getPU().formatC(value);
     }
 }

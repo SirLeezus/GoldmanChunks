@@ -62,22 +62,22 @@ public class Buy extends SubCommand {
                             plugin.getEssentialsAPI().withdraw(uuid, price);
                             plugin.getEssentialsAPI().deposit(ownerUUID, price);
                             cache.setChunkOwner(chunkCord, ownerUUID, uuid);
-                            player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_BUY_SUCCESSFUL.getString(new String[] { chunkCord, plugin.getPU().formatAmount(price), ownerName, plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) }));
+                            player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_BUY_SUCCESSFUL.getComponent(new String[] { chunkCord, plugin.getPU().formatAmount(price), ownerName, plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) })));
                             plugin.getPU().renderChunkBorder(player, chunk, "claim");
 
                             if (Bukkit.getOfflinePlayer(ownerUUID).isOnline()) {
                                 Player owner = Bukkit.getPlayer(ownerUUID);
-                                if (owner != null) owner.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_BUY_SUCCESSFUL_OWNER.getString(new String[] { player.getName(), chunkCord, plugin.getPU().formatAmount(price), plugin.getPU().formatAmount(ownerClaimAmount), plugin.getPU().formatAmount(ownerMaxClaims) }));
+                                if (owner != null) owner.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_BUY_SUCCESSFUL_OWNER.getComponent(new String[] { player.getName(), chunkCord, plugin.getPU().formatAmount(price), plugin.getPU().formatAmount(ownerClaimAmount), plugin.getPU().formatAmount(ownerMaxClaims) })));
                             }
-                        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_BUY_BALANCE.getString(new String[] { String.valueOf(price), chunkCord, ownerName, String.valueOf(balance) }));
-                    } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_CLAIM_MAXED.getString(new String[] { plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) }));
-                } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_BUY_OWNER.getString(null));
-            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_BUY_NOT_FOR_SALE.getString(new String[] { chunkCord, ownerName }));
-        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_BUY_NOT_CLAIMED.getString(new String[] { chunkCord }));
+                        } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_BUY_BALANCE.getComponent(new String[] { String.valueOf(price), chunkCord, ownerName, String.valueOf(balance) })));
+                    } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_CLAIM_MAXED.getComponent(new String[] { plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) })));
+                } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_BUY_OWNER.getComponent(null)));
+            } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_BUY_NOT_FOR_SALE.getComponent(new String[] { chunkCord, ownerName })));
+        } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_BUY_NOT_CLAIMED.getComponent(new String[] { chunkCord })));
     }
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
+        console.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NOT_A_CONSOLE_COMMAND.getComponent(null)));
     }
 }

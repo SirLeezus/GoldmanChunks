@@ -51,19 +51,19 @@ public class SetPrice extends SubCommand {
                         if (cache.isChunkClaimed(chunkCord)) {
                             if (cache.isChunkOwner(chunkCord, uuid)) {
                                 cache.setChunkPrice(chunkCord, value);
-                                if (value == 0) player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_SETPRICE_REMOVE_SUCCESSFUL.getString(new String[]{chunkCord}));
-                                else player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_SETPRICE_SUCCESSFUL.getString(new String[]{chunkCord, plugin.getPU().formatAmount(value)}));
+                                if (value == 0) player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_SETPRICE_REMOVE_SUCCESSFUL.getComponent(new String[]{chunkCord})));
+                                else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_SETPRICE_SUCCESSFUL.getComponent(new String[]{chunkCord, plugin.getPU().formatAmount(value)})));
                                 plugin.getPU().renderChunkBorder(player, chunk, "info");
-                            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_SETPRICE_NOT_OWNER.getString(new String[]{cache.getChunkOwnerName(chunkCord)}));
-                        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_SETPRICE_NOT_CLAIMED.getString(null));
-                    } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_SETPRICE_ADMIN_CHUNK.getString(null));
-                } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_SETPRICE_MAX_VALUE.getString(new String[]{String.valueOf(Settings.CHUNK_SELL_PRICE_MAX.getValue())}));
-            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_SETPRICE_NOT_NUMBER.getString(new String[]{args[1]}));
-        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_SETPRICE_NO_NUMBER.getString(null));
+                            } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_SETPRICE_NOT_OWNER.getComponent(new String[]{cache.getChunkOwnerName(chunkCord)})));
+                        } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_SETPRICE_NOT_CLAIMED.getComponent(null)));
+                    } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_SETPRICE_ADMIN_CHUNK.getComponent(null)));
+                } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_SETPRICE_MAX_VALUE.getComponent(new String[]{String.valueOf(Settings.CHUNK_SELL_PRICE_MAX.getValue())})));
+            } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_SETPRICE_NOT_NUMBER.getComponent(new String[]{args[1]})));
+        } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_SETPRICE_NO_NUMBER.getComponent(null)));
     }
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
+        console.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NOT_A_CONSOLE_COMMAND.getComponent(null)));
     }
 }

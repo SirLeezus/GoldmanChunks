@@ -42,11 +42,11 @@ public class Manage extends SubCommand {
         if (cache.isAdminChunk(chunkCord)) {
             new AdminChunkSettings(plugin.getData().getPlayerMU(player.getUniqueId())).open();
             player.playSound(player.getLocation(), Sound.ENTITY_LLAMA_SWAG, 1, 1);
-        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ADMIN_MANAGE_NOT_ADMIN_CHUNK.getString(null));
+        } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_ADMIN_MANAGE_NOT_ADMIN_CHUNK.getComponent(null)));
     }
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
+        console.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NOT_A_CONSOLE_COMMAND.getComponent(null)));
     }
 }

@@ -50,20 +50,20 @@ public class Claim extends SubCommand {
                 if (playerClaimAmount < playerMaxClaims) {
                     playerClaimAmount++;
                     cache.claimChunk(chunkCord, uuid);
-                    player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_CLAIM_SUCCESSFUL.getString(new String[] { chunkCord, plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) }));
+                    player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_CLAIM_SUCCESSFUL.getComponent(new String[] { chunkCord, plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) })));
                     plugin.getPU().renderChunkBorder(player, chunk, "claim");
-                } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_CLAIM_MAXED.getString(new String[] { plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) }));
-            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_ADMIN_CLAIMED.getString(null));
+                } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_CLAIM_MAXED.getComponent(new String[] { plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) })));
+            } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_ADMIN_CLAIMED.getComponent(null)));
         } else {
             UUID ownerUUID = cache.getChunkOwnerUUID(chunkCord);
             String ownerName = Bukkit.getOfflinePlayer(ownerUUID).getName();
-            if (!uuid.equals(ownerUUID)) player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_CLAIMED.getString(new String[] { ownerName }));
-            else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_CLAIMED_OWNER.getString(null));
+            if (!uuid.equals(ownerUUID)) player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_CLAIMED.getComponent(new String[] { ownerName })));
+            else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_CLAIMED_OWNER.getComponent(null)));
         }
     }
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
+        console.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NOT_A_CONSOLE_COMMAND.getComponent(null)));
     }
 }

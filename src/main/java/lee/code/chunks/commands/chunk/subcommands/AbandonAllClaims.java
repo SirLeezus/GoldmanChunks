@@ -41,12 +41,12 @@ public class AbandonAllClaims extends SubCommand {
             cache.unclaimAllChunks(uuid);
             int maxClaims = cache.getPlayerMaxClaimAmount(uuid);
             int totalClaims = cache.getClaimedAmount(uuid);
-            player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ABANDONALLCLAIMS_SUCCESSFUL.getString(new String[] { plugin.getPU().formatAmount(totalClaims), plugin.getPU().formatAmount(maxClaims) }));
-        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_ABANDONALLCLAIMS_NO_CLAIMS.getString(null));
+            player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ABANDONALLCLAIMS_SUCCESSFUL.getComponent(new String[] { plugin.getPU().formatAmount(totalClaims), plugin.getPU().formatAmount(maxClaims) })));
+        } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_ABANDONALLCLAIMS_NO_CLAIMS.getComponent(null)));
     }
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
+        console.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NOT_A_CONSOLE_COMMAND.getComponent(null)));
     }
 }

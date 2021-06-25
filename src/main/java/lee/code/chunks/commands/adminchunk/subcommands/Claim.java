@@ -47,7 +47,7 @@ public class Claim extends SubCommand {
 
             if (!plugin.getData().hasAdminClaimSelection(player.getUniqueId())) {
                 plugin.getData().addAdminClaimSelection(player.getUniqueId(), start);
-                player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_CLAIM_FIRST_CHUNK_SELECTED.getString(new String[] { String.format(selectedChunk, start.getX(), start.getZ()) }));
+                player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_CLAIM_FIRST_CHUNK_SELECTED.getComponent(new String[] { String.format(selectedChunk, start.getX(), start.getZ()) })));
                 return;
             }
 
@@ -68,13 +68,13 @@ public class Claim extends SubCommand {
                     }
                 }
                 plugin.getData().removeAdminClaimSelection(player.getUniqueId());
-                player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_ADMIN_CLAIM_SUCCESSFUL.getString(new String[] { String.valueOf(claimed) } ));
+                player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_CLAIM_SUCCESSFUL.getComponent(new String[] { String.valueOf(claimed) } )));
             });
-        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_ADMIN_CLAIM_PLAYER_CLAIMED.getString(null));
+        } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_ADMIN_CLAIM_PLAYER_CLAIMED.getComponent(null)));
     }
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
+        console.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NOT_A_CONSOLE_COMMAND.getComponent(null)));
     }
 }

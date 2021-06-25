@@ -4,9 +4,13 @@ import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Info extends SubCommand {
 
@@ -35,26 +39,27 @@ public class Info extends SubCommand {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
 
+        String owner = "";
         Chunk chunk = player.getLocation().getChunk();
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);
-        String owner = "";
-
-        if (cache.isAdminChunk(chunkCord)) owner = plugin.getPU().format("&4&lAdmin");
+        if (cache.isAdminChunk(chunkCord)) owner = "&4&lAdmin";
         else if (cache.isChunkClaimed(chunkCord)) owner = cache.getChunkOwnerName(chunkCord);
 
-        player.sendMessage(Lang.COMMAND_INFO_HEADER.getString(null));
-        player.sendMessage("");
-        player.sendMessage(Lang.COMMAND_INFO_LINE_1.getString(new String[] { owner }));
-        player.sendMessage(Lang.COMMAND_INFO_LINE_2.getString(new String[] { chunkCord }));
-        if (cache.isChunkClaimed(chunkCord)) if (cache.isChunkForSale(chunkCord))player.sendMessage(Lang.COMMAND_INFO_LINE_3.getString(new String[] { plugin.getPU().formatAmount(cache.getChunkPrice(chunkCord)) }));
-        player.sendMessage("");
-        player.sendMessage(Lang.COMMAND_INFO_FOOTER.getString(null));
+        List<Component> lines = new ArrayList<>();
+        lines.add(Lang.COMMAND_INFO_HEADER.getComponent(null));
+        lines.add(Component.text(""));
+        lines.add(Lang.COMMAND_INFO_LINE_1.getComponent(new String[] { owner }));
+        lines.add(Lang.COMMAND_INFO_LINE_2.getComponent(new String[] { chunkCord }));
+        if (cache.isChunkClaimed(chunkCord)) if (cache.isChunkForSale(chunkCord)) lines.add(Lang.COMMAND_INFO_LINE_3.getComponent(new String[] { plugin.getPU().formatAmount(cache.getChunkPrice(chunkCord)) }));
+        lines.add(Component.text(""));
+        lines.add(Lang.COMMAND_INFO_FOOTER.getComponent(null));
 
+        for (Component line : lines) player.sendMessage(line);
         plugin.getPU().renderChunkBorder(player, chunk, "info");
     }
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
+        console.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NOT_A_CONSOLE_COMMAND.getComponent(null)));
     }
 }

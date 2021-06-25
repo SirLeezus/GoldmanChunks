@@ -18,11 +18,11 @@ public class SQLite {
 
         try {
             if (!plugin.getDataFolder().exists()) {
-                plugin.getDataFolder().mkdir();
+                boolean created = plugin.getDataFolder().mkdir();
             }
             File dbFile = new File(plugin.getDataFolder(), "database.db");
             if (!dbFile.exists()) {
-                dbFile.createNewFile();
+                boolean created = dbFile.createNewFile();
             }
             String url = "jdbc:sqlite:" + dbFile.getPath();
 
