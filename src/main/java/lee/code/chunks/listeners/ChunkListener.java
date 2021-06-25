@@ -404,7 +404,7 @@ public class ChunkListener implements Listener {
                             warnMessagePVP(player);
                         }
                         //pve
-                    } else if (!(e.getEntity() instanceof Monster)) {
+                    } else if (!(e.getEntity() instanceof Monster) && !(e.getEntity() instanceof Phantom)) {
                         UUID owner = cache.getChunkOwnerUUID(chunkCord);
                         if (!cache.isChunkOwner(chunkCord, uuid)) {
                             if (cache.isGlobalTrusted(owner, uuid)) {
@@ -439,7 +439,7 @@ public class ChunkListener implements Listener {
                                 warnMessagePVP(player);
                             }
                             //pve
-                        } else if (!(e.getEntity() instanceof Monster)) {
+                        } else if (!(e.getEntity() instanceof Monster) && !(e.getEntity() instanceof Phantom)) {
                             UUID owner = cache.getChunkOwnerUUID(chunkCord);
                             if (!cache.isChunkOwner(chunkCord, uuid)) {
                                 if (cache.isGlobalTrusted(owner, uuid)) {
@@ -468,7 +468,6 @@ public class ChunkListener implements Listener {
                 e.setCancelled(true);
                 return;
             }
-
             //pvp
             if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
                 UUID uuid = e.getDamager().getUniqueId();
@@ -479,6 +478,12 @@ public class ChunkListener implements Listener {
                 //evp
             } else if (!(e.getDamager() instanceof Player) && e.getEntity() instanceof Player) {
                 UUID uuid = e.getEntity().getUniqueId();
+                if (!plugin.getData().hasAdminBypass(uuid)) {
+                    if (!cache.canAdminChunkPvE(chunkCord)) e.setCancelled(true);
+                }
+                //pve
+            } else if (e.getDamager() instanceof Player && !(e.getEntity() instanceof Player) && !(e.getEntity() instanceof Monster) && !(e.getEntity() instanceof Phantom)) {
+                UUID uuid = e.getDamager().getUniqueId();
                 if (!plugin.getData().hasAdminBypass(uuid)) {
                     if (!cache.canAdminChunkPvE(chunkCord)) e.setCancelled(true);
                 }

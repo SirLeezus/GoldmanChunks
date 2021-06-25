@@ -40,13 +40,14 @@ public class Teleport extends SubCommand {
         if (args.length > 1) {
             UUID uuid = player.getUniqueId();
             String chunk = args[1].trim();
-            System.out.println(chunk);
-            if (cache.isChunkClaimed(chunk)) {
-                if (cache.isChunkOwner(chunk, uuid)) {
-                    Location chunkLocation = plugin.getPU().unFormatChunkLocation(chunk);
-                    plugin.getPU().teleportPlayerToChunk(player, chunkLocation);
-                } else player.sendMessage("Not owner.");
-            } else player.sendMessage("Not claimed.");
+            if (!cache.isAdminChunk(chunk)) {
+                if (cache.isChunkClaimed(chunk)) {
+                    if (cache.isChunkOwner(chunk, uuid)) {
+                        Location chunkLocation = plugin.getPU().unFormatChunkLocation(chunk);
+                        plugin.getPU().teleportPlayerToChunk(player, chunkLocation);
+                    } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_TELEPORT_NOT_OWNER.getComponent(new String[] { chunk })));
+                } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_TELEPORT_NOT_CLAIMED.getComponent(new String[] { chunk })));
+            } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_TELEPORT_NOT_OWNER.getComponent(new String[] { chunk })));
         }
     }
 

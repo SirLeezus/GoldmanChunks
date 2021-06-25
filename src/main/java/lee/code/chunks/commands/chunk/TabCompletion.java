@@ -14,7 +14,7 @@ import java.util.*;
 
 public class TabCompletion implements TabCompleter {
 
-    private final List<String> subCommands = Arrays.asList("trust", "trustall", "trusted", "untrust", "untrustall", "claim", "unclaim", "map", "info", "manage", "autoclaim", "list", "abandonallclaims", "admin", "maxclaims", "setprice", "buy");
+    private final List<String> subCommands = Arrays.asList("teleport", "trust", "trustall", "trusted", "untrust", "untrustall", "claim", "unclaim", "map", "info", "manage", "autoclaim", "list", "abandonallclaims", "admin", "maxclaims", "setprice", "buy");
     private final List<String> blank = new ArrayList<>();
 
     @Override
@@ -22,7 +22,8 @@ public class TabCompletion implements TabCompleter {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
 
-        if (sender instanceof Player) {
+        if (sender instanceof Player player) {
+            UUID uuid = player.getUniqueId();
             if (args.length == 1) {
                 List<String> hasCommand = new ArrayList<>();
                 for (String pluginCommand : subCommands) if (sender.hasPermission("chunk.command." + pluginCommand)) hasCommand.add(pluginCommand);
@@ -34,18 +35,16 @@ public class TabCompletion implements TabCompleter {
                 if (args.length == 2) return StringUtil.copyPartialMatches(args[1], plugin.getPU().getOnlinePlayers(), new ArrayList<>());
             } else if (args[0].equals("untrust")) {
                 if (args.length == 2) {
-                    Player player = (Player) sender;
-                    UUID uuid = player.getUniqueId();
                     Chunk chunk = player.getLocation().getChunk();
                     String chunkCord = plugin.getPU().formatChunkLocation(chunk);
                     if (cache.isChunkOwner(chunkCord, uuid)) return StringUtil.copyPartialMatches(args[1], cache.getChunkTrustedNames(chunkCord), new ArrayList<>());
                 }
             } else if (args[0].equals("untrustall")) {
                 if (args.length == 2) {
-                    Player player = (Player) sender;
-                    UUID uuid = player.getUniqueId();
                     return StringUtil.copyPartialMatches(args[1], cache.getGlobalTrustedNames(uuid), new ArrayList<>());
                 }
+            } else if (args[0].equals("teleport")) {
+                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], cache.getChunkClaims(uuid), new ArrayList<>());
             } else if (args[0].equals("admin")) {
                 if (args.length == 2) return StringUtil.copyPartialMatches(args[1], Arrays.asList("unclaim", "unclaimall", "bypass", "bonusclaims"), new ArrayList<>());
                 else if (args.length == 3 && args[1].equals("bonusclaims")) return StringUtil.copyPartialMatches(args[2], Arrays.asList("add", "remove", "set"), new ArrayList<>());

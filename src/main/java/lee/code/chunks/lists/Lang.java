@@ -37,6 +37,8 @@ public enum Lang {
     ERROR_COMMAND_TRUSTALL_ALREADY_ADDED("&cThe player &6{0} &cis already added to your global trusted list."),
     ERROR_COMMAND_TRUSTALL_NO_TARGET_PLAYER("&cYou need to enter a player you want to trust globally."),
     ERROR_TELEPORT_UNSAFE("&cSadly there wasn't a safe place to teleport so it was canceled."),
+    ERROR_TELEPORT_NOT_OWNER("&cYou are not the owner of the chunk &b{0}&c, teleport canceled."),
+    ERROR_TELEPORT_NOT_CLAIMED("&cThe chunk &b{0}&c is not currently claimed, teleport canceled."),
     ERROR_COMMAND_UNTRUST_PLAYER_NOT_TRUSTED("&cThe player &6{0} &cis not trusted to the chunk &e(&b{1}&e)&c."),
     ERROR_COMMAND_UNTRUSTALL_PLAYER_NOT_TRUSTED("&cThe player &6{0} &cis not listed on your global trust list."),
     ERROR_COMMAND_UNTRUSTALL_NO_TARGET_PLAYER("&cYou need to enter a player you want to untrust globally."),
