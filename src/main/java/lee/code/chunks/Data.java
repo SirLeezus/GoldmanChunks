@@ -15,6 +15,7 @@ public class Data {
     private final HashMap<UUID, String> playerAutoClaimMap = new HashMap<>();
     private final HashMap<UUID, Vector> adminClaimSelection = new HashMap<>();
     private final List<UUID> adminBypassList = new ArrayList<>();
+    private final List<UUID> playerFlyList = new ArrayList<>();
     private final List<UUID> playerClickDelay = new ArrayList<>();
 
     public boolean hasPlayerClickDelay(UUID uuid) {
@@ -26,6 +27,7 @@ public class Data {
     public void removePlayerClickDelay(UUID uuid) {
         playerClickDelay.remove(uuid);
     }
+
     public void setPlayerAutoClaim(UUID uuid, String chunk) {
         playerAutoClaimMap.put(uuid, chunk);
     }
@@ -38,6 +40,7 @@ public class Data {
     public boolean isPlayerAutoClaiming(UUID uuid) {
         return playerAutoClaimMap.containsKey(uuid);
     }
+
     public void addAdminBypass(UUID uuid) {
         adminBypassList.add(uuid);
     }
@@ -47,6 +50,17 @@ public class Data {
     public boolean hasAdminBypass(UUID uuid) {
         return adminBypassList.contains(uuid);
     }
+
+    public void addChunkFlying(UUID uuid) {
+        playerFlyList.add(uuid);
+    }
+    public void removeChunkFlying(UUID uuid) {
+        playerFlyList.remove(uuid);
+    }
+    public boolean isChunkFlying(UUID uuid) {
+        return playerFlyList.contains(uuid);
+    }
+
     public boolean hasAdminClaimSelection(UUID uuid) {
         return adminClaimSelection.containsKey(uuid);
     }

@@ -8,6 +8,7 @@ import lee.code.chunks.lists.Settings;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -32,7 +33,7 @@ public class PU {
     }
 
     public String unFormatC(Component message) {
-        LegacyComponentSerializer serializer = LegacyComponentSerializer.legacyAmpersand();
+        PlainTextComponentSerializer serializer = PlainTextComponentSerializer.plainText();
         return serializer.serialize(message);
     }
 
@@ -73,13 +74,17 @@ public class PU {
         long minZ = chunk.getZ() * 16L;
         long minY = player.getLocation().getBlockY();
 
-        for (long y = minY - 2; y < minY + 7; y++) {
-            for (long x = minX; x < minX + 17; x++) {
-                for (long z = minZ; z < minZ + 17; z++) {
-                    player.spawnParticle(particle, minX, y + 1, z, 0);
-                    player.spawnParticle(particle, x, y + 1, minZ, 0);
-                    player.spawnParticle(particle, minX + 16, y + 1, z, 0);
-                    player.spawnParticle(particle, x, y + 1, minZ + 16, 0);
+        long maxX =  minX + 17;
+        long maxZ = minZ + 17;
+        long maxY = minY + 7;
+
+        for (long y = minY - 2; y < maxY; y++) {
+            for (long x = minX; x < maxX; x++) {
+                for (long z = minZ; z < maxZ; z++) {
+                    player.spawnParticle(particle, minX, y, z, 0);
+                    player.spawnParticle(particle, x, y, minZ, 0);
+                    player.spawnParticle(particle, maxX - 1, y, z, 0);
+                    player.spawnParticle(particle, x, y, maxZ - 1, 0);
                 }
             }
         }

@@ -1,6 +1,6 @@
 package lee.code.chunks.lists;
 
-import lee.code.essentials.GoldmanEssentials;
+import lee.code.chunks.GoldmanChunks;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
@@ -12,11 +12,13 @@ public enum Lang {
     TELEPORT("&eWhooosh!"),
     TRUE("&atrue"),
     FALSE("&cfalse"),
+    ON("&2&lON"),
+    OFF("&c&lOFF"),
     MESSAGE_HELP_DIVIDER("&e▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"),
     MESSAGE_HELP_TITLE("                      &6-== &e&l&nChunk Help&r &6==-"),
     MESSAGE_HELP_SUB_COMMAND("&3{0}&b. &e{1} &c| &7{2}"),
     ERROR_NO_PERMISSION("&cYou sadly do not have permission for this."),
-    ERROR_PVP_DISABLED("&c&lPvP is disabled in this chunk"),
+    ERROR_PVP_DISABLED("&c&lPvP is disabled in this chunk!"),
     ERROR_NO_CLAIM_PERMISSION("&6&lTrusted&7: {0} &7| {1} &7| &6&lOwner&7: &2{2}"),
     ERROR_CLAIMED("&cThis chunk has already been claimed by &6{0}&c."),
     ERROR_CLAIMED_OWNER("&cYou already own this chunk."),
@@ -37,8 +39,8 @@ public enum Lang {
     ERROR_COMMAND_TRUSTALL_ALREADY_ADDED("&cThe player &6{0} &cis already added to your global trusted list."),
     ERROR_COMMAND_TRUSTALL_NO_TARGET_PLAYER("&cYou need to enter a player you want to trust globally."),
     ERROR_TELEPORT_UNSAFE("&cSadly there wasn't a safe place to teleport so it was canceled."),
-    ERROR_TELEPORT_NOT_OWNER("&cYou are not the owner of the chunk &b{0}&c, teleport canceled."),
-    ERROR_TELEPORT_NOT_CLAIMED("&cThe chunk &b{0}&c is not currently claimed, teleport canceled."),
+    ERROR_TELEPORT_NOT_OWNER("&cYou are not the owner of the chunk &e(&b{0}&e)&c, teleport canceled."),
+    ERROR_TELEPORT_NOT_CLAIMED("&cThe chunk &e(&b{0}&e)&c is not currently claimed, teleport canceled."),
     ERROR_COMMAND_UNTRUST_PLAYER_NOT_TRUSTED("&cThe player &6{0} &cis not trusted to the chunk &e(&b{1}&e)&c."),
     ERROR_COMMAND_UNTRUSTALL_PLAYER_NOT_TRUSTED("&cThe player &6{0} &cis not listed on your global trust list."),
     ERROR_COMMAND_UNTRUSTALL_NO_TARGET_PLAYER("&cYou need to enter a player you want to untrust globally."),
@@ -56,6 +58,8 @@ public enum Lang {
     ERROR_COMMAND_SETPRICE_MAX_VALUE("&cYou can only sell a chunk for a max of ${0}&c."),
     ERROR_COMMAND_SETPRICE_NOT_NUMBER("&cThe input &b{0} &cis not a accepted value. You need to input a sell price, decimals are not supported."),
     ERROR_COMMAND_SETPRICE_NO_NUMBER("&cYou need to input a number for how much you would like to sell the chunk you're standing on. Keep in mind decimals are not supported."),
+    ERROR_COMMAND_FLY_NOT_OWNER("&cYou must be the owner or trusted on the chunk you're standing on to use this command."),
+    ERROR_COMMAND_FLY_OUTSIDE_OF_CLAIM("&cYour fly has been toggled off due to going outside of claimed or trusted chunks."),
     ERROR_PREVIOUS_PAGE("&7You are already on the first page."),
     ERROR_NEXT_PAGE("&7You are on the last page."),
     ERROR_COMMAND_MANAGE_NOT_CHUNK_OWNER("&cYou need to be standing on a chunk you own to open this menu."),
@@ -115,22 +119,23 @@ public enum Lang {
     COMMAND_MAX_CLAIMS_LINE_6("&6&lAccrued Claims&7: &2{0}&7/&2{1}"),
     COMMAND_MAX_CLAIMS_LINE_7("&6&lTotal Claims&7: &2{0}&7/&2{1}"),
     COMMAND_MAX_CLAIMS_FOOTER("&2------------------------------------------------"),
+    COMMAND_FLY_TOGGLE_SUCCESSFUL("&aYour fly has been toggled {0}&a."),
     MENU_ADMIN_CHUNK_SETTINGS_TITLE("&4&lAdmin Chunk Settings"),
     MENU_CHUNK_MANAGER_TITLE("&c&lChunk Manager"),
     MENU_PLAYER_CHUNKS_TITLE("&2&lClaimed Chunks &8Page {0}"),
     MENU_GENERAL_CHUNK_SETTINGS_TITLE("&e&lGeneral Chunk Settings"),
     MENU_TRUSTED_TITLE("&2&lTrusted Chunk Settings"),
     MENU_GLOBAL_TRUSTED_TITLE("&2&lTrusted Global Settings"),
-    ITEM_TRUSTED_CHUNK_SETTINGS_NAME("&2&lTrusted Chunk Settings"),
-    ITEM_GLOBAL_TRUSTED_CHUNK_SETTINGS_NAME("&2&lTrusted Global Settings"),
-    ITEM_GLOBAL_TRUSTED_CHUNK_SETTINGS_LORE_1("&7Toggle your trusted player global"),
-    ITEM_GLOBAL_TRUSTED_CHUNK_SETTINGS_LORE_2("&7settings on all your claimed chunks."),
-    ITEM_GENERAL_CHUNK_SETTINGS_NAME("&e&lGeneral Chunk Settings"),
-    ITEM_GENERAL_CHUNK_SETTINGS_LORE_1("&7Toggle settings for the chunk you"),
-    ITEM_GENERAL_CHUNK_SETTINGS_LORE_2("&7are standing on."),
-    ITEM_TRUSTED_CHUNK_PLAYERS_NAME("&2&lTrusted Chunk Players"),
-    ITEM_TRUSTED_CHUNK_PLAYERS_LORE_1("&7List the players that are trusted"),
-    ITEM_TRUSTED_CHUNK_PLAYERS_LORE_2("&7in the chunk you are standing on."),
+    //ITEM_TRUSTED_CHUNK_SETTINGS_NAME("&2&lTrusted Chunk Settings"),
+    //ITEM_GLOBAL_TRUSTED_CHUNK_SETTINGS_NAME("&2&lTrusted Global Settings"),
+    //ITEM_GLOBAL_TRUSTED_CHUNK_SETTINGS_LORE_1("&7Toggle your trusted player global"),
+    //ITEM_GLOBAL_TRUSTED_CHUNK_SETTINGS_LORE_2("&7settings on all your claimed chunks."),
+    //ITEM_GENERAL_CHUNK_SETTINGS_NAME("&e&lGeneral Chunk Settings"),
+    //ITEM_GENERAL_CHUNK_SETTINGS_LORE_1("&7Toggle settings for the chunk you"),
+    //ITEM_GENERAL_CHUNK_SETTINGS_LORE_2("&7are standing on."),
+    //ITEM_TRUSTED_CHUNK_PLAYERS_NAME("&2&lTrusted Chunk Players"),
+    //ITEM_TRUSTED_CHUNK_PLAYERS_LORE_1("&7List the players that are trusted"),
+    //ITEM_TRUSTED_CHUNK_PLAYERS_LORE_2("&7in the chunk you are standing on."),
     ITEM_SETTINGS_BUILD_NAME("&6&lBuild&7: {0}"),
     ITEM_SETTINGS_BREAK_NAME("&6&lBreak&7: {0}"),
     ITEM_SETTINGS_INTERACT_NAME("&6&lInteract&7: {0}"),
@@ -138,8 +143,8 @@ public enum Lang {
     ITEM_SETTINGS_PVE_NAME("&6&lPvE&7: {0}"),
     ITEM_SETTINGS_MONSTER_SPAWNING_NAME("&6&lMonster Spawning&7: {0}"),
     ITEM_SETTINGS_EXPLOSIONS_NAME("&6&lExplosions&7: {0}"),
-    INTERFACE_ITEM_NEXT_PAGE_NAME("&eNext Page >"),
-    INTERFACE_ITEM_PREVIOUS_PAGE_NAME("&e< Previous Page"),
+    //INTERFACE_ITEM_NEXT_PAGE_NAME("&eNext Page >"),
+    //INTERFACE_ITEM_PREVIOUS_PAGE_NAME("&e< Previous Page"),
     ;
 
     @Getter private final String string;
@@ -153,7 +158,7 @@ public enum Lang {
     }
 
     public Component getComponent(String[] variables) {
-        GoldmanEssentials plugin = GoldmanEssentials.getPlugin();
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
         String value = string;
         if (variables == null || variables.length == 0) return plugin.getPU().formatC(value);
         for (int i = 0; i < variables.length; i++) value = value.replace("{" + i + "}", variables[i]);
