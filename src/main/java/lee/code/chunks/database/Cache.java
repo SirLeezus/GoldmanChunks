@@ -450,6 +450,32 @@ public class Cache {
         }
     }
 
+    public boolean isChunkFlying(UUID uuid) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        String sUUID = uuid.toString();
+
+        try (Jedis jedis = pool.getResource()) {
+            String flag = jedis.hget("chunkFlying", sUUID);
+            return !flag.equals("0");
+        }
+    }
+
+    public void setChunkFlying(UUID uuid, boolean canFly) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+        SQLite SQL = plugin.getSqLite();
+        String result; if (canFly) result = "1"; else result = "0";
+
+        String sUUID = uuid.toString();
+
+        try (Jedis jedis = pool.getResource()) {
+            jedis.hset("chunkFlying", sUUID, result);
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkFlying(sUUID, result));
+        }
+    }
+
     public boolean canChunkPvP(String chunk) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
@@ -492,13 +518,14 @@ public class Cache {
             pipe.hset("trustedGlobalBreak", sUUID, "1");
             pipe.hset("trustedGlobalInteract", sUUID, "1");
             pipe.hset("trustedGlobalPvE", sUUID, "1");
+            pipe.hset("chunkFlying", sUUID, "0");
             pipe.sync();
 
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.createPlayerData(sUUID));
         }
     }
 
-    public void setPlayerData(String uuid, String claimed, String bonusClaims, String accruedClaims, String trustedGlobal, String trustedGlobalBuild, String trustedGlobalBreak, String trustedGlobalInteract, String trustedGlobalPvE) {
+    public void setPlayerData(String uuid, String claimed, String bonusClaims, String accruedClaims, String trustedGlobal, String trustedGlobalBuild, String trustedGlobalBreak, String trustedGlobalInteract, String trustedGlobalPvE, String flying) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
@@ -512,6 +539,7 @@ public class Cache {
             pipe.hset("trustedGlobalBreak", uuid, trustedGlobalBreak);
             pipe.hset("trustedGlobalInteract", uuid, trustedGlobalInteract);
             pipe.hset("trustedGlobalPvE", uuid, trustedGlobalPvE);
+            pipe.hset("chunkFlying", uuid, flying);
             pipe.sync();
         }
     }

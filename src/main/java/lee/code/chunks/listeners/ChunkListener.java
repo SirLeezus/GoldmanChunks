@@ -611,7 +611,7 @@ public class ChunkListener implements Listener {
                 }
             } else if (!data.getPlayerLastAutoClaim(uuid).equals(chunkCord)) data.setPlayerAutoClaim(uuid, chunkCord);
 
-        } else if (data.isChunkFlying(uuid)) {
+        } else if (cache.isChunkFlying(uuid)) {
             Player player = e.getPlayer();
             Chunk chunk = player.getLocation().getChunk();
             String chunkCord = plugin.getPU().formatChunkLocation(chunk);
@@ -624,11 +624,11 @@ public class ChunkListener implements Listener {
 
     private void toggleChunkFly(Player player) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Data data = plugin.getData();
+        Cache cache = plugin.getCache();
         UUID uuid = player.getUniqueId();
         player.setAllowFlight(false);
         player.setFlying(false);
-        data.removeChunkFlying(uuid);
+        cache.setChunkFlying(uuid, false);
         player.addPotionEffect(PotionEffectType.SLOW_FALLING.createEffect(20*15, 1));
         player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_FLY_OUTSIDE_OF_CLAIM.getComponent(new String[] { Lang.OFF.getString() })));
     }

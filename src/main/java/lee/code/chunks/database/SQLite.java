@@ -99,7 +99,8 @@ public class SQLite {
                 "`build` varchar NOT NULL," +
                 "`break` varchar NOT NULL," +
                 "`interact` varchar NOT NULL," +
-                "`pve` varchar NOT NULL" +
+                "`pve` varchar NOT NULL," +
+                "`flying` varchar NOT NULL" +
                 ");");
     }
 
@@ -200,7 +201,11 @@ public class SQLite {
     //PLAYER DATA TABLE
 
     public void createPlayerData(String uuid) {
-        update("INSERT OR REPLACE INTO player_data (player, claimed, bonus_claims, accrued_claims, trusted_global, build, break, interact, pve) VALUES( '" + uuid + "', '0', '0', '0', 'n', '1', '1', '1', '1');");
+        update("INSERT OR REPLACE INTO player_data (player, claimed, bonus_claims, accrued_claims, trusted_global, build, break, interact, pve, flying) VALUES( '" + uuid + "', '0', '0', '0', 'n', '1', '1', '1', '1', '0');");
+    }
+
+    public void setChunkFlying(String uuid, String flying) {
+        update("UPDATE player_data SET flying = '" + flying + "' WHERE player ='" + uuid + "';");
     }
 
     public void setClaimedAmount(String uuid, String amount) {
@@ -281,7 +286,8 @@ public class SQLite {
                 String trustedGlobalBreak = rs.getString("break");
                 String trustedGlobalInteract = rs.getString("interact");
                 String trustedGlobalPvE = rs.getString("pve");
-                cache.setPlayerData(uuid, claimed, bonusClaimed, accruedClaims, trustedGlobal, trustedGlobalBuild, trustedGlobalBreak, trustedGlobalInteract, trustedGlobalPvE);
+                String flying = rs.getString("flying");
+                cache.setPlayerData(uuid, claimed, bonusClaimed, accruedClaims, trustedGlobal, trustedGlobalBuild, trustedGlobalBreak, trustedGlobalInteract, trustedGlobalPvE, flying);
                 count++;
             }
             System.out.println(plugin.getPU().format("&6Players Loaded: &a" + count));

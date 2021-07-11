@@ -37,20 +37,19 @@ public class Fly extends SubCommand {
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
-        Data data = plugin.getData();
         UUID uuid = player.getUniqueId();
         Chunk chunk = player.getLocation().getChunk();
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
         if (cache.isChunkClaimed(chunkCord)) {
             if (cache.isChunkOwner(chunkCord, uuid) || cache.isChunkTrusted(chunkCord, uuid)) {
-                if (!data.isChunkFlying(uuid)) {
-                    data.addChunkFlying(uuid);
+                if (!cache.isChunkFlying(uuid)) {
+                    cache.setChunkFlying(uuid, true);
                     player.setAllowFlight(true);
                     player.setFlying(true);
                     player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_FLY_TOGGLE_SUCCESSFUL.getComponent(new String[] { Lang.ON.getString() })));
                 } else {
-                    data.removeChunkFlying(uuid);
+                    cache.setChunkFlying(uuid, false);
                     player.setAllowFlight(false);
                     player.setFlying(false);
                     player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_FLY_TOGGLE_SUCCESSFUL.getComponent(new String[] { Lang.OFF.getString() })));
