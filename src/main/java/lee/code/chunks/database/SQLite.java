@@ -109,7 +109,7 @@ public class SQLite {
     //CHUNKS TABLE
 
     public void claimChunk(String chunk, UUID uuid, String amount) {
-        update("INSERT OR REPLACE INTO chunks (chunk, owner, trusted, build, break, interact, pve, pvp, monster_spawning, explosions, price) VALUES( '" + chunk + "','" + uuid + "', 'n', '1', '1', '1', '1', '0', '0', '0', '0');");
+        update("INSERT OR REPLACE INTO chunks (chunk, owner, trusted, build, break, interact, pve, pvp, monster_spawning, explosions, price) VALUES( '" + chunk + "','" + uuid + "', '0', '1', '1', '1', '1', '0', '0', '0', '0');");
         update("UPDATE player_data SET claimed ='" + amount + "' WHERE player ='" + uuid + "';");
     }
 
@@ -203,7 +203,7 @@ public class SQLite {
     //PLAYER DATA TABLE
 
     public void createPlayerData(String uuid) {
-        update("INSERT OR REPLACE INTO player_data (player, claimed, bonus_claims, accrued_claims, trusted_global, build, break, interact, pve, flying) VALUES( '" + uuid + "', '0', '0', '0', 'n', '1', '1', '1', '1', '0');");
+        update("INSERT OR REPLACE INTO player_data (player, claimed, bonus_claims, accrued_claims, trusted_global, build, break, interact, pve, flying) VALUES( '" + uuid + "', '0', '0', '0', '0', '1', '1', '1', '1', '0');");
     }
 
     public void setChunkFlying(String uuid, String flying) {

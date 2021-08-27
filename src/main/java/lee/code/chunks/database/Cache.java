@@ -25,7 +25,7 @@ public class Cache {
         try (Jedis jedis = pool.getResource()) {
             Pipeline pipe = jedis.pipelined();
             pipe.hset("chunk", chunk, sUUID);
-            pipe.hset("chunkTrusted", chunk, "n");
+            pipe.hset("chunkTrusted", chunk, "0");
             pipe.hset("chunkTrustedBuild", chunk, "1");
             pipe.hset("chunkTrustedBreak", chunk, "1");
             pipe.hset("chunkTrustedInteract", chunk, "1");
@@ -255,7 +255,7 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             String players = jedis.hget("chunkTrusted", chunk);
-            if (!players.equals("n")) {
+            if (!players.equals("0")) {
                 String[] split = StringUtils.split(players, ',');
                 for (String player : split) if (player.equals(sUUID)) return true;
             }
@@ -269,7 +269,7 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             String players = jedis.hget("chunkTrusted", chunk);
-            if (!players.equals("n")) {
+            if (!players.equals("0")) {
                 List<String> trusted = new ArrayList<>();
                 String[] split = StringUtils.split(players, ',');
                 for (String uuid : split) trusted.add(Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName());
@@ -287,7 +287,7 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             String players = jedis.hget("chunkTrusted", chunk);
-            if (!players.equals("n")) {
+            if (!players.equals("0")) {
                 List<String> trusted = new ArrayList<>();
                 String[] split = StringUtils.split(players, ',');
                 for (String player : split) if (!player.equals(sUUID)) trusted.add(player);
@@ -310,7 +310,7 @@ public class Cache {
             String players = jedis.hget("chunkTrusted", chunk);
 
             String trusted;
-            if (players.equals("n")) trusted = sUUID;
+            if (players.equals("0")) trusted = sUUID;
             else trusted = players + "," + sUUID;
 
             jedis.hset("chunkTrusted", chunk, trusted);
@@ -513,7 +513,7 @@ public class Cache {
             pipe.hset("claimed", sUUID, "0");
             pipe.hset("bonusClaims", sUUID, "0");
             pipe.hset("accruedClaims", sUUID, "0");
-            pipe.hset("trustedGlobal", sUUID, "n");
+            pipe.hset("trustedGlobal", sUUID, "0");
             pipe.hset("trustedGlobalBuild", sUUID, "1");
             pipe.hset("trustedGlobalBreak", sUUID, "1");
             pipe.hset("trustedGlobalInteract", sUUID, "1");
@@ -685,7 +685,7 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             String players = jedis.hget("trustedGlobal", sUUID);
-            if (!players.equals("n")) {
+            if (!players.equals("0")) {
                 String[] split = StringUtils.split(players, ',');
                 for (String player : split) if (player.equals(sTrusted)) return true;
             }
@@ -705,7 +705,7 @@ public class Cache {
             String players = jedis.hget("trustedGlobal", sUUID);
 
             String newTrusted;
-            if (players.equals("n")) newTrusted = sTrusted;
+            if (players.equals("0")) newTrusted = sTrusted;
             else newTrusted = players + "," + sTrusted;
 
             jedis.hset("trustedGlobal", sUUID, newTrusted);
@@ -722,7 +722,7 @@ public class Cache {
         try (Jedis jedis = pool.getResource()) {
             String trusted = jedis.hget("trustedGlobal", sUUID);
 
-            if (!trusted.equals("n")) {
+            if (!trusted.equals("0")) {
                 List<String> players = new ArrayList<>();
                 String[] split = StringUtils.split(trusted, ',');
                 for (String player : split) players.add(Bukkit.getOfflinePlayer(UUID.fromString(player)).getName());
@@ -741,7 +741,7 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             String players = jedis.hget("trustedGlobal", sUUID);
-            if (!players.equals("n")) {
+            if (!players.equals("0")) {
 
                 List<String> trustedList = new ArrayList<>();
                 String[] split = StringUtils.split(players, ',');
@@ -1049,7 +1049,7 @@ public class Cache {
         String result; if (canSpawnMonsters) result = "1"; else result = "0";
 
         try (Jedis jedis = pool.getResource()) {
-            jedis.hset("adminChunkPvP", chunk, result);
+            jedis.hset("adminChunkMonsters", chunk, result);
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setAdminChunkSpawnMonsters(chunk, result));
         }
     }
