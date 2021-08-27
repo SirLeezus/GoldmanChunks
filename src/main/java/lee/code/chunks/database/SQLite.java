@@ -1,11 +1,13 @@
 package lee.code.chunks.database;
 
 import lee.code.chunks.GoldmanChunks;
+import org.bukkit.Bukkit;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
+import java.util.logging.Level;
 
 public class SQLite {
 
@@ -262,7 +264,7 @@ public class SQLite {
                 cache.setChunk(chunk, uuid, trusted, canTrustedBuild, canTrustedBreak, canTrustedInteract, canTrustedPvE, canPvP, canSpawnMonsters, canExplode, chunkPrice);
                 count++;
             }
-            System.out.println(plugin.getPU().format("&6Chunk Claims Loaded: &a" + count));
+            Bukkit.getLogger().log(Level.INFO, plugin.getPU().format("&6Chunk Claims Loaded: &a" + count));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -290,7 +292,7 @@ public class SQLite {
                 cache.setPlayerData(uuid, claimed, bonusClaimed, accruedClaims, trustedGlobal, trustedGlobalBuild, trustedGlobalBreak, trustedGlobalInteract, trustedGlobalPvE, flying);
                 count++;
             }
-            System.out.println(plugin.getPU().format("&6Players Loaded: &a" + count));
+            Bukkit.getLogger().log(Level.INFO, plugin.getPU().format("&6Players Loaded: &a" + count));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -315,7 +317,7 @@ public class SQLite {
                 cache.setAdminChunk(chunk, canBuild, canBreak, canInteract, canPvE, canPvP, canSpawnMonsters, canExplode);
                 count++;
             }
-            System.out.println(plugin.getPU().format("&6Admin Chunk Claims Loaded: &a" + count));
+            Bukkit.getLogger().log(Level.INFO, plugin.getPU().format("&6Admin Chunk Claims Loaded: &a" + count));
         } catch (SQLException e) {
             e.printStackTrace();
         }

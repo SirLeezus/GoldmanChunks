@@ -75,10 +75,10 @@
         <!-- GoldmanEssentials API -->
         <dependency>
             <groupId>lee.code.essentials</groupId>
-            <artifactId>essentials-17</artifactId>
+            <artifactId>essentials-api</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>C:\Users\Lee\Documents\APIs\GoldmanEssentials.jar</systemPath>
+            <systemPath>C:\Users\Lee\Documents\APIs\EssentailsAPI.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

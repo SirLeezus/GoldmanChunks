@@ -24,7 +24,7 @@ public class Teleport extends SubCommand {
 
     @Override
     public String getSyntax() {
-        return "/teleport &f<chunk>";
+        return "/chunk teleport &f<chunk>";
     }
 
     @Override

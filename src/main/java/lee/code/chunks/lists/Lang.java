@@ -60,6 +60,7 @@ public enum Lang {
     ERROR_COMMAND_SETPRICE_NO_NUMBER("&cYou need to input a number for how much you would like to sell the chunk you're standing on. Keep in mind decimals are not supported."),
     ERROR_COMMAND_FLY_NOT_OWNER("&cYou must be the owner or trusted on the chunk you're standing on to use this command."),
     ERROR_COMMAND_FLY_OUTSIDE_OF_CLAIM("&cYour fly has been toggled off due to going outside of claimed or trusted chunks."),
+    ERROR_COMMAND_FLY_PVP("&cYour fly has been toggled off due to going into battle with another player."),
     ERROR_PREVIOUS_PAGE("&7You are already on the first page."),
     ERROR_NEXT_PAGE("&7You are on the last page."),
     ERROR_COMMAND_MANAGE_NOT_CHUNK_OWNER("&cYou need to be standing on a chunk you own to open this menu."),

@@ -19,7 +19,6 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
@@ -392,7 +391,7 @@ public class ChunkListener implements Listener {
                         if (!cache.canChunkPvP(chunkCord)) {
                             e.setCancelled(true);
                             warnMessagePVP(player);
-                        }
+                        } else if (cache.isChunkFlying(uuid)) toggleChunkFly(player, "pvp");
                         //pve
                     } else if (!(e.getEntity() instanceof Monster) && !(e.getEntity() instanceof Phantom)) {
                         UUID owner = cache.getChunkOwnerUUID(chunkCord);
@@ -427,7 +426,7 @@ public class ChunkListener implements Listener {
                             if (!cache.canChunkPvP(chunkCord)) {
                                 e.setCancelled(true);
                                 warnMessagePVP(player);
-                            }
+                            } else if (cache.isChunkFlying(uuid)) toggleChunkFly(player, "pvp");
                             //pve
                         } else if (!(e.getEntity() instanceof Monster) && !(e.getEntity() instanceof Phantom)) {
                             UUID owner = cache.getChunkOwnerUUID(chunkCord);
@@ -611,18 +610,44 @@ public class ChunkListener implements Listener {
                 }
             } else if (!data.getPlayerLastAutoClaim(uuid).equals(chunkCord)) data.setPlayerAutoClaim(uuid, chunkCord);
 
-        } else if (cache.isChunkFlying(uuid)) {
-            Player player = e.getPlayer();
+        } else if (cache.isChunkFlying(uuid)) {            Player player = e.getPlayer();
             Chunk chunk = player.getLocation().getChunk();
             String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
             if (cache.isChunkClaimed(chunkCord)) {
-                if (!cache.isChunkOwner(chunkCord, uuid)) if (!cache.isChunkTrusted(chunkCord, uuid)) toggleChunkFly(player);
-            } else toggleChunkFly(player);
+                if (!cache.isChunkOwner(chunkCord, uuid)) if (!cache.isChunkTrusted(chunkCord, uuid)) toggleChunkFly(player, "outside");
+            } else toggleChunkFly(player, "outside");
         }
     }
 
-    private void toggleChunkFly(Player player) {
+    @EventHandler
+    public void onAdminChunkPlayerDamage(EntityDamageEvent e) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
+
+        if (e.getEntity() instanceof Player player) {
+            Chunk chunk = player.getLocation().getChunk();
+            String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+            if (cache.isAdminChunk(chunkCord)) e.setCancelled(true);
+        }
+    }
+
+    //portal claim check
+    @EventHandler
+    public void onPortalCreate(PlayerPortalEvent e) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
+
+        UUID uuid = e.getPlayer().getUniqueId();
+        Chunk chunk = e.getTo().getChunk();
+        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+
+        if (cache.isChunkClaimed(chunkCord)) {
+            if (!cache.isChunkOwner(chunkCord, uuid) && !cache.isChunkTrusted(chunkCord, uuid)) e.setCancelled(true);
+        } else if (cache.isAdminChunk(chunkCord)) e.setCancelled(true);
+    }
+
+    private void toggleChunkFly(Player player, String type) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
         UUID uuid = player.getUniqueId();
@@ -630,6 +655,7 @@ public class ChunkListener implements Listener {
         player.setFlying(false);
         cache.setChunkFlying(uuid, false);
         player.addPotionEffect(PotionEffectType.SLOW_FALLING.createEffect(20*15, 1));
-        player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_FLY_OUTSIDE_OF_CLAIM.getComponent(new String[] { Lang.OFF.getString() })));
+        if (type.equals("outside")) player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_FLY_OUTSIDE_OF_CLAIM.getComponent(null)));
+        else if (type.equals("pvp")) player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_FLY_PVP.getComponent(null)));
     }
 }
