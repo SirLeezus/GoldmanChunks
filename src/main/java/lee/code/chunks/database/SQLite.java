@@ -164,6 +164,29 @@ public class SQLite {
 
     //ADMIN CHUNKS TABLE
 
+    public void claimBulkAdminChunks(List<String> chunks) {
+        String sqlQuery = "INSERT INTO admin_chunks values (?,?,?,?,?,?,?,?)";
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(sqlQuery);
+
+            for (String chunk : chunks) {
+                pstmt.setString(1, chunk);
+                pstmt.setString(2, "0");
+                pstmt.setString(3, "0");
+                pstmt.setString(4, "0");
+                pstmt.setString(5, "0");
+                pstmt.setString(6, "0");
+                pstmt.setString(7, "0");
+                pstmt.setString(8, "0");
+                pstmt.addBatch();
+            }
+            pstmt.executeBatch();
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void claimAdminChunk(String chunk) {
         update("INSERT OR REPLACE INTO admin_chunks (chunk, build, break, interact, pve, pvp, monster_spawning, explosions) VALUES( '" + chunk + "', '0', '0', '0', '0', '0', '0', '0');");
     }

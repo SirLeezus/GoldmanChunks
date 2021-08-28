@@ -57,7 +57,7 @@ public class PlayerChunks extends PaginatedMenu {
                 page = page - 1;
                 pmu.setChunkListPage(page);
                 super.open();
-                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
+                playClickSound(player);
             }
         } else if (item.equals(nextPageItem)) {
 
@@ -65,15 +65,14 @@ public class PlayerChunks extends PaginatedMenu {
                 page = page + 1;
                 pmu.setChunkListPage(page);
                 super.open();
-                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
+                playClickSound(player);
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NEXT_PAGE.getString(null));
 
         } else if (item.equals(closeItem)) {
             player.closeInventory();
-            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
+            playClickSound(player);
         } else {
-            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
-
+            playClickSound(player);
             if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
                 Location chunk = plugin.getPU().unFormatChunkLocation(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
                 plugin.getPU().teleportPlayerToChunk(player, chunk);

@@ -49,7 +49,7 @@ public class TrustedChunkSettings extends Menu {
                 case 16 -> updatePermItem(player, item, 16, player.getLocation().getChunk());
                 case 31 -> {
                     new ChunkManager(pmu).open();
-                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
+                    playClickSound(player);
                 }
             }
         }
@@ -144,28 +144,28 @@ public class TrustedChunkSettings extends Menu {
                     allow.setItemMeta(allowMeta);
                     cache.setChunkTrustedBuild(chunkCord, true);
                     inventory.setItem(slot, allow);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 1);
+                    playClickOnSound(player);
                 }
                 case 12 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
                     cache.setChunkTrustedBreak(chunkCord, true);
                     inventory.setItem(slot, allow);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 1);
+                    playClickOnSound(player);
                 }
                 case 14 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
                     cache.setChunkTrustedInteract(chunkCord, true);
                     inventory.setItem(slot, allow);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 1);
+                    playClickOnSound(player);
                 }
                 case 16 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
                     cache.setChunkTrustedPvE(chunkCord, true);
                     inventory.setItem(slot, allow);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 1);
+                    playClickOnSound(player);
                 }
             }
             //deny
@@ -177,28 +177,28 @@ public class TrustedChunkSettings extends Menu {
                     deny.setItemMeta(denyMeta);
                     cache.setChunkTrustedBuild(chunkCord, false);
                     inventory.setItem(slot, deny);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1, 1);
+                    playClickOffSound(player);
                 }
                 case 12 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
                     cache.setChunkTrustedBreak(chunkCord, false);
                     inventory.setItem(slot, deny);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1, 1);
+                    playClickOffSound(player);
                 }
                 case 14 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
                     cache.setChunkTrustedInteract(chunkCord, false);
                     inventory.setItem(slot, deny);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1, 1);
+                    playClickOffSound(player);
                 }
                 case 16 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
                     cache.setChunkTrustedPvE(chunkCord, false);
                     inventory.setItem(slot, deny);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1, 1);
+                    playClickOffSound(player);
                 }
             }
         }

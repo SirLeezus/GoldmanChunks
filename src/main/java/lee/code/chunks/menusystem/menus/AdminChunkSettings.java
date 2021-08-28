@@ -155,49 +155,49 @@ public class AdminChunkSettings extends Menu {
                     allow.setItemMeta(allowMeta);
                     cache.setAdminChunkExplode(chunkCord, true);
                     inventory.setItem(slot, allow);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 1);
+                    playClickOnSound(player);
                 }
                 case 11 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
                     cache.setAdminChunkBuild(chunkCord, true);
                     inventory.setItem(slot, allow);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 1);
+                    playClickOnSound(player);
                 }
                 case 12 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
                     cache.setAdminChunkBreak(chunkCord, true);
                     inventory.setItem(slot, allow);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 1);
+                    playClickOnSound(player);
                 }
                 case 13 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
                     cache.setAdminChunkInteract(chunkCord, true);
                     inventory.setItem(slot, allow);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 1);
+                    playClickOnSound(player);
                 }
                 case 14 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
                     cache.setAdminChunkSpawnMonsters(chunkCord, true);
                     inventory.setItem(slot, allow);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 1);
+                    playClickOnSound(player);
                 }
                 case 15 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
                     cache.setAdminChunkPvP(chunkCord, true);
                     inventory.setItem(slot, allow);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 1);
+                    playClickOnSound(player);
                 }
                 case 16 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
                     cache.setAdminChunkPvE(chunkCord, true);
                     inventory.setItem(slot, allow);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 1, 1);
+                    playClickOnSound(player);
                 }
             }
             //deny
@@ -209,49 +209,49 @@ public class AdminChunkSettings extends Menu {
                     deny.setItemMeta(denyMeta);
                     cache.setAdminChunkExplode(chunkCord, false);
                     inventory.setItem(slot, deny);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1, 1);
+                    playClickOffSound(player);
                 }
                 case 11 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
                     cache.setAdminChunkBuild(chunkCord, false);
                     inventory.setItem(slot, deny);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1, 1);
+                    playClickOffSound(player);
                 }
                 case 12 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
                     cache.setAdminChunkBreak(chunkCord, false);
                     inventory.setItem(slot, deny);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1, 1);
+                    playClickOffSound(player);
                 }
                 case 13 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
                     cache.setAdminChunkInteract(chunkCord, false);
                     inventory.setItem(slot, deny);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1, 1);
+                    playClickOffSound(player);
                 }
                 case 14 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
                     cache.setAdminChunkSpawnMonsters(chunkCord, false);
                     inventory.setItem(slot, deny);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1, 1);
+                    playClickOffSound(player);
                 }
                 case 15 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
                     cache.setAdminChunkPvP(chunkCord, false);
                     inventory.setItem(slot, deny);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1, 1);
+                    playClickOffSound(player);
                 }
                 case 16 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
                     cache.setAdminChunkPvE(chunkCord, false);
                     inventory.setItem(slot, deny);
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 1, 1);
+                    playClickOffSound(player);
                 }
             }
         }

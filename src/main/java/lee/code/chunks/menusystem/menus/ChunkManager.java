@@ -48,18 +48,18 @@ public class ChunkManager extends Menu {
             case 11:
                 if (cache.isChunkClaimed(chunkCord) && cache.isChunkOwner(chunkCord, uuid)) {
                     new TrustedChunkSettings(pmu).open();
-                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
+                    playClickSound(player);
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_MANAGE_NOT_CHUNK_OWNER.getString(null));
                 break;
             case 13:
                 if (cache.isChunkClaimed(chunkCord) && cache.isChunkOwner(chunkCord, uuid)) {
                     new GeneralChunkSettings(pmu).open();
-                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
+                    playClickSound(player);
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_MANAGE_NOT_CHUNK_OWNER.getString(null));
                 break;
             case 15:
                 new TrustedGlobalSettings(pmu).open();
-                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
+                playClickSound(player);
                 break;
         }
     }

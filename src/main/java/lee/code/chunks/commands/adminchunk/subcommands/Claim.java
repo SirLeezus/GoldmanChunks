@@ -10,6 +10,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Claim extends SubCommand {
 
     @Override
@@ -56,6 +59,7 @@ public class Claim extends SubCommand {
             Vector min = Vector.getMinimum(start, stop);
 
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                List<String> chunks = new ArrayList<>();
                 int claimed = 0;
                 for (double x = min.getX(); x <= max.getX(); x++) {
                     for(double z = min.getZ(); z <= max.getZ(); z++) {
@@ -63,10 +67,11 @@ public class Claim extends SubCommand {
                         String chunkCordSelected = String.format(inSelectionMessage, x, z);
                         if (!cache.isChunkClaimed(chunkCordSelected) && !cache.isAdminChunk(chunkCordSelected)) {
                             claimed++;
-                            cache.claimAdminChunk(chunkCordSelected);
+                            chunks.add(chunkCordSelected);
                         }
                     }
                 }
+                cache.claimBulkAdminChunk(chunks);
                 plugin.getData().removeAdminClaimSelection(player.getUniqueId());
                 player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_CLAIM_SUCCESSFUL.getComponent(new String[] { String.valueOf(claimed) } )));
             });

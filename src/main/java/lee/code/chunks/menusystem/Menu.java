@@ -3,6 +3,8 @@ package lee.code.chunks.menusystem;
 import lee.code.chunks.lists.MenuItems;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -48,5 +50,17 @@ public abstract class Menu implements InventoryHolder {
                 inventory.setItem(i, fillerGlass);
             }
         }
+    }
+
+    public void playClickOnSound(Player player) {
+        player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, (float) 0.5, (float) 1);
+    }
+
+    public void playClickOffSound(Player player) {
+        player.playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, (float) 0.5, (float) 1);
+    }
+
+    public void playClickSound(Player player) {
+        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, (float) 0.5, (float) 1);
     }
 }

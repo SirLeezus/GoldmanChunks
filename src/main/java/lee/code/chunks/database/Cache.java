@@ -864,6 +864,29 @@ public class Cache {
 
     //ADMIN CHUNK METHODS
 
+    public void claimBulkAdminChunk(List<String> chunks) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        SQLite SQL = plugin.getSqLite();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        try (Jedis jedis = pool.getResource()) {
+
+            for (String chunk : chunks) {
+                Pipeline pipe = jedis.pipelined();
+                pipe.hset("adminChunkBuild", chunk, "0");
+                pipe.hset("adminChunkBreak", chunk, "0");
+                pipe.hset("adminChunkInteract", chunk, "0");
+                pipe.hset("adminChunkPvE", chunk, "0");
+                pipe.hset("adminChunkPvP", chunk, "0");
+                pipe.hset("adminChunkMonsters", chunk, "0");
+                pipe.hset("adminChunkExplode", chunk, "0");
+                pipe.sync();
+            }
+
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.claimBulkAdminChunks(chunks));
+        }
+    }
+
 
     public void claimAdminChunk(String chunk) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
