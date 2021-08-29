@@ -3,7 +3,11 @@ package lee.code.chunks.listeners;
 import lee.code.chunks.Data;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.database.Cache;
-import lee.code.chunks.lists.Lang;
+import lee.code.chunks.lists.*;
+import lee.code.chunks.lists.chunksettings.ChunkAdminSettings;
+import lee.code.chunks.lists.chunksettings.ChunkSettings;
+import lee.code.chunks.lists.chunksettings.ChunkTrustedGlobalSettings;
+import lee.code.chunks.lists.chunksettings.ChunkTrustedSettings;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -65,13 +69,13 @@ public class ChunkListener implements Listener {
                     UUID owner = cache.getChunkOwnerUUID(chunkCord);
                     //chunk trusted check
                     if (cache.isChunkTrusted(chunkCord, uuid)) {
-                        if (!cache.canChunkTrustedBreak(chunkCord)) {
+                        if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.BREAK, chunkCord)) {
                             e.setCancelled(true);
                             warnMessage(player, true, owner, "break");
                         }
                         //global trusted check
                     } else if (cache.isGlobalTrusted(owner, uuid)) {
-                        if (!cache.canGlobalTrustedBreak(owner)) {
+                        if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.BREAK, owner)) {
                             e.setCancelled(true);
                             warnMessage(player, true, owner, "break");
                         }
@@ -81,7 +85,7 @@ public class ChunkListener implements Listener {
                     }
                 }
             } else if (cache.isAdminChunk(chunkCord)) {
-                if (!cache.canAdminChunkBreak(chunkCord)) e.setCancelled(true);
+                if (!cache.canAdminChunkSetting(ChunkAdminSettings.BREAK, chunkCord)) e.setCancelled(true);
             }
         }
     }
@@ -104,13 +108,13 @@ public class ChunkListener implements Listener {
                         UUID owner = cache.getChunkOwnerUUID(chunkCord);
                         //chunk trusted check
                         if (cache.isChunkTrusted(chunkCord, uuid)) {
-                            if (!cache.canChunkTrustedBreak(chunkCord)) {
+                            if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.BREAK, chunkCord)) {
                                 e.setCancelled(true);
                                 warnMessage(player, true, owner, "break");
                             }
                             //global trusted check
                         } else if (cache.isGlobalTrusted(owner, uuid)) {
-                            if (!cache.canGlobalTrustedBreak(owner)) {
+                            if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.BREAK, owner)) {
                                 e.setCancelled(true);
                                 warnMessage(player, true, owner, "break");
                             }
@@ -127,7 +131,7 @@ public class ChunkListener implements Listener {
             if (e.getRemover() instanceof Player player) {
                 UUID uuid = player.getUniqueId();
                 if (!plugin.getData().hasAdminBypass(uuid)) {
-                    if (!cache.canAdminChunkBreak(chunkCord)) e.setCancelled(true);
+                    if (!cache.canAdminChunkSetting(ChunkAdminSettings.BREAK, chunkCord)) e.setCancelled(true);
                 }
             }
         }
@@ -150,12 +154,12 @@ public class ChunkListener implements Listener {
                     if (!cache.isChunkOwner(chunkCord, uuid)) {
 
                         if (cache.isChunkTrusted(chunkCord, uuid)) {
-                            if (!cache.canChunkTrustedBreak(chunkCord)) {
+                            if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.BREAK, chunkCord)) {
                                 e.setCancelled(true);
                                 warnMessage(player, true, owner, "break");
                             }
                         } else if (cache.isGlobalTrusted(owner, uuid)) {
-                            if (!cache.canGlobalTrustedBreak(owner)) {
+                            if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.BREAK, owner)) {
                                 e.setCancelled(true);
                                 warnMessage(player, true, owner, "break");
                             }
@@ -172,7 +176,7 @@ public class ChunkListener implements Listener {
             if (e.getAttacker() instanceof Player player) {
                 UUID uuid = player.getUniqueId();
                 if (!plugin.getData().hasAdminBypass(uuid)) {
-                    if (!cache.canAdminChunkBreak(chunkCord)) e.setCancelled(true);
+                    if (!cache.canAdminChunkSetting(ChunkAdminSettings.BREAK, chunkCord)) e.setCancelled(true);
                 }
             }
         }
@@ -194,13 +198,13 @@ public class ChunkListener implements Listener {
                     UUID owner = cache.getChunkOwnerUUID(chunkCord);
                     //chunk trusted check
                     if (cache.isChunkTrusted(chunkCord, uuid)) {
-                        if (!cache.canChunkTrustedBuild(chunkCord)) {
+                        if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.BUILD, chunkCord)) {
                             e.setCancelled(true);
                             warnMessage(player, true, owner, "build");
                         }
                         //global trusted check
                     } else if (cache.isGlobalTrusted(owner, uuid)) {
-                        if (!cache.canGlobalTrustedBuild(owner)) {
+                        if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.BUILD, owner)) {
                             e.setCancelled(true);
                             warnMessage(player, true, owner, "build");
                         }
@@ -210,7 +214,7 @@ public class ChunkListener implements Listener {
                     }
                 }
             } else if (cache.isAdminChunk(chunkCord)) {
-                if (!cache.canAdminChunkBuild(chunkCord)) e.setCancelled(true);
+                if (!cache.canAdminChunkSetting(ChunkAdminSettings.BUILD, chunkCord)) e.setCancelled(true);
             }
         }
     }
@@ -240,13 +244,13 @@ public class ChunkListener implements Listener {
                             if (e.getClickedBlock().getType().isInteractable() || e.getAction() == Action.PHYSICAL) {
                                 //chunk trusted check
                                 if (cache.isChunkTrusted(chunkCord, uuid)) {
-                                    if (!cache.canChunkTrustedInteract(chunkCord)) {
+                                    if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.INTERACT, chunkCord)) {
                                         e.setCancelled(true);
                                         if (!isSign) warnMessage(player, true, owner, "interact");
                                     }
                                     //global trusted check
                                 } else if (cache.isGlobalTrusted(owner, uuid)) {
-                                    if (!cache.canGlobalTrustedInteract(owner)) {
+                                    if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.INTERACT, owner)) {
                                         e.setCancelled(true);
                                         if (!isSign) warnMessage(player, true, owner, "interact");
                                     }
@@ -258,13 +262,13 @@ public class ChunkListener implements Listener {
 
                                 //chunk trusted check
                                 if (cache.isChunkTrusted(chunkCord, uuid)) {
-                                    if (!cache.canChunkTrustedBuild(chunkCord)) {
+                                    if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.BUILD, chunkCord)) {
                                         e.setCancelled(true);
                                         warnMessage(player, true, owner, "build");
                                     }
                                     //global trusted check
                                 } else if (cache.isGlobalTrusted(owner, uuid)) {
-                                    if (!cache.canGlobalTrustedBuild(owner)) {
+                                    if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.BUILD, owner)) {
                                         e.setCancelled(true);
                                         warnMessage(player, true, owner, "build");
                                     }
@@ -276,8 +280,8 @@ public class ChunkListener implements Listener {
                         }
                     } else if (cache.isAdminChunk(chunkCord)) {
                         if (block.getType().isInteractable() || e.getAction() == Action.PHYSICAL) {
-                            if (!cache.canAdminChunkInteract(chunkCord)) e.setCancelled(true);
-                        } else if (!cache.canAdminChunkBuild(chunkCord)) e.setCancelled(true);
+                            if (!cache.canAdminChunkSetting(ChunkAdminSettings.INTERACT, chunkCord)) e.setCancelled(true);
+                        } else if (!cache.canAdminChunkSetting(ChunkAdminSettings.BUILD, chunkCord)) e.setCancelled(true);
                     }
                 }
             }
@@ -303,13 +307,13 @@ public class ChunkListener implements Listener {
                         UUID owner = cache.getChunkOwnerUUID(chunkCord);
                         //chunk trusted check
                         if (cache.isChunkTrusted(chunkCord, uuid)) {
-                            if (!cache.canChunkTrustedInteract(chunkCord)) {
+                            if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.INTERACT, chunkCord)) {
                                 e.setCancelled(true);
                                 warnMessage(player, true, owner, "interact");
                             }
                             //global trusted check
                         } else if (cache.isGlobalTrusted(owner, uuid)) {
-                            if (!cache.canGlobalTrustedInteract(owner)) {
+                            if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.INTERACT, owner)) {
                                 e.setCancelled(true);
                                 warnMessage(player, true, owner, "interact");
                             }
@@ -319,7 +323,7 @@ public class ChunkListener implements Listener {
                         }
                     }
                 } else if (cache.isAdminChunk(chunkCord)) {
-                    if (!cache.canAdminChunkInteract(chunkCord)) e.setCancelled(true);
+                    if (!cache.canAdminChunkSetting(ChunkAdminSettings.INTERACT, chunkCord)) e.setCancelled(true);
                 }
             }
         }
@@ -344,13 +348,13 @@ public class ChunkListener implements Listener {
                         UUID owner = cache.getChunkOwnerUUID(chunkCord);
                         //chunk trusted check
                         if (cache.isChunkTrusted(chunkCord, uuid)) {
-                            if (!cache.canChunkTrustedInteract(chunkCord)) {
+                            if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.INTERACT, chunkCord)) {
                                 e.setCancelled(true);
                                 warnMessage(player, true, owner, "interact");
                             }
                             //global trusted check
                         } else if (cache.isGlobalTrusted(owner, uuid)) {
-                            if (!cache.canGlobalTrustedInteract(owner)) {
+                            if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.INTERACT, owner)) {
                                 e.setCancelled(true);
                                 warnMessage(player, true, owner, "interact");
                             }
@@ -360,7 +364,7 @@ public class ChunkListener implements Listener {
                         }
                     }
                 } else if (cache.isAdminChunk(chunkCord)) {
-                    if (!cache.canAdminChunkInteract(chunkCord)) e.setCancelled(true);
+                    if (!cache.canAdminChunkSetting(ChunkAdminSettings.INTERACT, chunkCord)) e.setCancelled(true);
                 }
             }
         }
@@ -388,7 +392,7 @@ public class ChunkListener implements Listener {
                 if (!plugin.getData().hasAdminBypass(uuid)) {
 
                     if (e.getEntity() instanceof Player) {
-                        if (!cache.canChunkPvP(chunkCord)) {
+                        if (!cache.canChunkSetting(ChunkSettings.PVP, chunkCord)) {
                             e.setCancelled(true);
                             warnMessagePVP(player);
                         } else if (cache.isChunkFlying(uuid)) toggleChunkFly(player, "pvp");
@@ -397,12 +401,12 @@ public class ChunkListener implements Listener {
                         UUID owner = cache.getChunkOwnerUUID(chunkCord);
                         if (!cache.isChunkOwner(chunkCord, uuid)) {
                             if (cache.isGlobalTrusted(owner, uuid)) {
-                                if (!cache.canGlobalTrustedPvE(owner)) {
+                                if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.PVE, owner)) {
                                     e.setCancelled(true);
                                     warnMessage(player, true, owner, "pve");
                                 }
                             } else if (cache.isChunkTrusted(chunkCord, uuid)) {
-                                if (!cache.canChunkTrustedPvE(chunkCord)) {
+                                if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.PVE, chunkCord)) {
                                     e.setCancelled(true);
                                     warnMessage(player, true, owner, "pve");
                                 }
@@ -423,7 +427,7 @@ public class ChunkListener implements Listener {
 
                         //pvp
                         if (e.getEntity() instanceof Player) {
-                            if (!cache.canChunkPvP(chunkCord)) {
+                            if (!cache.canChunkSetting(ChunkSettings.PVP, chunkCord)) {
                                 e.setCancelled(true);
                                 warnMessagePVP(player);
                             } else if (cache.isChunkFlying(uuid)) toggleChunkFly(player, "pvp");
@@ -432,12 +436,12 @@ public class ChunkListener implements Listener {
                             UUID owner = cache.getChunkOwnerUUID(chunkCord);
                             if (!cache.isChunkOwner(chunkCord, uuid)) {
                                 if (cache.isGlobalTrusted(owner, uuid)) {
-                                    if (!cache.canGlobalTrustedPvE(owner)) {
+                                    if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.PVE, owner)) {
                                         e.setCancelled(true);
                                         warnMessage(player, true, owner, "pve");
                                     }
                                 } else if (cache.isChunkTrusted(chunkCord, uuid)) {
-                                    if (!cache.canChunkTrustedPvE(chunkCord)) {
+                                    if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.PVE, chunkCord)) {
                                         e.setCancelled(true);
                                         warnMessage(player, true, owner, "pve");
                                     }
@@ -461,20 +465,20 @@ public class ChunkListener implements Listener {
             if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
                 UUID uuid = e.getDamager().getUniqueId();
                 if (!plugin.getData().hasAdminBypass(uuid)) {
-                    if (!cache.canAdminChunkPvP(chunkCord)) e.setCancelled(true);
+                    if (!cache.canAdminChunkSetting(ChunkAdminSettings.PVP, chunkCord)) e.setCancelled(true);
                 }
 
                 //evp
             } else if (!(e.getDamager() instanceof Player) && e.getEntity() instanceof Player) {
                 UUID uuid = e.getEntity().getUniqueId();
                 if (!plugin.getData().hasAdminBypass(uuid)) {
-                    if (!cache.canAdminChunkPvE(chunkCord)) e.setCancelled(true);
+                    if (!cache.canAdminChunkSetting(ChunkAdminSettings.PVE, chunkCord)) e.setCancelled(true);
                 }
                 //pve
             } else if (e.getDamager() instanceof Player && !(e.getEntity() instanceof Player) && !(e.getEntity() instanceof Monster) && !(e.getEntity() instanceof Phantom)) {
                 UUID uuid = e.getDamager().getUniqueId();
                 if (!plugin.getData().hasAdminBypass(uuid)) {
-                    if (!cache.canAdminChunkPvE(chunkCord)) e.setCancelled(true);
+                    if (!cache.canAdminChunkSetting(ChunkAdminSettings.PVE, chunkCord)) e.setCancelled(true);
                 }
             } else if (e.getDamager() instanceof Projectile projectile) {
 
@@ -482,7 +486,7 @@ public class ChunkListener implements Listener {
                 if (projectile.getShooter() instanceof Player player) {
                     UUID uuid = player.getUniqueId();
                     if (!plugin.getData().hasAdminBypass(uuid)) {
-                        if (!cache.canAdminChunkPvE(chunkCord)) e.setCancelled(true);
+                        if (!cache.canAdminChunkSetting(ChunkAdminSettings.PVE, chunkCord)) e.setCancelled(true);
                     }
                 } else if (projectile.getShooter() instanceof Monster) e.setCancelled(true);
             }
@@ -499,9 +503,9 @@ public class ChunkListener implements Listener {
             Chunk chunk = block.getLocation().getChunk();
             String chunkCord = plugin.getPU().formatChunkLocation(chunk);
             if (cache.isChunkClaimed(chunkCord)) {
-                if (!cache.canChunkExplode(chunkCord)) e.blockList().remove(block);
+                if (!cache.canChunkSetting(ChunkSettings.EXPLOSIONS, chunkCord)) e.blockList().remove(block);
             } else if (cache.isAdminChunk(chunkCord)) {
-                if (!cache.canAdminChunkExplode(chunkCord)) e.blockList().remove(block);
+                if (!cache.canAdminChunkSetting(ChunkAdminSettings.EXPLOSIONS, chunkCord)) e.blockList().remove(block);
             }
         }
     }
@@ -544,9 +548,9 @@ public class ChunkListener implements Listener {
                 String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
                 if (cache.isChunkClaimed(chunkCord)) {
-                    if (!cache.canChunkSpawnMonsters(chunkCord)) e.setCancelled(true);
+                    if (!cache.canChunkSetting(ChunkSettings.MONSTERS, chunkCord)) e.setCancelled(true);
                 } else if (cache.isAdminChunk(chunkCord)) {
-                    if (!cache.canAdminChunkSpawnMonsters(chunkCord)) e.setCancelled(true);
+                    if (!cache.canAdminChunkSetting(ChunkAdminSettings.MONSTERS, chunkCord)) e.setCancelled(true);
                 }
             }
         }
@@ -595,7 +599,7 @@ public class ChunkListener implements Listener {
                             cache.claimChunk(chunkCord, uuid);
                             data.setPlayerAutoClaim(uuid,chunkCord);
                             player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_CLAIM_SUCCESSFUL.getString(new String[]{chunkCord, plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims)}));
-                            plugin.getPU().renderChunkBorder(player, chunk, "claim");
+                            plugin.getPU().renderChunkBorder(player, chunk, RenderTypes.INFO);
                         } else {
                             data.removePlayerAutoClaim(uuid);
                             player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_CLAIM_MAXED.getString(new String[] { plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) }));

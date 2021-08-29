@@ -2,11 +2,11 @@ package lee.code.chunks.menusystem.menus;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.database.Cache;
+import lee.code.chunks.lists.chunksettings.ChunkTrustedGlobalSettings;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.Menu;
 import lee.code.chunks.menusystem.PlayerMU;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -71,7 +71,7 @@ public class TrustedGlobalSettings extends Menu {
         UUID uuid = player.getUniqueId();
 
         //build
-        if (cache.canGlobalTrustedBuild(uuid)) {
+        if (cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.BUILD, uuid)) {
             allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
             allow.setItemMeta(allowMeta);
             inventory.setItem(10, allow);
@@ -83,7 +83,7 @@ public class TrustedGlobalSettings extends Menu {
         }
 
         //break
-        if (cache.canGlobalTrustedBreak(uuid)) {
+        if (cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.BREAK, uuid)) {
             allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
             allow.setItemMeta(allowMeta);
             inventory.setItem(12, allow);
@@ -95,7 +95,7 @@ public class TrustedGlobalSettings extends Menu {
         }
 
         //interact
-        if (cache.canGlobalTrustedInteract(uuid)) {
+        if (cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.INTERACT, uuid)) {
             allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
             allow.setItemMeta(allowMeta);
             inventory.setItem(14, allow);
@@ -107,7 +107,7 @@ public class TrustedGlobalSettings extends Menu {
         }
 
         //pve
-        if (cache.canGlobalTrustedPvE(uuid)) {
+        if (cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.PVE, uuid)) {
             allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
             allow.setItemMeta(allowMeta);
             inventory.setItem(16, allow);
@@ -141,28 +141,28 @@ public class TrustedGlobalSettings extends Menu {
                 case 10 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
-                    cache.setGlobalTrustedBuild(uuid, true);
+                    cache.setChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.BUILD, uuid, true);
                     inventory.setItem(slot, allow);
                     playClickOnSound(player);
                 }
                 case 12 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
-                    cache.setGlobalTrustedBreak(uuid, true);
+                    cache.setChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.BREAK, uuid, true);
                     inventory.setItem(slot, allow);
                     playClickOnSound(player);
                 }
                 case 14 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
-                    cache.setGlobalTrustedInteract(uuid, true);
+                    cache.setChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.INTERACT, uuid, true);
                     inventory.setItem(slot, allow);
                     playClickOnSound(player);
                 }
                 case 16 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
-                    cache.setGlobalTrustedPvE(uuid, true);
+                    cache.setChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.PVE, uuid, true);
                     inventory.setItem(slot, allow);
                     playClickOnSound(player);
                 }
@@ -174,28 +174,28 @@ public class TrustedGlobalSettings extends Menu {
                 case 10 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
-                    cache.setGlobalTrustedBuild(uuid, false);
+                    cache.setChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.BUILD, uuid, false);
                     inventory.setItem(slot, deny);
                     playClickOffSound(player);
                 }
                 case 12 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
-                    cache.setGlobalTrustedBreak(uuid, false);
+                    cache.setChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.BREAK, uuid, false);
                     inventory.setItem(slot, deny);
                     playClickOffSound(player);
                 }
                 case 14 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
-                    cache.setGlobalTrustedInteract(uuid, false);
+                    cache.setChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.INTERACT, uuid, false);
                     inventory.setItem(slot, deny);
                     playClickOffSound(player);
                 }
                 case 16 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
-                    cache.setGlobalTrustedPvE(uuid, false);
+                    cache.setChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.PVE, uuid, false);
                     inventory.setItem(slot, deny);
                     playClickOffSound(player);
                 }

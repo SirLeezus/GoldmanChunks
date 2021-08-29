@@ -4,6 +4,7 @@ import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
+import lee.code.chunks.lists.RenderTypes;
 import lee.code.chunks.lists.Settings;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
@@ -53,7 +54,7 @@ public class SetPrice extends SubCommand {
                                 cache.setChunkPrice(chunkCord, value);
                                 if (value == 0) player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_SETPRICE_REMOVE_SUCCESSFUL.getComponent(new String[]{chunkCord})));
                                 else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_SETPRICE_SUCCESSFUL.getComponent(new String[]{chunkCord, plugin.getPU().formatAmount(value)})));
-                                plugin.getPU().renderChunkBorder(player, chunk, "info");
+                                plugin.getPU().renderChunkBorder(player, chunk, RenderTypes.INFO);
                             } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_SETPRICE_NOT_OWNER.getComponent(new String[]{cache.getChunkOwnerName(chunkCord)})));
                         } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_SETPRICE_NOT_CLAIMED.getComponent(null)));
                     } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_SETPRICE_ADMIN_CHUNK.getComponent(null)));

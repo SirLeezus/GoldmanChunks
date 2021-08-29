@@ -4,6 +4,10 @@ import jedis.Jedis;
 import jedis.JedisPool;
 import jedis.Pipeline;
 import lee.code.chunks.GoldmanChunks;
+import lee.code.chunks.lists.chunksettings.ChunkAdminSettings;
+import lee.code.chunks.lists.chunksettings.ChunkSettings;
+import lee.code.chunks.lists.chunksettings.ChunkTrustedGlobalSettings;
+import lee.code.chunks.lists.chunksettings.ChunkTrustedSettings;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -13,7 +17,7 @@ import java.util.*;
 
 public class Cache {
 
-    //CHUNK TABLE METHODS
+    //CHUNK DATA
 
     public void claimChunk(String chunk, UUID uuid) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
@@ -318,135 +322,49 @@ public class Cache {
         }
     }
 
-    public boolean canChunkTrustedBuild(String chunk) {
+    public boolean canChunkTrustedSetting(ChunkTrustedSettings setting, String chunk) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
         try (Jedis jedis = pool.getResource()) {
-            String flag = jedis.hget("chunkTrustedBuild", chunk);
+            String flag = jedis.hget(setting.getRedisKey(), chunk);
             return !flag.equals("0");
         }
     }
 
-    public void setChunkTrustedBuild(String chunk, boolean canBuild) {
+    public void setChunkTrustedSetting(ChunkTrustedSettings setting, String chunk, boolean value) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
         SQLite SQL = plugin.getSqLite();
-        String result; if (canBuild) result = "1"; else result = "0";
+
+        String result; if (value) result = "1"; else result = "0";
 
         try (Jedis jedis = pool.getResource()) {
-            jedis.hset("chunkTrustedBuild", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkTrustedBuild(chunk, result));
+            jedis.hset(setting.getRedisKey(), chunk, result);
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkSetting(setting.getSqliteKey(), chunk, result));
         }
     }
 
-    public boolean canChunkTrustedBreak(String chunk) {
+    public boolean canChunkSetting(ChunkSettings setting, String chunk) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
         try (Jedis jedis = pool.getResource()) {
-            String flag = jedis.hget("chunkTrustedBreak", chunk);
+            String flag = jedis.hget(setting.getRedisKey(), chunk);
             return !flag.equals("0");
         }
     }
 
-    public void setChunkTrustedBreak(String chunk, boolean canBreak) {
+    public void setChunkSetting(ChunkSettings setting, String chunk, boolean value) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
         SQLite SQL = plugin.getSqLite();
-        String result; if (canBreak) result = "1"; else result = "0";
+
+        String result; if (value) result = "1"; else result = "0";
 
         try (Jedis jedis = pool.getResource()) {
-            jedis.hset("chunkTrustedBreak", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkTrustedBreak(chunk, result));
-        }
-    }
-
-    public boolean canChunkTrustedInteract(String chunk) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-
-        try (Jedis jedis = pool.getResource()) {
-            String flag = jedis.hget("chunkTrustedInteract", chunk);
-            return !flag.equals("0");
-        }
-    }
-
-    public void setChunkTrustedInteract(String chunk, boolean canInteract) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-        SQLite SQL = plugin.getSqLite();
-        String result; if (canInteract) result = "1"; else result = "0";
-
-        try (Jedis jedis = pool.getResource()) {
-            jedis.hset("chunkTrustedInteract", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkTrustedInteract(chunk, result));
-        }
-    }
-
-    public boolean canChunkTrustedPvE(String chunk) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-
-        try (Jedis jedis = pool.getResource()) {
-            String flag = jedis.hget("chunkTrustedPvE", chunk);
-            return !flag.equals("0");
-        }
-    }
-
-    public void setChunkTrustedPvE(String chunk, boolean canPvE) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-        SQLite SQL = plugin.getSqLite();
-        String result; if (canPvE) result = "1"; else result = "0";
-
-        try (Jedis jedis = pool.getResource()) {
-            jedis.hset("chunkTrustedPvE", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkTrustedPVE(chunk, result));
-        }
-    }
-
-    public boolean canChunkSpawnMonsters(String chunk) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-
-        try (Jedis jedis = pool.getResource()) {
-            String flag = jedis.hget("chunkMonsters", chunk);
-            return !flag.equals("0");
-        }
-    }
-
-    public void setChunkSpawnMonsters(String chunk, boolean canSpawnMonsters) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-        SQLite SQL = plugin.getSqLite();
-        String result; if (canSpawnMonsters) result = "1"; else result = "0";
-
-        try (Jedis jedis = pool.getResource()) {
-            jedis.hset("chunkMonsters", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkSpawnMonsters(chunk, result));
-        }
-    }
-
-    public boolean canChunkExplode(String chunk) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-
-        try (Jedis jedis = pool.getResource()) {
-            String flag = jedis.hget("chunkExplode", chunk);
-            return !flag.equals("0");
-        }
-    }
-
-    public void setChunkExplode(String chunk, boolean canExplode) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-        SQLite SQL = plugin.getSqLite();
-        String result; if (canExplode) result = "1"; else result = "0";
-
-        try (Jedis jedis = pool.getResource()) {
-            jedis.hset("chunkExplode", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkExplode(chunk, result));
+            jedis.hset(setting.getRedisKey(), chunk, result);
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkSetting(setting.getSqliteKey(), chunk, result));
         }
     }
 
@@ -473,28 +391,6 @@ public class Cache {
         try (Jedis jedis = pool.getResource()) {
             jedis.hset("chunkFlying", sUUID, result);
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkFlying(sUUID, result));
-        }
-    }
-
-    public boolean canChunkPvP(String chunk) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-
-        try (Jedis jedis = pool.getResource()) {
-            String flag = jedis.hget("chunkPvP", chunk);
-            return !flag.equals("0");
-        }
-    }
-
-    public void setChunkPvP(String chunk, boolean canPvP) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-        SQLite SQL = plugin.getSqLite();
-        String result; if (canPvP) result = "1"; else result = "0";
-
-        try (Jedis jedis = pool.getResource()) {
-            jedis.hset("chunkPvP", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkPVP(chunk, result));
         }
     }
 
@@ -754,117 +650,54 @@ public class Cache {
         }
     }
 
-    public boolean canGlobalTrustedBuild(UUID uuid) {
+    public boolean canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings setting, UUID uuid) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
         String sUUID = String.valueOf(uuid);
-
         try (Jedis jedis = pool.getResource()) {
-            String flag = jedis.hget("trustedGlobalBuild", sUUID);
+            String flag = jedis.hget(setting.getRedisKey(), sUUID);
             return !flag.equals("0");
         }
     }
 
-    public void setGlobalTrustedBuild(UUID uuid, boolean canBuild) {
+    public void setChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings setting, UUID uuid, boolean value) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
         SQLite SQL = plugin.getSqLite();
 
-        String result; if (canBuild) result = "1"; else result = "0";
+        String result; if (value) result = "1"; else result = "0";
         String sUUID = String.valueOf(uuid);
 
         try (Jedis jedis = pool.getResource()) {
-            jedis.hset("trustedGlobalBuild", sUUID, result);
-
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setGlobalTrustedBuild(sUUID, result));
+            jedis.hset(setting.getRedisKey(), sUUID, result);
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setTrustedGlobalSetting(setting.getSqliteKey(), sUUID, result));
         }
     }
 
-    public boolean canGlobalTrustedBreak(UUID uuid) {
+    //ADMIN CHUNK DATA
+
+    public int updateBulkAdminChunks(List<String> chunks, ChunkAdminSettings setting, boolean value) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-
-        String sUUID = String.valueOf(uuid);
-
-        try (Jedis jedis = pool.getResource()) {
-            String flag = jedis.hget("trustedGlobalBreak", sUUID);
-            return !flag.equals("0");
-        }
-    }
-
-    public void setGlobalTrustedBreak(UUID uuid, boolean canBreak) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
         SQLite SQL = plugin.getSqLite();
-
-        String result; if (canBreak) result = "1"; else result = "0";
-        String sUUID = String.valueOf(uuid);
-
-        try (Jedis jedis = pool.getResource()) {
-            jedis.hset("trustedGlobalBreak", sUUID, result);
-
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setGlobalTrustedBreak(sUUID, result));
-        }
-    }
-
-    public boolean canGlobalTrustedInteract(UUID uuid) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
-        String sUUID = String.valueOf(uuid);
+        String result; if (value) result = "1"; else result = "0";
 
+        List<String> updatedChunks = new ArrayList<>();
         try (Jedis jedis = pool.getResource()) {
-            String flag = jedis.hget("trustedGlobalInteract", sUUID);
-            return !flag.equals("0");
+            for (String chunk : chunks) {
+                if (jedis.hexists(setting.getRedisKey(), chunk)) {
+                    jedis.hset(setting.getRedisKey(), chunk, result);
+                    updatedChunks.add(chunk);
+                }
+            }
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.updateBulkAdminChunksSetting(updatedChunks, setting.getSqliteKey(), result));
         }
+        return updatedChunks.size();
     }
 
-    public void setGlobalTrustedInteract(UUID uuid, boolean canInteract) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-        SQLite SQL = plugin.getSqLite();
-
-        String result; if (canInteract) result = "1"; else result = "0";
-        String sUUID = String.valueOf(uuid);
-
-        try (Jedis jedis = pool.getResource()) {
-            jedis.hset("trustedGlobalInteract", sUUID, result);
-
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setGlobalTrustedInteract(sUUID, result));
-        }
-    }
-
-    public boolean canGlobalTrustedPvE(UUID uuid) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-
-        String sUUID = String.valueOf(uuid);
-
-        try (Jedis jedis = pool.getResource()) {
-            String flag = jedis.hget("trustedGlobalPvE", sUUID);
-            return !flag.equals("0");
-        }
-    }
-
-    public void setGlobalTrustedPvE(UUID uuid, boolean canPvE) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-        SQLite SQL = plugin.getSqLite();
-
-        String result; if (canPvE) result = "1"; else result = "0";
-        String sUUID = String.valueOf(uuid);
-
-        try (Jedis jedis = pool.getResource()) {
-            jedis.hset("trustedGlobalPvE", sUUID, result);
-
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setGlobalTrustedPvE(sUUID, result));
-        }
-    }
-
-    //ADMIN CHUNK METHODS
-
-    public void claimBulkAdminChunk(List<String> chunks) {
+    public void claimBulkAdminChunks(List<String> chunks) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         SQLite SQL = plugin.getSqLite();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
@@ -925,6 +758,27 @@ public class Cache {
         }
     }
 
+    public void unclaimBulkAdminChunk(List<String> chunks) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        SQLite SQL = plugin.getSqLite();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        try (Jedis jedis = pool.getResource()) {
+
+            for (String chunk : chunks) {
+                jedis.hdel("adminChunkBuild", chunk);
+                jedis.hdel("adminChunkBreak", chunk);
+                jedis.hdel("adminChunkInteract", chunk);
+                jedis.hdel("adminChunkPvE", chunk);
+                jedis.hdel("adminChunkPvP", chunk);
+                jedis.hdel("adminChunkMonsters", chunk);
+                jedis.hdel("adminChunkExplode", chunk);
+            }
+
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.unclaimBulkAdminChunks(chunks));
+        }
+    }
+
     public void unclaimAdminChunk(String chunk) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         SQLite SQL = plugin.getSqLite();
@@ -945,157 +799,26 @@ public class Cache {
         }
     }
 
-    public boolean canAdminChunkBuild(String chunk) {
+    public boolean canAdminChunkSetting(ChunkAdminSettings setting, String chunk) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
         try (Jedis jedis = pool.getResource()) {
-            String flag = jedis.hget("adminChunkBuild", chunk);
+            String flag = jedis.hget(setting.getRedisKey(), chunk);
             return !flag.equals("0");
         }
     }
 
-    public void setAdminChunkBuild(String chunk, boolean canBuild) {
+    public void setAdminChunkSetting(ChunkAdminSettings setting, String chunk, boolean value) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
         SQLite SQL = plugin.getSqLite();
-        String result; if (canBuild) result = "1"; else result = "0";
+
+        String result; if (value) result = "1"; else result = "0";
 
         try (Jedis jedis = pool.getResource()) {
-            jedis.hset("adminChunkBuild", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setAdminChunkBuild(chunk, result));
-        }
-    }
-
-    public boolean canAdminChunkBreak(String chunk) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-
-        try (Jedis jedis = pool.getResource()) {
-            String flag = jedis.hget("adminChunkBreak", chunk);
-            return !flag.equals("0");
-        }
-    }
-
-    public void setAdminChunkBreak(String chunk, boolean canBreak) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-        SQLite SQL = plugin.getSqLite();
-        String result; if (canBreak) result = "1"; else result = "0";
-
-        try (Jedis jedis = pool.getResource()) {
-            jedis.hset("adminChunkBreak", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setAdminChunkBreak(chunk, result));
-        }
-    }
-
-    public boolean canAdminChunkInteract(String chunk) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-
-        try (Jedis jedis = pool.getResource()) {
-            String flag = jedis.hget("adminChunkInteract", chunk);
-            return !flag.equals("0");
-        }
-    }
-
-    public void setAdminChunkInteract(String chunk, boolean canInteract) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-        SQLite SQL = plugin.getSqLite();
-        String result; if (canInteract) result = "1"; else result = "0";
-
-        try (Jedis jedis = pool.getResource()) {
-            jedis.hset("adminChunkInteract", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setAdminChunkInteract(chunk, result));
-        }
-    }
-
-    public boolean canAdminChunkPvE(String chunk) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-
-        try (Jedis jedis = pool.getResource()) {
-            String flag = jedis.hget("adminChunkPvE", chunk);
-            return !flag.equals("0");
-        }
-    }
-
-    public void setAdminChunkPvE(String chunk, boolean canPvE) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-        SQLite SQL = plugin.getSqLite();
-        String result; if (canPvE) result = "1"; else result = "0";
-
-        try (Jedis jedis = pool.getResource()) {
-            jedis.hset("adminChunkPvE", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setAdminChunkPvE(chunk, result));
-        }
-    }
-
-    public boolean canAdminChunkPvP(String chunk) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-
-        try (Jedis jedis = pool.getResource()) {
-            String flag = jedis.hget("adminChunkPvP", chunk);
-            return !flag.equals("0");
-        }
-    }
-
-    public void setAdminChunkPvP(String chunk, boolean canPvP) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-        SQLite SQL = plugin.getSqLite();
-        String result; if (canPvP) result = "1"; else result = "0";
-
-        try (Jedis jedis = pool.getResource()) {
-            jedis.hset("adminChunkPvP", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setAdminChunkPvP(chunk, result));
-        }
-    }
-
-    public boolean canAdminChunkSpawnMonsters(String chunk) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-
-        try (Jedis jedis = pool.getResource()) {
-            String flag = jedis.hget("adminChunkMonsters", chunk);
-            return !flag.equals("0");
-        }
-    }
-
-    public void setAdminChunkSpawnMonsters(String chunk, boolean canSpawnMonsters) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-        SQLite SQL = plugin.getSqLite();
-        String result; if (canSpawnMonsters) result = "1"; else result = "0";
-
-        try (Jedis jedis = pool.getResource()) {
-            jedis.hset("adminChunkMonsters", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setAdminChunkSpawnMonsters(chunk, result));
-        }
-    }
-
-    public boolean canAdminChunkExplode(String chunk) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-
-        try (Jedis jedis = pool.getResource()) {
-            String flag = jedis.hget("adminChunkExplode", chunk);
-            return !flag.equals("0");
-        }
-    }
-
-    public void setAdminChunkExplode(String chunk, boolean canExplode) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        JedisPool pool = plugin.getCacheAPI().getChunksPool();
-        SQLite SQL = plugin.getSqLite();
-        String result; if (canExplode) result = "1"; else result = "0";
-
-        try (Jedis jedis = pool.getResource()) {
-            jedis.hset("adminChunkExplode", chunk, result);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setAdminChunkExplosion(chunk, result));
+            jedis.hset(setting.getRedisKey(), chunk, result);
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setAdminChunkSetting(setting.getSqliteKey(), chunk, result));
         }
     }
 }

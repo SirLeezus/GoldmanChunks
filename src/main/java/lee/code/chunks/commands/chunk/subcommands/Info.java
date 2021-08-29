@@ -4,6 +4,7 @@ import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
+import lee.code.chunks.lists.RenderTypes;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
@@ -55,7 +56,7 @@ public class Info extends SubCommand {
         lines.add(Lang.COMMAND_INFO_FOOTER.getComponent(null));
 
         for (Component line : lines) player.sendMessage(line);
-        plugin.getPU().renderChunkBorder(player, chunk, "info");
+        plugin.getPU().renderChunkBorder(player, chunk, RenderTypes.INFO);
     }
 
     @Override

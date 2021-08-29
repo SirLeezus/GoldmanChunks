@@ -2,12 +2,12 @@ package lee.code.chunks.menusystem.menus;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.database.Cache;
+import lee.code.chunks.lists.chunksettings.ChunkSettings;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.Menu;
 import lee.code.chunks.menusystem.PlayerMU;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Chunk;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -70,7 +70,7 @@ public class GeneralChunkSettings extends Menu {
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
         //chunk monster spawning
-        if (cache.canChunkSpawnMonsters(chunkCord)) {
+        if (cache.canChunkSetting(ChunkSettings.MONSTERS, chunkCord)) {
             allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
             allow.setItemMeta(allowMeta);
             inventory.setItem(11, allow);
@@ -81,7 +81,7 @@ public class GeneralChunkSettings extends Menu {
         }
 
         //chunk pvp
-        if (cache.canChunkPvP(chunkCord)) {
+        if (cache.canChunkSetting(ChunkSettings.PVP, chunkCord)) {
             allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
             allow.setItemMeta(allowMeta);
             inventory.setItem(13, allow);
@@ -93,7 +93,7 @@ public class GeneralChunkSettings extends Menu {
         }
 
         //chunk explosions
-        if (cache.canChunkExplode(chunkCord)) {
+        if (cache.canChunkSetting(ChunkSettings.EXPLOSIONS, chunkCord)) {
             allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
             allow.setItemMeta(allowMeta);
             inventory.setItem(15, allow);
@@ -125,21 +125,21 @@ public class GeneralChunkSettings extends Menu {
                 case 11 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
-                    cache.setChunkSpawnMonsters(chunkCord, true);
+                    cache.setChunkSetting(ChunkSettings.MONSTERS, chunkCord, true);
                     inventory.setItem(slot, allow);
                     playClickOnSound(player);
                 }
                 case 13 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
-                    cache.setChunkPvP(chunkCord, true);
+                    cache.setChunkSetting(ChunkSettings.PVP, chunkCord, true);
                     inventory.setItem(slot, allow);
                     playClickOnSound(player);
                 }
                 case 15 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
-                    cache.setChunkExplode(chunkCord, true);
+                    cache.setChunkSetting(ChunkSettings.EXPLOSIONS, chunkCord, true);
                     inventory.setItem(slot, allow);
                     playClickOnSound(player);
                 }
@@ -151,21 +151,21 @@ public class GeneralChunkSettings extends Menu {
                 case 11 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
-                    cache.setChunkSpawnMonsters(chunkCord, false);
+                    cache.setChunkSetting(ChunkSettings.MONSTERS, chunkCord, false);
                     inventory.setItem(slot, deny);
                     playClickOffSound(player);
                 }
                 case 13 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
-                    cache.setChunkPvP(chunkCord, false);
+                    cache.setChunkSetting(ChunkSettings.PVP, chunkCord, false);
                     inventory.setItem(slot, deny);
                     playClickOffSound(player);
                 }
                 case 15 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
-                    cache.setChunkExplode(chunkCord, false);
+                    cache.setChunkSetting(ChunkSettings.EXPLOSIONS, chunkCord, false);
                     inventory.setItem(slot, deny);
                     playClickOffSound(player);
                 }

@@ -5,15 +5,16 @@ import lee.code.chunks.menusystem.PlayerMU;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Data {
 
-    private final HashMap<UUID, PlayerMU> playerMUList = new HashMap<>();
-    private final HashMap<UUID, String> playerAutoClaimMap = new HashMap<>();
-    private final HashMap<UUID, Vector> adminClaimSelection = new HashMap<>();
+    private final ConcurrentHashMap<UUID, PlayerMU> playerMUList = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<UUID, String> playerAutoClaimMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<UUID, Vector> adminSelectionFirstChunk = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<UUID, List<String>> adminSelectedChunks = new ConcurrentHashMap<>();
     private final List<UUID> adminBypassList = new ArrayList<>();
     private final List<UUID> playerClickDelay = new ArrayList<>();
 
@@ -50,18 +51,27 @@ public class Data {
         return adminBypassList.contains(uuid);
     }
 
-    public boolean hasAdminClaimSelection(UUID uuid) {
-        return adminClaimSelection.containsKey(uuid);
+    public boolean hasFirstAdminSelection(UUID uuid) {
+        return adminSelectionFirstChunk.containsKey(uuid);
     }
-    public void addAdminClaimSelection(UUID uuid, Vector vector) {
-        adminClaimSelection.put(uuid, vector);
+    public void setFirstAdminSelection(UUID uuid, Vector vector) {
+        adminSelectionFirstChunk.put(uuid, vector);
     }
-    public void removeAdminClaimSelection(UUID uuid) {
-        adminClaimSelection.remove(uuid);
+    public void removeFirstAdminSelection(UUID uuid) {
+        adminSelectionFirstChunk.remove(uuid);
     }
-    public Vector getAdminClaimSelection(UUID uuid) {
-        return adminClaimSelection.get(uuid);
+    public Vector getFistAdminSelection(UUID uuid) {
+        return adminSelectionFirstChunk.get(uuid);
     }
+
+    public boolean hasAdminSelectedChunks(UUID uuid) { return adminSelectedChunks.containsKey(uuid); }
+    public void setAdminSelectedChunks(UUID uuid, List<String> chunks) {
+        adminSelectedChunks.put(uuid, chunks);
+    }
+    public List<String> getAdminSelectedChunks(UUID uuid) {
+        return adminSelectedChunks.get(uuid);
+    }
+    public void removeAdminSelectedChunks(UUID uuid) { adminSelectedChunks.remove(uuid); }
 
     public void cacheDatabase() {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();

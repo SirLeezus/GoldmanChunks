@@ -3,13 +3,14 @@ package lee.code.chunks;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import lee.code.chunks.database.Cache;
+import lee.code.chunks.lists.chunksettings.ChunkAdminSettings;
 import lee.code.chunks.lists.Lang;
+import lee.code.chunks.lists.RenderTypes;
 import lee.code.chunks.lists.Settings;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,6 +22,7 @@ import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class PU {
 
@@ -57,17 +59,20 @@ public class PU {
         return formatter.format(value);
     }
 
+    public List<String> getAdminChunkSettings() {
+        return EnumSet.allOf(ChunkAdminSettings.class).stream().map(ChunkAdminSettings::name).collect(Collectors.toList());
+    }
+
     public List<String> getOnlinePlayers() {
         List<String> players = new ArrayList<>();
         for (Player player : Bukkit.getOnlinePlayers()) players.add(player.getName());
         return players;
     }
 
-    public void renderChunkBorder(Player player, Chunk chunk, String type) {
-
+    public void renderChunkBorder(Player player, Chunk chunk, RenderTypes type) {
         Particle particle = switch (type) {
-            case "unclaim" -> Particle.FLAME;
-            case "info" -> Particle.END_ROD;
+            case UNCLAIM -> Particle.FLAME;
+            case INFO -> Particle.END_ROD;
             default -> Particle.VILLAGER_HAPPY;
         };
 
@@ -92,7 +97,6 @@ public class PU {
     }
 
     public void teleportPlayerToChunk(Player player, Location location) {
-
         World world = location.getWorld();
 
         int y = location.getBlockY();

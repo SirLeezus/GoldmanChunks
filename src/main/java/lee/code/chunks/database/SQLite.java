@@ -118,35 +118,12 @@ public class SQLite {
         update("UPDATE player_data SET claimed ='" + claimAmount + "' WHERE player ='" + uuid + "';");
     }
 
-    public void setChunkTrustedBuild(String chunk, String canBuild) {
-        update("UPDATE chunks SET build ='" + canBuild + "' WHERE chunk ='" + chunk + "';");
-    }
-
-    public void setChunkTrustedBreak(String chunk, String canBreak) {
-        update("UPDATE chunks SET break ='" + canBreak + "' WHERE chunk ='" + chunk + "';");
-    }
-
-    public void setChunkTrustedInteract(String chunk, String canInteract) {
-        update("UPDATE chunks SET interact ='" + canInteract + "' WHERE chunk ='" + chunk + "';");
-    }
-
-    public void setChunkTrustedPVE(String chunk, String canPVE) {
-        update("UPDATE chunks SET pve ='" + canPVE + "' WHERE chunk ='" + chunk + "';");
+    public void setChunkSetting(String key, String chunk, String value) {
+        update("UPDATE chunks SET " + key + " = '" + value + "' WHERE chunk ='" + chunk + "';");
     }
 
     public void setChunkTrusted(String chunk, String trusted) {
         update("UPDATE chunks SET trusted ='" + trusted + "' WHERE chunk ='" + chunk + "';");
-    }
-    public void setChunkPVP(String chunk, String canPVP) {
-        update("UPDATE chunks SET pvp ='" + canPVP + "' WHERE chunk ='" + chunk + "';");
-    }
-
-    public void setChunkSpawnMonsters(String chunk, String canSpawnMonster) {
-        update("UPDATE chunks SET monster_spawning ='" + canSpawnMonster + "' WHERE chunk ='" + chunk + "';");
-    }
-
-    public void setChunkExplode(String chunk, String canExplode) {
-        update("UPDATE chunks SET explosions ='" + canExplode + "' WHERE chunk ='" + chunk + "';");
     }
 
     public void unclaimAllChunks(String uuid) {
@@ -164,8 +141,25 @@ public class SQLite {
 
     //ADMIN CHUNKS TABLE
 
+    public void updateBulkAdminChunksSetting(List<String> chunks, String key, String result) {
+        String sqlQuery = "UPDATE admin_chunks SET " + key + " = ? WHERE chunk = ?";
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(sqlQuery);
+
+            for (String chunk : chunks) {
+                pstmt.setString(1, result);
+                pstmt.setString(2, chunk);
+                pstmt.addBatch();
+            }
+            pstmt.executeBatch();
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void claimBulkAdminChunks(List<String> chunks) {
-        String sqlQuery = "INSERT INTO admin_chunks values (?,?,?,?,?,?,?,?)";
+        String sqlQuery = "INSERT OR REPLACE INTO admin_chunks values (?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement pstmt = connection.prepareStatement(sqlQuery);
 
@@ -191,36 +185,16 @@ public class SQLite {
         update("INSERT OR REPLACE INTO admin_chunks (chunk, build, break, interact, pve, pvp, monster_spawning, explosions) VALUES( '" + chunk + "', '0', '0', '0', '0', '0', '0', '0');");
     }
 
+    public void unclaimBulkAdminChunks(List<String> chunks) {
+        for (String chunk : chunks) unclaimAdminChunk(chunk);
+    }
+
     public void unclaimAdminChunk(String chunk) {
         update("DELETE FROM admin_chunks WHERE chunk = '" + chunk + "';");
     }
 
-    public void setAdminChunkBuild(String chunk, String canBuild) {
-        update("UPDATE admin_chunks SET build ='" + canBuild + "' WHERE chunk ='" + chunk + "';");
-    }
-
-    public void setAdminChunkBreak(String chunk, String canBreak) {
-        update("UPDATE admin_chunks SET break ='" + canBreak + "' WHERE chunk ='" + chunk + "';");
-    }
-
-    public void setAdminChunkInteract(String chunk, String canInteract) {
-        update("UPDATE admin_chunks SET interact ='" + canInteract + "' WHERE chunk ='" + chunk + "';");
-    }
-
-    public void setAdminChunkPvE(String chunk, String canPVE) {
-        update("UPDATE admin_chunks SET pve ='" + canPVE + "' WHERE chunk ='" + chunk + "';");
-    }
-
-    public void setAdminChunkPvP(String chunk, String canPVP) {
-        update("UPDATE admin_chunks SET pvp ='" + canPVP + "' WHERE chunk ='" + chunk + "';");
-    }
-
-    public void setAdminChunkSpawnMonsters(String chunk, String canSpawnMonster) {
-        update("UPDATE admin_chunks SET monster_spawning ='" + canSpawnMonster + "' WHERE chunk ='" + chunk + "';");
-    }
-
-    public void setAdminChunkExplosion(String chunk, String canExplode) {
-        update("UPDATE admin_chunks SET explosions ='" + canExplode + "' WHERE chunk ='" + chunk + "';");
+    public void setAdminChunkSetting(String key, String chunk, String value) {
+        update("UPDATE admin_chunks SET " + key + " = '" + value + "' WHERE chunk ='" + chunk + "';");
     }
 
     //PLAYER DATA TABLE
@@ -249,20 +223,8 @@ public class SQLite {
         update("UPDATE player_data SET trusted_global ='" + trust + "' WHERE player ='" + uuid + "';");
     }
 
-    public void setGlobalTrustedBuild(String uuid, String canBuild) {
-        update("UPDATE player_data SET build ='" + canBuild + "' WHERE player ='" + uuid + "';");
-    }
-
-    public void setGlobalTrustedBreak(String uuid, String canBreak) {
-        update("UPDATE player_data SET break ='" + canBreak + "' WHERE player ='" + uuid + "';");
-    }
-
-    public void setGlobalTrustedInteract(String uuid, String canInteract) {
-        update("UPDATE player_data SET interact ='" + canInteract + "' WHERE player ='" + uuid + "';");
-    }
-
-    public void setGlobalTrustedPvE(String uuid, String canPVE) {
-        update("UPDATE player_data SET pve ='" + canPVE + "' WHERE player ='" + uuid + "';");
+    public void setTrustedGlobalSetting(String key, String uuid, String value) {
+        update("UPDATE player_data SET " + key + " = '" + value + "' WHERE player ='" + uuid + "';");
     }
 
     public void loadChunks() {

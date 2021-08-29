@@ -4,6 +4,7 @@ import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
+import lee.code.chunks.lists.RenderTypes;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -45,7 +46,7 @@ public class UnClaim extends SubCommand {
             if (cache.isChunkOwner(chunkCord, uuid)) {
                 cache.unclaimChunk(chunkCord, uuid);
                 player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_UNCLAIM_SUCCESSFUL.getComponent(new String[] { chunkCord })));
-                plugin.getPU().renderChunkBorder(player, chunk, "unclaim");
+                plugin.getPU().renderChunkBorder(player, chunk, RenderTypes.UNCLAIM);
             } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_UNCLAIM_OWNER.getComponent(new String[] { cache.getChunkOwnerName(chunkCord) })));
         } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_UNCLAIMED_NOT_CLAIMED.getComponent(null)));
     }

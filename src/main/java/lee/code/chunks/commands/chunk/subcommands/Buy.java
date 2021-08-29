@@ -4,6 +4,7 @@ import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
+import lee.code.chunks.lists.RenderTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
@@ -63,7 +64,7 @@ public class Buy extends SubCommand {
                             plugin.getEssentialsAPI().deposit(ownerUUID, price);
                             cache.setChunkOwner(chunkCord, ownerUUID, uuid);
                             player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_BUY_SUCCESSFUL.getComponent(new String[] { chunkCord, plugin.getPU().formatAmount(price), ownerName, plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) })));
-                            plugin.getPU().renderChunkBorder(player, chunk, "claim");
+                            plugin.getPU().renderChunkBorder(player, chunk, RenderTypes.CLAIM);
 
                             if (Bukkit.getOfflinePlayer(ownerUUID).isOnline()) {
                                 Player owner = Bukkit.getPlayer(ownerUUID);

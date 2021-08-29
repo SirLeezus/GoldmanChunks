@@ -4,6 +4,7 @@ import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
+import lee.code.chunks.lists.RenderTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
@@ -51,7 +52,7 @@ public class Claim extends SubCommand {
                     playerClaimAmount++;
                     cache.claimChunk(chunkCord, uuid);
                     player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_CLAIM_SUCCESSFUL.getComponent(new String[] { chunkCord, plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) })));
-                    plugin.getPU().renderChunkBorder(player, chunk, "claim");
+                    plugin.getPU().renderChunkBorder(player, chunk, RenderTypes.CLAIM);
                 } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_CLAIM_MAXED.getComponent(new String[] { plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) })));
             } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_ADMIN_CLAIMED.getComponent(null)));
         } else {

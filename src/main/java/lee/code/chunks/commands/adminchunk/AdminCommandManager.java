@@ -21,6 +21,7 @@ public class AdminCommandManager implements CommandExecutor {
         subCommands.add(new UnClaim());
         subCommands.add(new Manage());
         subCommands.add(new Bypass());
+        subCommands.add(new Selection());
     }
 
     @Override
