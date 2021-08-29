@@ -4,10 +4,7 @@ import lee.code.chunks.Data;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.*;
-import lee.code.chunks.lists.chunksettings.ChunkAdminSettings;
-import lee.code.chunks.lists.chunksettings.ChunkSettings;
-import lee.code.chunks.lists.chunksettings.ChunkTrustedGlobalSettings;
-import lee.code.chunks.lists.chunksettings.ChunkTrustedSettings;
+import lee.code.chunks.lists.chunksettings.*;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -31,25 +28,22 @@ import java.util.UUID;
 
 public class ChunkListener implements Listener {
 
-    private void warnMessage(Player player, boolean trusted, UUID owner, String type) {
+    private void warnMessage(Player player, boolean trusted, UUID owner, ChunkWarnings warning) {
         String messageType;
         String messageTrusted;
 
         if (trusted) messageTrusted = Lang.TRUE.getString(null);
         else messageTrusted = Lang.FALSE.getString(null);
 
-        messageType = switch (type) {
-            case "build" -> Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{Lang.FALSE.getString(null)});
-            case "break" -> Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.FALSE.getString(null)});
-            case "interact" -> Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.FALSE.getString(null)});
-            case "pve" -> Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[]{Lang.FALSE.getString(null)});
+        messageType = switch (warning) {
+            case BUILD -> Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{Lang.FALSE.getString(null)});
+            case BREAK -> Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.FALSE.getString(null)});
+            case INTERACT -> Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.FALSE.getString(null)});
+            case PVE -> Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[]{Lang.FALSE.getString(null)});
             default -> "ERROR";
         };
-        player.sendActionBar(Lang.ERROR_NO_CLAIM_PERMISSION.getComponent(new String[] { messageTrusted, messageType, Bukkit.getOfflinePlayer(owner).getName() }));
-    }
-
-    private void warnMessagePVP(Player player) {
-        player.sendActionBar(Lang.ERROR_PVP_DISABLED.getComponent(null));
+        if (!warning.equals(ChunkWarnings.PVP)) player.sendActionBar(Lang.ERROR_NO_CLAIM_PERMISSION.getComponent(new String[] { messageTrusted, messageType, Bukkit.getOfflinePlayer(owner).getName() }));
+        else player.sendActionBar(Lang.ERROR_PVP_DISABLED.getComponent(null));
     }
 
     @EventHandler
@@ -71,17 +65,17 @@ public class ChunkListener implements Listener {
                     if (cache.isChunkTrusted(chunkCord, uuid)) {
                         if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.BREAK, chunkCord)) {
                             e.setCancelled(true);
-                            warnMessage(player, true, owner, "break");
+                            warnMessage(player, true, owner, ChunkWarnings.BREAK);
                         }
                         //global trusted check
                     } else if (cache.isGlobalTrusted(owner, uuid)) {
                         if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.BREAK, owner)) {
                             e.setCancelled(true);
-                            warnMessage(player, true, owner, "break");
+                            warnMessage(player, true, owner, ChunkWarnings.BREAK);
                         }
                     } else {
                         e.setCancelled(true);
-                        warnMessage(player, false, owner, "break");
+                        warnMessage(player, false, owner, ChunkWarnings.BREAK);
                     }
                 }
             } else if (cache.isAdminChunk(chunkCord)) {
@@ -110,17 +104,17 @@ public class ChunkListener implements Listener {
                         if (cache.isChunkTrusted(chunkCord, uuid)) {
                             if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.BREAK, chunkCord)) {
                                 e.setCancelled(true);
-                                warnMessage(player, true, owner, "break");
+                                warnMessage(player, true, owner, ChunkWarnings.BREAK);
                             }
                             //global trusted check
                         } else if (cache.isGlobalTrusted(owner, uuid)) {
                             if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.BREAK, owner)) {
                                 e.setCancelled(true);
-                                warnMessage(player, true, owner, "break");
+                                warnMessage(player, true, owner, ChunkWarnings.BREAK);
                             }
                         } else {
                             e.setCancelled(true);
-                            warnMessage(player, false, owner, "break");
+                            warnMessage(player, false, owner, ChunkWarnings.BREAK);
                         }
                     }
                 }
@@ -156,16 +150,16 @@ public class ChunkListener implements Listener {
                         if (cache.isChunkTrusted(chunkCord, uuid)) {
                             if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.BREAK, chunkCord)) {
                                 e.setCancelled(true);
-                                warnMessage(player, true, owner, "break");
+                                warnMessage(player, true, owner, ChunkWarnings.BREAK);
                             }
                         } else if (cache.isGlobalTrusted(owner, uuid)) {
                             if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.BREAK, owner)) {
                                 e.setCancelled(true);
-                                warnMessage(player, true, owner, "break");
+                                warnMessage(player, true, owner, ChunkWarnings.BREAK);
                             }
                         } else {
                             e.setCancelled(true);
-                            warnMessage(player, false, owner, "break");
+                            warnMessage(player, false, owner, ChunkWarnings.BREAK);
                         }
                     }
                 }
@@ -200,17 +194,17 @@ public class ChunkListener implements Listener {
                     if (cache.isChunkTrusted(chunkCord, uuid)) {
                         if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.BUILD, chunkCord)) {
                             e.setCancelled(true);
-                            warnMessage(player, true, owner, "build");
+                            warnMessage(player, true, owner, ChunkWarnings.BUILD);
                         }
                         //global trusted check
                     } else if (cache.isGlobalTrusted(owner, uuid)) {
                         if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.BUILD, owner)) {
                             e.setCancelled(true);
-                            warnMessage(player, true, owner, "build");
+                            warnMessage(player, true, owner, ChunkWarnings.BUILD);
                         }
                     } else {
                         e.setCancelled(true);
-                        warnMessage(player, false, owner, "build");
+                        warnMessage(player, false, owner, ChunkWarnings.BUILD);
                     }
                 }
             } else if (cache.isAdminChunk(chunkCord)) {
@@ -246,17 +240,17 @@ public class ChunkListener implements Listener {
                                 if (cache.isChunkTrusted(chunkCord, uuid)) {
                                     if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.INTERACT, chunkCord)) {
                                         e.setCancelled(true);
-                                        if (!isSign) warnMessage(player, true, owner, "interact");
+                                        if (!isSign) warnMessage(player, true, owner, ChunkWarnings.INTERACT);
                                     }
                                     //global trusted check
                                 } else if (cache.isGlobalTrusted(owner, uuid)) {
                                     if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.INTERACT, owner)) {
                                         e.setCancelled(true);
-                                        if (!isSign) warnMessage(player, true, owner, "interact");
+                                        if (!isSign) warnMessage(player, true, owner, ChunkWarnings.INTERACT);
                                     }
                                 } else {
                                     e.setCancelled(true);
-                                    if (!isSign) warnMessage(player, false, owner, "interact");
+                                    if (!isSign) warnMessage(player, false, owner, ChunkWarnings.INTERACT);
                                 }
                             } else {
 
@@ -264,17 +258,17 @@ public class ChunkListener implements Listener {
                                 if (cache.isChunkTrusted(chunkCord, uuid)) {
                                     if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.BUILD, chunkCord)) {
                                         e.setCancelled(true);
-                                        warnMessage(player, true, owner, "build");
+                                        warnMessage(player, true, owner, ChunkWarnings.BUILD);
                                     }
                                     //global trusted check
                                 } else if (cache.isGlobalTrusted(owner, uuid)) {
                                     if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.BUILD, owner)) {
                                         e.setCancelled(true);
-                                        warnMessage(player, true, owner, "build");
+                                        warnMessage(player, true, owner, ChunkWarnings.BUILD);
                                     }
                                 } else {
                                     e.setCancelled(true);
-                                    warnMessage(player, false, owner, "build");
+                                    warnMessage(player, false, owner, ChunkWarnings.BUILD);
                                 }
                             }
                         }
@@ -309,17 +303,17 @@ public class ChunkListener implements Listener {
                         if (cache.isChunkTrusted(chunkCord, uuid)) {
                             if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.INTERACT, chunkCord)) {
                                 e.setCancelled(true);
-                                warnMessage(player, true, owner, "interact");
+                                warnMessage(player, true, owner, ChunkWarnings.INTERACT);
                             }
                             //global trusted check
                         } else if (cache.isGlobalTrusted(owner, uuid)) {
                             if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.INTERACT, owner)) {
                                 e.setCancelled(true);
-                                warnMessage(player, true, owner, "interact");
+                                warnMessage(player, true, owner, ChunkWarnings.INTERACT);
                             }
                         } else {
                             e.setCancelled(true);
-                            warnMessage(player, false, owner, "interact");
+                            warnMessage(player, false, owner, ChunkWarnings.INTERACT);
                         }
                     }
                 } else if (cache.isAdminChunk(chunkCord)) {
@@ -350,17 +344,17 @@ public class ChunkListener implements Listener {
                         if (cache.isChunkTrusted(chunkCord, uuid)) {
                             if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.INTERACT, chunkCord)) {
                                 e.setCancelled(true);
-                                warnMessage(player, true, owner, "interact");
+                                warnMessage(player, true, owner, ChunkWarnings.INTERACT);
                             }
                             //global trusted check
                         } else if (cache.isGlobalTrusted(owner, uuid)) {
                             if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.INTERACT, owner)) {
                                 e.setCancelled(true);
-                                warnMessage(player, true, owner, "interact");
+                                warnMessage(player, true, owner, ChunkWarnings.INTERACT);
                             }
                         } else {
                             e.setCancelled(true);
-                            warnMessage(player, false, owner, "interact");
+                            warnMessage(player, false, owner, ChunkWarnings.INTERACT);
                         }
                     }
                 } else if (cache.isAdminChunk(chunkCord)) {
@@ -394,8 +388,8 @@ public class ChunkListener implements Listener {
                     if (e.getEntity() instanceof Player) {
                         if (!cache.canChunkSetting(ChunkSettings.PVP, chunkCord)) {
                             e.setCancelled(true);
-                            warnMessagePVP(player);
-                        } else if (cache.isChunkFlying(uuid)) toggleChunkFly(player, "pvp");
+                            warnMessage(player, false, uuid, ChunkWarnings.PVP);
+                        } else if (cache.isChunkFlying(uuid)) toggleChunkFly(player, ChunkWarnings.FLY_PVP);
                         //pve
                     } else if (!(e.getEntity() instanceof Monster) && !(e.getEntity() instanceof Phantom)) {
                         UUID owner = cache.getChunkOwnerUUID(chunkCord);
@@ -403,16 +397,16 @@ public class ChunkListener implements Listener {
                             if (cache.isGlobalTrusted(owner, uuid)) {
                                 if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.PVE, owner)) {
                                     e.setCancelled(true);
-                                    warnMessage(player, true, owner, "pve");
+                                    warnMessage(player, true, owner, ChunkWarnings.PVE);
                                 }
                             } else if (cache.isChunkTrusted(chunkCord, uuid)) {
                                 if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.PVE, chunkCord)) {
                                     e.setCancelled(true);
-                                    warnMessage(player, true, owner, "pve");
+                                    warnMessage(player, true, owner, ChunkWarnings.PVE);
                                 }
                             } else {
                                 e.setCancelled(true);
-                                warnMessage(player, false, owner, "pve");
+                                warnMessage(player, false, owner, ChunkWarnings.PVE);
                             }
                         }
                     }
@@ -429,8 +423,8 @@ public class ChunkListener implements Listener {
                         if (e.getEntity() instanceof Player) {
                             if (!cache.canChunkSetting(ChunkSettings.PVP, chunkCord)) {
                                 e.setCancelled(true);
-                                warnMessagePVP(player);
-                            } else if (cache.isChunkFlying(uuid)) toggleChunkFly(player, "pvp");
+                                warnMessage(player, false, uuid, ChunkWarnings.PVP);
+                            } else if (cache.isChunkFlying(uuid)) toggleChunkFly(player, ChunkWarnings.FLY_PVP);
                             //pve
                         } else if (!(e.getEntity() instanceof Monster) && !(e.getEntity() instanceof Phantom)) {
                             UUID owner = cache.getChunkOwnerUUID(chunkCord);
@@ -438,16 +432,16 @@ public class ChunkListener implements Listener {
                                 if (cache.isGlobalTrusted(owner, uuid)) {
                                     if (!cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.PVE, owner)) {
                                         e.setCancelled(true);
-                                        warnMessage(player, true, owner, "pve");
+                                        warnMessage(player, true, owner, ChunkWarnings.PVE);
                                     }
                                 } else if (cache.isChunkTrusted(chunkCord, uuid)) {
                                     if (!cache.canChunkTrustedSetting(ChunkTrustedSettings.PVE, chunkCord)) {
                                         e.setCancelled(true);
-                                        warnMessage(player, true, owner, "pve");
+                                        warnMessage(player, true, owner, ChunkWarnings.PVE);
                                     }
                                 } else {
                                     e.setCancelled(true);
-                                    warnMessage(player, false, owner, "pve");
+                                    warnMessage(player, false, owner, ChunkWarnings.PVE);
                                 }
                             }
                         }
@@ -614,25 +608,14 @@ public class ChunkListener implements Listener {
                 }
             } else if (!data.getPlayerLastAutoClaim(uuid).equals(chunkCord)) data.setPlayerAutoClaim(uuid, chunkCord);
 
-        } else if (cache.isChunkFlying(uuid)) {            Player player = e.getPlayer();
+        } else if (cache.isChunkFlying(uuid)) {
+            Player player = e.getPlayer();
             Chunk chunk = player.getLocation().getChunk();
             String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
             if (cache.isChunkClaimed(chunkCord)) {
-                if (!cache.isChunkOwner(chunkCord, uuid)) if (!cache.isChunkTrusted(chunkCord, uuid)) toggleChunkFly(player, "outside");
-            } else toggleChunkFly(player, "outside");
-        }
-    }
-
-    @EventHandler
-    public void onAdminChunkPlayerDamage(EntityDamageEvent e) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
-
-        if (e.getEntity() instanceof Player player) {
-            Chunk chunk = player.getLocation().getChunk();
-            String chunkCord = plugin.getPU().formatChunkLocation(chunk);
-            if (cache.isAdminChunk(chunkCord)) e.setCancelled(true);
+                if (!cache.isChunkOwner(chunkCord, uuid)) if (!cache.isChunkTrusted(chunkCord, uuid)) toggleChunkFly(player, ChunkWarnings.FLY_OUTSIDE);
+            } else toggleChunkFly(player, ChunkWarnings.FLY_OUTSIDE);
         }
     }
 
@@ -646,12 +629,14 @@ public class ChunkListener implements Listener {
         Chunk chunk = e.getTo().getChunk();
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
-        if (cache.isChunkClaimed(chunkCord)) {
-            if (!cache.isChunkOwner(chunkCord, uuid) && !cache.isChunkTrusted(chunkCord, uuid)) e.setCancelled(true);
-        } else if (cache.isAdminChunk(chunkCord)) e.setCancelled(true);
+        if (!e.getTo().getWorld().getEnvironment().equals(World.Environment.THE_END)) {
+            if (cache.isChunkClaimed(chunkCord)) {
+                if (!cache.isChunkOwner(chunkCord, uuid) && !cache.isChunkTrusted(chunkCord, uuid)) e.setCancelled(true);
+            } else if (cache.isAdminChunk(chunkCord)) e.setCancelled(true);
+        }
     }
 
-    private void toggleChunkFly(Player player, String type) {
+    private void toggleChunkFly(Player player, ChunkWarnings type) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
         UUID uuid = player.getUniqueId();
@@ -659,7 +644,7 @@ public class ChunkListener implements Listener {
         player.setFlying(false);
         cache.setChunkFlying(uuid, false);
         player.addPotionEffect(PotionEffectType.SLOW_FALLING.createEffect(20*15, 1));
-        if (type.equals("outside")) player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_FLY_OUTSIDE_OF_CLAIM.getComponent(null)));
-        else if (type.equals("pvp")) player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_FLY_PVP.getComponent(null)));
+        if (type.equals(ChunkWarnings.FLY_OUTSIDE)) player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_FLY_OUTSIDE_OF_CLAIM.getComponent(null)));
+        else if (type.equals(ChunkWarnings.FLY_PVP)) player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_FLY_PVP.getComponent(null)));
     }
 }
