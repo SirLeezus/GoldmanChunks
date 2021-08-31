@@ -1,6 +1,5 @@
 package lee.code.chunks.commands.chunk.subcommands;
 
-import lee.code.chunks.Data;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
@@ -20,7 +19,7 @@ public class Fly extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Able to fly in claimed or trusted chunks.";
+        return "Toggle fly in claimed or trusted chunks.";
     }
 
     @Override
