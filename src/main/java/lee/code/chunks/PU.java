@@ -12,6 +12,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -111,8 +112,13 @@ public class PU {
                 Location loc = new Location(player.getWorld(), x, i, z, yaw, pitch);
                 if (loc.getBlock().getType() == Material.AIR) {
                     Location ground = new Location(loc.getWorld(), loc.getX(), loc.getY() - 1, loc.getZ());
-                    if (ground.getBlock().getType() != Material.AIR && ground.getBlock().getType() != Material.LAVA) {
-                        player.teleportAsync(loc);
+                    Block block = ground.getBlock();
+                    if (block.getType() != Material.AIR && block.getType() != Material.LAVA) {
+                        double bX = block.getBoundingBox().getCenter().getX();
+                        double bY = block.getBoundingBox().getCenter().getY() + 0.5;
+                        double bZ = block.getBoundingBox().getCenter().getZ();
+                        Location teleportLocation = new Location(block.getWorld(), bX, bY, bZ, yaw, pitch);
+                        player.teleportAsync(teleportLocation);
                         player.sendActionBar(Lang.TELEPORT.getComponent(null));
                         return;
                     }

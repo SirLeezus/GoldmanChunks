@@ -8,6 +8,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -53,6 +54,8 @@ public class Map extends SubCommand {
 
         String world = chunk.getWorld().getName();
 
+        Location location = player.getLocation();
+        player.teleportAsync(new Location(player.getWorld(),location.getX(), location.getY(), location.getZ(), (float) 180, (float) 0));
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 
             int firstX = chunk.getX() - 9;
@@ -88,9 +91,9 @@ public class Map extends SubCommand {
                 chunkMap.add(output);
                 chunkSquare.clear();
             }
-            for (Component selectedChunk : chunkMap) player.sendMessage(selectedChunk);
+            chunkMap.add(Lang.COMMAND_MAP_FOOTER.getComponent(null));
 
-            String line1 = plugin.getPU().format(" &e\\ &b&lN &e/ ");
+            String line1 = plugin.getPU().format(" &e\\ &9&lN &e/ ");
             String line2 = plugin.getPU().format(" &b&lW &6&l• &b&lE");
             String line3 = plugin.getPU().format(" &e/ &b&lS &e\\");
 
@@ -102,9 +105,9 @@ public class Map extends SubCommand {
             lines.add(Lang.COMMAND_MAP_LINE_2.getComponent(new String[] { line2 }));
             lines.add(Lang.COMMAND_MAP_LINE_3.getComponent(new String[] { line3 }));
             lines.add(Component.text(""));
-            lines.add(Lang.COMMAND_MAP_FOOTER.getComponent(null));
 
             for (Component line : lines) player.sendMessage(line);
+            for (Component selectedChunk : chunkMap) player.sendMessage(selectedChunk);
         });
     }
 

@@ -45,13 +45,15 @@ public class Trust extends SubCommand {
                 Chunk chunk = player.getLocation().getChunk();
                 String chunkCord = plugin.getPU().formatChunkLocation(chunk);
                 UUID targetUUID = target.getUniqueId();
+                UUID uuid = player.getUniqueId();
 
                 if (cache.isChunkClaimed(chunkCord)) {
                     if (!cache.isChunkTrusted(chunkCord, targetUUID)) {
-                        if (cache.isChunkOwner(chunkCord, player.getUniqueId())) {
-                            cache.addChunkTrusted(chunkCord, target.getUniqueId());
-                            player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_TRUST_ADDED_PLAYER.getComponent(new String[]{target.getName(), chunkCord})));
-
+                        if (cache.isChunkOwner(chunkCord, uuid)) {
+                            if (!targetUUID.equals(uuid)) {
+                                cache.addChunkTrusted(chunkCord, target.getUniqueId());
+                                player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_TRUST_ADDED_PLAYER.getComponent(new String[]{target.getName(), chunkCord})));
+                            } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_TRUST_OWNER.getComponent(null)));
                         } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_TRUST_NOT_OWNER.getComponent(null)));
                     } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_TRUST_ALREADY_ADDED.getComponent(new String[]{target.getName(), chunkCord})));
                 } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_TRUST_NOT_OWNER.getComponent(null)));

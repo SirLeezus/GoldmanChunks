@@ -5,6 +5,7 @@ import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.*;
 import lee.code.chunks.lists.chunksettings.*;
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -29,21 +30,23 @@ import java.util.UUID;
 public class ChunkListener implements Listener {
 
     private void warnMessage(Player player, boolean trusted, UUID owner, ChunkWarnings warning) {
-        String messageType;
+        Component messageType;
         String messageTrusted;
 
         if (trusted) messageTrusted = Lang.TRUE.getString(null);
         else messageTrusted = Lang.FALSE.getString(null);
+        String name = Bukkit.getOfflinePlayer(owner).getName();
 
         messageType = switch (warning) {
-            case BUILD -> Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{Lang.FALSE.getString(null)});
-            case BREAK -> Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.FALSE.getString(null)});
-            case INTERACT -> Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.FALSE.getString(null)});
-            case PVE -> Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[]{Lang.FALSE.getString(null)});
-            default -> "ERROR";
+            case BUILD -> Lang.ERROR_NO_CLAIM_PERMISSION.getComponent(new String[] { messageTrusted, Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{ Lang.FALSE.getString(null)}), name });
+            case BREAK -> Lang.ERROR_NO_CLAIM_PERMISSION.getComponent(new String[] { messageTrusted, Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.FALSE.getString(null)}), name });
+            case INTERACT -> Lang.ERROR_NO_CLAIM_PERMISSION.getComponent(new String[] { messageTrusted, Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.FALSE.getString(null)}), name });
+            case PVE -> Lang.ERROR_NO_CLAIM_PERMISSION.getComponent(new String[] { messageTrusted, Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[]{Lang.FALSE.getString(null)}), name });
+            case PVP -> Lang.ERROR_PVP_DISABLED.getComponent(null);
+            case ADMIN -> Lang.ERROR_NO_CLAIM_PERMISSION_ADMIN_CHUNK.getComponent(null);
+            default -> Component.text("ERROR");
         };
-        if (!warning.equals(ChunkWarnings.PVP)) player.sendActionBar(Lang.ERROR_NO_CLAIM_PERMISSION.getComponent(new String[] { messageTrusted, messageType, Bukkit.getOfflinePlayer(owner).getName() }));
-        else player.sendActionBar(Lang.ERROR_PVP_DISABLED.getComponent(null));
+        player.sendActionBar(messageType);
     }
 
     @EventHandler
@@ -274,8 +277,14 @@ public class ChunkListener implements Listener {
                         }
                     } else if (cache.isAdminChunk(chunkCord)) {
                         if (block.getType().isInteractable() || e.getAction() == Action.PHYSICAL) {
-                            if (!cache.canAdminChunkSetting(ChunkAdminSettings.INTERACT, chunkCord)) e.setCancelled(true);
-                        } else if (!cache.canAdminChunkSetting(ChunkAdminSettings.BUILD, chunkCord)) e.setCancelled(true);
+                            if (!cache.canAdminChunkSetting(ChunkAdminSettings.INTERACT, chunkCord)) {
+                                e.setCancelled(true);
+                                if (!isSign) warnMessage(player, false, uuid, ChunkWarnings.ADMIN);
+                            }
+                        } else if (!cache.canAdminChunkSetting(ChunkAdminSettings.BUILD, chunkCord)) {
+                            e.setCancelled(true);
+                            if (!isSign) warnMessage(player, false, uuid, ChunkWarnings.ADMIN);
+                        }
                     }
                 }
             }
