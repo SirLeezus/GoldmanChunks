@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.util.Vector;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -47,7 +48,7 @@ public class PU {
 
     public Location unFormatChunkLocation(String chunk) {
         String[] split = chunk.split(",", 3);
-        return new Location(Bukkit.getWorld(split[0]), Double.parseDouble(split[1]) * 16, 100, Double.parseDouble(split[2]) * 16, (float) 180.0, (float) 0.0);
+        return new Location(Bukkit.getWorld(split[0]), Double.parseDouble(split[1]) * 16, 150, Double.parseDouble(split[2]) * 16, (float) 180.0, (float) 0.0);
     }
 
     public String formatAmount(int value) {
@@ -81,17 +82,17 @@ public class PU {
         long minZ = chunk.getZ() * 16L;
         long minY = player.getLocation().getBlockY();
 
-        long maxX =  minX + 17;
-        long maxZ = minZ + 17;
+        long maxX = minX + 16;
+        long maxZ = minZ + 16;
         long maxY = minY + 7;
 
-        for (long y = minY - 2; y < maxY; y++) {
-            for (long x = minX; x < maxX; x++) {
-                for (long z = minZ; z < maxZ; z++) {
+        for (long y = minY; y < maxY; y++) {
+            for (long x = minX; x <= maxX; x++) {
+                for (long z = minZ; z <= maxZ; z++) {
                     player.spawnParticle(particle, minX, y, z, 0);
                     player.spawnParticle(particle, x, y, minZ, 0);
-                    player.spawnParticle(particle, maxX - 1, y, z, 0);
-                    player.spawnParticle(particle, x, y, maxZ - 1, 0);
+                    player.spawnParticle(particle, maxX, y, z, 0);
+                    player.spawnParticle(particle, x, y, maxZ, 0);
                 }
             }
         }
@@ -109,16 +110,12 @@ public class PU {
         if (world.getWorldBorder().isInside(location)) {
             world.loadChunk(location.getChunk());
             for (int i = y; i > 0; i--) {
-                Location loc = new Location(player.getWorld(), x, i, z, yaw, pitch);
+                Location loc = new Location(world, x, i, z, yaw, pitch);
                 if (loc.getBlock().getType() == Material.AIR) {
-                    Location ground = new Location(loc.getWorld(), loc.getX(), loc.getY() - 1, loc.getZ());
+                    Location ground = loc.subtract(0, 1, 0);
                     Block block = ground.getBlock();
                     if (block.getType() != Material.AIR && block.getType() != Material.LAVA) {
-                        double bX = block.getBoundingBox().getCenter().getX();
-                        double bY = block.getBoundingBox().getCenter().getY() + 0.5;
-                        double bZ = block.getBoundingBox().getCenter().getZ();
-                        Location teleportLocation = new Location(block.getWorld(), bX, bY, bZ, yaw, pitch);
-                        player.teleportAsync(teleportLocation);
+                        player.teleportAsync(loc);
                         player.sendActionBar(Lang.TELEPORT.getComponent(null));
                         return;
                     }
