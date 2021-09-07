@@ -17,7 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.util.Vector;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -115,7 +114,7 @@ public class PU {
                     Location ground = loc.subtract(0, 1, 0);
                     Block block = ground.getBlock();
                     if (block.getType() != Material.AIR && block.getType() != Material.LAVA) {
-                        player.teleportAsync(loc);
+                        player.teleportAsync(loc.add(0, 1, 0));
                         player.sendActionBar(Lang.TELEPORT.getComponent(null));
                         return;
                     }

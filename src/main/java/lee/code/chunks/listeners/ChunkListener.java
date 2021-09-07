@@ -569,6 +569,7 @@ public class ChunkListener implements Listener {
 
         if (cache.isChunkClaimed(chunkCord) || cache.isAdminChunk(chunkCord)) {
             e.getDrops().clear();
+            e.setDroppedExp(0);
             e.setKeepInventory(true);
             e.setKeepLevel(true);
         }
@@ -602,7 +603,7 @@ public class ChunkListener implements Listener {
                             cache.claimChunk(chunkCord, uuid);
                             data.setPlayerAutoClaim(uuid,chunkCord);
                             player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_CLAIM_SUCCESSFUL.getString(new String[]{chunkCord, plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims)}));
-                            plugin.getPU().renderChunkBorder(player, chunk, RenderTypes.INFO);
+                            plugin.getPU().renderChunkBorder(player, chunk, RenderTypes.CLAIM);
                         } else {
                             data.removePlayerAutoClaim(uuid);
                             player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_CLAIM_MAXED.getString(new String[] { plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) }));
