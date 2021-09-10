@@ -11,6 +11,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,7 @@ public class Map extends SubCommand {
         String world = chunk.getWorld().getName();
 
         Location location = player.getLocation();
-        player.teleportAsync(new Location(player.getWorld(),location.getX(), location.getY(), location.getZ(), (float) 180, (float) 0));
+        player.teleportAsync(new Location(player.getWorld(),location.getX(), location.getY(), location.getZ(), (float) 180, (float) 0), PlayerTeleportEvent.TeleportCause.UNKNOWN);
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 
             int firstX = chunk.getX() - 9;

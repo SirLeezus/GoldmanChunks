@@ -23,6 +23,7 @@ public class GoldmanChunks extends JavaPlugin {
     @Getter private Cache cache;
     @Getter private CacheAPI cacheAPI;
     @Getter private EssentialsAPI essentialsAPI;
+    @Getter private ChunkAPI chunkAPI;
 
     @Override
     public void onEnable() {
@@ -32,6 +33,7 @@ public class GoldmanChunks extends JavaPlugin {
         this.cache = new Cache();
         this.cacheAPI = new CacheAPI();
         this.essentialsAPI = new EssentialsAPI();
+        this.chunkAPI = new ChunkAPI();
 
         sqLite.connect();
         sqLite.loadTables();
