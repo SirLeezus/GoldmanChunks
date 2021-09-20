@@ -1,6 +1,8 @@
 package lee.code.chunks.commands.chunk.subcommands;
 
+import lee.code.chunks.Data;
 import lee.code.chunks.GoldmanChunks;
+import lee.code.chunks.PU;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Chunk;
@@ -34,18 +36,23 @@ public class AutoClaim extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        PU pu = plugin.getPU();
+        Data data = plugin.getData();
 
         UUID uuid = player.getUniqueId();
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+        String chunkCord = pu.formatChunkLocation(chunk);
+        String worldName = player.getWorld().getName();
 
-        if (plugin.getData().isPlayerAutoClaiming(uuid)) {
-            plugin.getData().removePlayerAutoClaim(uuid);
-            player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_AUTO_CLAIM_DISABLED.getComponent(null)));
-        } else {
-            plugin.getData().setPlayerAutoClaim(uuid, chunkCord);
-            player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_AUTO_CLAIM_ENABLED.getComponent(null)));
-        }
+        if (data.getWhitelistedWorlds().contains(worldName)) {
+            if (data.isPlayerAutoClaiming(uuid)) {
+                data.removePlayerAutoClaim(uuid);
+                player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_AUTO_CLAIM_DISABLED.getComponent(null)));
+            } else {
+                data.setPlayerAutoClaim(uuid, chunkCord);
+                player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_AUTO_CLAIM_ENABLED.getComponent(null)));
+            }
+        } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_WORLD_SUPPORT.getComponent(null)));
     }
 
     @Override

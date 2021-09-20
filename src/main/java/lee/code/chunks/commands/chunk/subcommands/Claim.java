@@ -1,6 +1,8 @@
 package lee.code.chunks.commands.chunk.subcommands;
 
+import lee.code.chunks.Data;
 import lee.code.chunks.GoldmanChunks;
+import lee.code.chunks.PU;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
@@ -37,23 +39,28 @@ public class Claim extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        PU pu = plugin.getPU();
+        Data data = plugin.getData();
         Cache cache = plugin.getCache();
 
         UUID uuid = player.getUniqueId();
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+        String chunkCord = pu.formatChunkLocation(chunk);
+        String worldName = player.getWorld().getName();
 
         if (!cache.isChunkClaimed(chunkCord)) {
             if (!cache.isAdminChunk(chunkCord)) {
-                int playerClaimAmount = cache.getClaimedAmount(uuid);
-                int playerMaxClaims = cache.getPlayerMaxClaimAmount(uuid);
+                if (data.getWhitelistedWorlds().contains(worldName)) {
+                    int playerClaimAmount = cache.getClaimedAmount(uuid);
+                    int playerMaxClaims = cache.getPlayerMaxClaimAmount(uuid);
 
-                if (playerClaimAmount < playerMaxClaims) {
-                    playerClaimAmount++;
-                    cache.claimChunk(chunkCord, uuid);
-                    player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_CLAIM_SUCCESSFUL.getComponent(new String[] { chunkCord, plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) })));
-                    plugin.getPU().renderChunkBorder(player, chunk, RenderTypes.CLAIM);
-                } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_CLAIM_MAXED.getComponent(new String[] { plugin.getPU().formatAmount(playerClaimAmount), plugin.getPU().formatAmount(playerMaxClaims) })));
+                    if (playerClaimAmount < playerMaxClaims) {
+                        playerClaimAmount++;
+                        cache.claimChunk(chunkCord, uuid);
+                        player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_CLAIM_SUCCESSFUL.getComponent(new String[] { chunkCord, pu.formatAmount(playerClaimAmount), pu.formatAmount(playerMaxClaims) })));
+                        pu.renderChunkBorder(player, chunk, RenderTypes.CLAIM);
+                    } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_CLAIM_MAXED.getComponent(new String[] { pu.formatAmount(playerClaimAmount), pu.formatAmount(playerMaxClaims) })));
+                } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_WORLD_SUPPORT.getComponent(null)));
             } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_ADMIN_CLAIMED.getComponent(null)));
         } else {
             UUID ownerUUID = cache.getChunkOwnerUUID(chunkCord);

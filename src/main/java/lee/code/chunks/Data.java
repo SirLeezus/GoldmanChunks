@@ -2,6 +2,7 @@ package lee.code.chunks;
 
 import lee.code.chunks.database.SQLite;
 import lee.code.chunks.menusystem.PlayerMU;
+import lombok.Getter;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class Data {
     private final ConcurrentHashMap<UUID, List<String>> adminSelectedChunks = new ConcurrentHashMap<>();
     private final List<UUID> adminBypassList = new ArrayList<>();
     private final List<UUID> playerClickDelay = new ArrayList<>();
+    @Getter private final List<String> whitelistedWorlds = new ArrayList<>();
 
     public boolean hasPlayerClickDelay(UUID uuid) {
         return playerClickDelay.contains(uuid);
@@ -79,6 +81,13 @@ public class Data {
         SQL.loadChunks();
         SQL.loadPlayerData();
         SQL.loadAdminChunks();
+    }
+
+    public void loadListData() {
+        //whitelisted worlds
+        whitelistedWorlds.add("world");
+        whitelistedWorlds.add("world_nether");
+        whitelistedWorlds.add("world_the_end");
     }
 
     public PlayerMU getPlayerMU(UUID uuid) {

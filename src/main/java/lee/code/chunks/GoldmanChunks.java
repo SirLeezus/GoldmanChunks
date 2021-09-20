@@ -39,6 +39,7 @@ public class GoldmanChunks extends JavaPlugin {
         sqLite.loadTables();
 
         data.cacheDatabase();
+        data.loadListData();
 
         registerCommands();
         registerListeners();

@@ -31,6 +31,7 @@ public enum Lang {
     ERROR_COMMAND_AUTO_CLAIM("&cYou moved outside of the chunks around the last group you auto claimed so auto claim has been disabled."),
     ERROR_COMMAND_ABANDONALLCLAIMS_NO_CLAIMS("&cYou have no claimed chunks so nothing was unclaimed."),
     ERROR_COMMAND_CLAIM_MAXED("&cYou have reached the max amount of chunks you can claim at this time &e(&2{0}&7/&2{1}&e)&c."),
+    ERROR_COMMAND_WORLD_SUPPORT("&cYou can't claim chunks in this world."),
     ERROR_COMMAND_BUY_NOT_CLAIMED("&cThe chunk &e(&b{0}&e) &cis not currently claimed so you can't buy it. Use /chunk claim."),
     ERROR_COMMAND_BUY_NOT_FOR_SALE("&cThe chunk &e(&b{0}&e) &cis not currently for sale. You can ask &6{1} &cif they want to sell it."),
     ERROR_COMMAND_BUY_OWNER("&cYou can't buy your own chunk. You already own it..."),
