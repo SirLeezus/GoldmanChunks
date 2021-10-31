@@ -75,7 +75,7 @@ public class ChunkAPI {
             else if (cache.isChunkTrusted(chunkCord, uuid)) return cache.canChunkTrustedSetting(ChunkTrustedSettings.BREAK, chunkCord);
             else if (cache.isGlobalTrusted(oUUID, uuid)) return cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.BREAK, oUUID);
             else return data.hasAdminBypass(uuid);
-        }
+        } else if (cache.isAdminChunk(chunkCord)) return data.hasAdminBypass(uuid);
         return true;
     }
 }

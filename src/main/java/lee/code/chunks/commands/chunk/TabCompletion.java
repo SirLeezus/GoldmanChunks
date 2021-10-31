@@ -37,7 +37,7 @@ public class TabCompletion implements TabCompleter {
                 if (args.length == 2) {
                     Chunk chunk = player.getLocation().getChunk();
                     String chunkCord = plugin.getPU().formatChunkLocation(chunk);
-                    if (cache.isChunkOwner(chunkCord, uuid)) return StringUtil.copyPartialMatches(args[1], cache.getChunkTrustedNames(chunkCord), new ArrayList<>());
+                    if (cache.isChunkClaimed(chunkCord) && cache.isChunkOwner(chunkCord, uuid)) return StringUtil.copyPartialMatches(args[1], cache.getChunkTrustedNames(chunkCord), new ArrayList<>());
                 }
             } else if (args[0].equals("untrustall")) {
                 if (args.length == 2) {
