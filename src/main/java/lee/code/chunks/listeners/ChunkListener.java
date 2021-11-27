@@ -617,14 +617,23 @@ public class ChunkListener implements Listener {
                     player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_ADMIN_CLAIMED.getString(null));
                 }
             } else if (!data.getPlayerLastAutoClaim(uuid).equals(chunkCord)) data.setPlayerAutoClaim(uuid, chunkCord);
+        }
+    }
 
-        } else if (cache.isChunkFlying(uuid)) {
+    @EventHandler
+    public void onChunkFlying(PlayerMoveEvent e) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
+        UUID uuid = e.getPlayer().getUniqueId();
+
+        if (cache.isChunkFlying(uuid)) {
             Player player = e.getPlayer();
             Chunk chunk = player.getLocation().getChunk();
             String chunkCord = plugin.getPU().formatChunkLocation(chunk);
 
             if (cache.isChunkClaimed(chunkCord)) {
-                if (!cache.isChunkOwner(chunkCord, uuid)) if (!cache.isChunkTrusted(chunkCord, uuid)) toggleChunkFly(player, ChunkWarnings.FLY_OUTSIDE);
+                UUID ownerUUID = cache.getChunkOwnerUUID(chunkCord);
+                if (!cache.isChunkOwner(chunkCord, uuid) && !cache.isChunkTrusted(chunkCord, uuid) && !cache.isGlobalTrusted(ownerUUID, uuid)) toggleChunkFly(player, ChunkWarnings.FLY_OUTSIDE);
             } else toggleChunkFly(player, ChunkWarnings.FLY_OUTSIDE);
         }
     }
@@ -641,7 +650,8 @@ public class ChunkListener implements Listener {
 
         if (!e.getTo().getWorld().getEnvironment().equals(World.Environment.THE_END)) {
             if (cache.isChunkClaimed(chunkCord)) {
-                if (!cache.isChunkOwner(chunkCord, uuid) && !cache.isChunkTrusted(chunkCord, uuid)) e.setCancelled(true);
+                UUID ownerUUID = cache.getChunkOwnerUUID(chunkCord);
+                if (!cache.isChunkOwner(chunkCord, uuid) && !cache.isChunkTrusted(chunkCord, uuid) && !cache.isGlobalTrusted(ownerUUID, uuid)) e.setCancelled(true);
             } else if (cache.isAdminChunk(chunkCord)) e.setCancelled(true);
         }
     }
