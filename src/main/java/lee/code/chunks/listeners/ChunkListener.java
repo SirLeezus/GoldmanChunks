@@ -455,7 +455,7 @@ public class ChunkListener implements Listener {
                             }
                         }
                     }
-                } else if (projectile.getShooter() instanceof Monster) e.setCancelled(true);
+                } else e.setCancelled(true);
             }
             //admin chunk claim
         } else if (cache.isAdminChunk(chunkCord)) {
@@ -491,7 +491,7 @@ public class ChunkListener implements Listener {
                     if (!plugin.getData().hasAdminBypass(uuid)) {
                         if (!cache.canAdminChunkSetting(ChunkAdminSettings.PVE, chunkCord)) e.setCancelled(true);
                     }
-                } else if (projectile.getShooter() instanceof Monster) e.setCancelled(true);
+                } else e.setCancelled(true);
             }
         }
     }
