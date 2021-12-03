@@ -7,12 +7,14 @@ import lee.code.chunks.lists.chunksettings.ChunkAdminSettings;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.lists.RenderTypes;
 import lee.code.chunks.lists.Settings;
+import lee.code.chunks.lists.chunksettings.HostileEntities;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -62,6 +64,10 @@ public class PU {
 
     public List<String> getAdminChunkSettings() {
         return EnumSet.allOf(ChunkAdminSettings.class).stream().map(ChunkAdminSettings::name).collect(Collectors.toList());
+    }
+
+    public List<EntityType> getHostileEntities() {
+        return EnumSet.allOf(HostileEntities.class).stream().map(HostileEntities::getType).collect(Collectors.toList());
     }
 
     public List<String> getOnlinePlayers() {
