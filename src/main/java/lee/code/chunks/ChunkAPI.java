@@ -5,9 +5,22 @@ import lee.code.chunks.lists.chunksettings.ChunkTrustedGlobalSettings;
 import lee.code.chunks.lists.chunksettings.ChunkTrustedSettings;
 import org.bukkit.Chunk;
 
+import java.util.List;
 import java.util.UUID;
 
 public class ChunkAPI {
+
+    public List<UUID> getUserList() {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
+        return cache.getUserList();
+    }
+
+    public List<String> getChunks(UUID uuid) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
+        return cache.getChunkClaims(uuid);
+    }
 
     public boolean isClaimed(Chunk chunk) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();

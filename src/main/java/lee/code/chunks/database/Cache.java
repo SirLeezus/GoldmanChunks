@@ -417,6 +417,7 @@ public class Cache {
             pipe.hset("chunkFlying", sUUID, "0");
             pipe.sync();
 
+            addPlayerToUserList(uuid);
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.createPlayerData(sUUID));
         }
     }
@@ -437,6 +438,8 @@ public class Cache {
             pipe.hset("trustedGlobalPvE", uuid, trustedGlobalPvE);
             pipe.hset("chunkFlying", uuid, flying);
             pipe.sync();
+
+            addPlayerToUserList(UUID.fromString(uuid));
         }
     }
 
@@ -672,6 +675,35 @@ public class Cache {
         try (Jedis jedis = pool.getResource()) {
             jedis.hset(setting.getRedisKey(), sUUID, result);
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setTrustedGlobalSetting(setting.getSqliteKey(), sUUID, result));
+        }
+    }
+
+    private void addPlayerToUserList(UUID uuid) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        String sUUID = String.valueOf(uuid);
+
+        try (Jedis jedis = pool.getResource()) {
+            if (jedis.exists("userList")) {
+                String list = jedis.get("userList");
+                jedis.set("userList", list + "," + sUUID);
+            } else jedis.set("userList", sUUID);
+        }
+    }
+
+    public List<UUID> getUserList() {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        try (Jedis jedis = pool.getResource()) {
+            List<UUID> players = new ArrayList<>();
+            if (jedis.exists("userList")) {
+                String users = jedis.get("userList");
+                String[] split = StringUtils.split(users, ',');
+                for (String player : split) players.add(UUID.fromString(player));
+                return players;
+            } return players;
         }
     }
 
