@@ -417,7 +417,7 @@ public class Cache {
             pipe.hset("chunkFlying", sUUID, "0");
             pipe.sync();
 
-            addPlayerToUserList(uuid);
+            addPlayerToUserList(sUUID);
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.createPlayerData(sUUID));
         }
     }
@@ -439,7 +439,7 @@ public class Cache {
             pipe.hset("chunkFlying", uuid, flying);
             pipe.sync();
 
-            addPlayerToUserList(UUID.fromString(uuid));
+            addPlayerToUserList(uuid);
         }
     }
 
@@ -678,17 +678,15 @@ public class Cache {
         }
     }
 
-    private void addPlayerToUserList(UUID uuid) {
+    private void addPlayerToUserList(String uuid) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
-
-        String sUUID = String.valueOf(uuid);
 
         try (Jedis jedis = pool.getResource()) {
             if (jedis.exists("userList")) {
                 String list = jedis.get("userList");
-                jedis.set("userList", list + "," + sUUID);
-            } else jedis.set("userList", sUUID);
+                jedis.set("userList", list + "," + uuid);
+            } else jedis.set("userList", uuid);
         }
     }
 
