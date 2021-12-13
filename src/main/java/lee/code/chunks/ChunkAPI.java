@@ -22,6 +22,12 @@ public class ChunkAPI {
         return cache.getChunkClaims(uuid);
     }
 
+    public List<String> getAdminChunks() {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
+        return cache.getAdminChunkClaims();
+    }
+
     public boolean isClaimed(Chunk chunk) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();

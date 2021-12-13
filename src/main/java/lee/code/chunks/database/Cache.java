@@ -707,6 +707,43 @@ public class Cache {
 
     //ADMIN CHUNK DATA
 
+    public List<String> getAdminChunkClaims() {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        try (Jedis jedis = pool.getResource()) {
+            if (jedis.exists("adminChunkList")) {
+                String[] split = StringUtils.split(jedis.get("adminChunkList"), '%');
+                return new ArrayList<>(Arrays.asList(split));
+            } else return Collections.singletonList("");
+        }
+    }
+
+    private void addToAdminChunkClaims(String chunk) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        try (Jedis jedis = pool.getResource()) {
+            if (jedis.exists("adminChunkList")) {
+                String newChunkList = jedis.get("adminChunkList") + "%" + chunk;
+                jedis.set("adminChunkList", newChunkList);
+            } else jedis.set("adminChunkList", chunk);
+        }
+    }
+
+    private void removeFromAdminChunkClaims(String chunk) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        try (Jedis jedis = pool.getResource()) {
+            List<String> newList = new ArrayList<>();
+            String[] split = StringUtils.split(jedis.get("adminChunkList"), '%');
+            for (String playerChunk : split) if (!playerChunk.equals(chunk)) newList.add(playerChunk);
+            String newChunkList = StringUtils.join(newList, "%");
+            jedis.set("adminChunkList", newChunkList);
+        }
+    }
+
     public int updateBulkAdminChunks(List<String> chunks, ChunkAdminSettings setting, boolean value) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         SQLite SQL = plugin.getSqLite();
@@ -744,6 +781,8 @@ public class Cache {
                 pipe.hset("adminChunkMonsters", chunk, "0");
                 pipe.hset("adminChunkExplode", chunk, "0");
                 pipe.sync();
+
+                addToAdminChunkClaims(chunk);
             }
 
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.claimBulkAdminChunks(chunks));
@@ -767,6 +806,8 @@ public class Cache {
             pipe.hset("adminChunkExplode", chunk, "0");
             pipe.sync();
 
+            addToAdminChunkClaims(chunk);
+
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.claimAdminChunk(chunk));
         }
     }
@@ -785,6 +826,8 @@ public class Cache {
             pipe.hset("adminChunkMonsters", chunk, canSpawnMonsters);
             pipe.hset("adminChunkExplode", chunk, canExplode);
             pipe.sync();
+
+            addToAdminChunkClaims(chunk);
         }
     }
 
@@ -803,6 +846,8 @@ public class Cache {
                 jedis.hdel("adminChunkPvP", chunk);
                 jedis.hdel("adminChunkMonsters", chunk);
                 jedis.hdel("adminChunkExplode", chunk);
+
+                removeFromAdminChunkClaims(chunk);
             }
 
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.unclaimBulkAdminChunks(chunks));
@@ -816,6 +861,8 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             jedis.hdel("adminChunk", chunk);
+            removeFromAdminChunkClaims(chunk);
+
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.unclaimAdminChunk(chunk));
         }
     }
