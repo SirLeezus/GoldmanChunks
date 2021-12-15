@@ -10,6 +10,12 @@ import java.util.UUID;
 
 public class ChunkAPI {
 
+    public boolean hasClaims(UUID uuid) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
+        return cache.hasClaimedChunks(uuid);
+    }
+
     public List<UUID> getUserList() {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
