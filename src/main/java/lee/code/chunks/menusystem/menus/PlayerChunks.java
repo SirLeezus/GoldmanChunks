@@ -1,8 +1,10 @@
 package lee.code.chunks.menusystem.menus;
 
 import lee.code.chunks.GoldmanChunks;
+import lee.code.chunks.PU;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
+import lee.code.chunks.lists.MenuItems;
 import lee.code.chunks.menusystem.PaginatedMenu;
 import lee.code.chunks.menusystem.PlayerMU;
 import net.kyori.adventure.text.Component;
@@ -38,19 +40,17 @@ public class PlayerChunks extends PaginatedMenu {
     public void handleMenu(InventoryClickEvent e) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
+        PU pu = plugin.getPU();
 
-        ItemStack item = e.getCurrentItem();
-        Player player = (Player) e.getWhoClicked();
+        Player player = pmu.getOwner();
+        ItemStack clickedItem = e.getCurrentItem();
 
-        if (plugin.getData().hasPlayerClickDelay(player.getUniqueId())) return;
-        else plugin.getPU().addPlayerClickDelay(player.getUniqueId());
-
-        if (item == null) return;
         if (e.getClickedInventory() == player.getInventory()) return;
-        if (item.getType().equals(Material.AIR)) return;
-        if (item.equals(fillerGlass)) return;
+        if (clickedItem == null) return;
+        if (clickedItem.getType().equals(Material.AIR)) return;
+        if (clickedItem.equals(fillerGlass)) return;
 
-        if (item.equals(previousPageItem)) {
+        if (clickedItem.equals(previousPageItem)) {
             if (page == 0) {
                 player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_PREVIOUS_PAGE.getString(null));
             } else {
@@ -59,7 +59,7 @@ public class PlayerChunks extends PaginatedMenu {
                 super.open();
                 playClickSound(player);
             }
-        } else if (item.equals(nextPageItem)) {
+        } else if (clickedItem.equals(nextPageItem)) {
 
             if (!((index + 1) >= cache.getChunkClaims(player.getUniqueId()).size())) {
                 page = page + 1;
@@ -68,14 +68,11 @@ public class PlayerChunks extends PaginatedMenu {
                 playClickSound(player);
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NEXT_PAGE.getString(null));
 
-        } else if (item.equals(closeItem)) {
-            player.closeInventory();
-            playClickSound(player);
         } else {
             playClickSound(player);
-            if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
-                Location chunk = plugin.getPU().unFormatChunkLocation(ChatColor.stripColor(item.getItemMeta().getDisplayName()));
-                plugin.getPU().teleportPlayerToChunk(player, chunk);
+            if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasDisplayName()) {
+                Location chunk = pu.unFormatChunkLocation(ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()));
+                pu.teleportPlayerToChunk(player, chunk);
             }
         }
     }
@@ -84,6 +81,7 @@ public class PlayerChunks extends PaginatedMenu {
     public void setMenuItems() {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
+        PU pu = plugin.getPU();
         addMenuBorder();
 
         page = pmu.getChunkListPage();
@@ -91,7 +89,7 @@ public class PlayerChunks extends PaginatedMenu {
         Player player = pmu.getOwner();
         UUID uuid = player.getUniqueId();
         Chunk playerChunk = player.getLocation().getChunk();
-        String playerChunkCord = plugin.getPU().formatChunkLocation(playerChunk);
+        String playerChunkCord = pu.formatChunkLocation(playerChunk);
 
         List<String> chunks = cache.getChunkClaims(uuid);
 
@@ -113,7 +111,7 @@ public class PlayerChunks extends PaginatedMenu {
                 };
 
                 ItemMeta itemChunkMeta = itemChunk.getItemMeta();
-                itemChunkMeta.displayName(Component.text(plugin.getPU().format("&b&l&n" + chunk)));
+                itemChunkMeta.displayName(pu.formatC("&b&l&n" + chunk));
 
                 if (chunk.equals(playerChunkCord)) {
                     itemChunkMeta.addEnchant(Enchantment.PROTECTION_FALL, 1, false);

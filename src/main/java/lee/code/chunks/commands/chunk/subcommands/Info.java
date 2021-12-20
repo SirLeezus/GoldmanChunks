@@ -1,6 +1,7 @@
 package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
+import lee.code.chunks.PU;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
@@ -39,24 +40,26 @@ public class Info extends SubCommand {
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
+        PU pu = plugin.getPU();
 
         String owner = "";
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+        String chunkCord = pu.formatChunkLocation(chunk);
         if (cache.isAdminChunk(chunkCord)) owner = "&4&lAdmin";
         else if (cache.isChunkClaimed(chunkCord)) owner = cache.getChunkOwnerName(chunkCord);
 
         List<Component> lines = new ArrayList<>();
+        Component spacer = Component.text("");
         lines.add(Lang.COMMAND_INFO_HEADER.getComponent(null));
-        lines.add(Component.text(""));
+        lines.add(spacer);
         lines.add(Lang.COMMAND_INFO_LINE_1.getComponent(new String[] { owner }));
         lines.add(Lang.COMMAND_INFO_LINE_2.getComponent(new String[] { chunkCord }));
-        if (cache.isChunkClaimed(chunkCord)) if (cache.isChunkForSale(chunkCord)) lines.add(Lang.COMMAND_INFO_LINE_3.getComponent(new String[] { plugin.getPU().formatAmount(cache.getChunkPrice(chunkCord)) }));
-        lines.add(Component.text(""));
+        if (cache.isChunkClaimed(chunkCord)) if (cache.isChunkForSale(chunkCord)) lines.add(Lang.COMMAND_INFO_LINE_3.getComponent(new String[] { pu.formatAmount(cache.getChunkPrice(chunkCord)) }));
+        lines.add(spacer);
         lines.add(Lang.COMMAND_INFO_FOOTER.getComponent(null));
 
         for (Component line : lines) player.sendMessage(line);
-        plugin.getPU().renderChunkBorder(player, chunk, RenderTypes.INFO);
+        pu.renderChunkBorder(player, chunk, RenderTypes.INFO);
     }
 
     @Override

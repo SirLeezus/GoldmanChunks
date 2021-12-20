@@ -8,6 +8,7 @@ import lee.code.chunks.menusystem.Menu;
 import lee.code.chunks.menusystem.PlayerMU;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -31,26 +32,22 @@ public class TrustedChunkSettings extends Menu {
 
     @Override
     public void handleMenu(InventoryClickEvent e) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Player player = pmu.getOwner();
-
-        if (plugin.getData().hasPlayerClickDelay(player.getUniqueId())) return;
-        else plugin.getPU().addPlayerClickDelay(player.getUniqueId());
+        ItemStack clickedItem = e.getCurrentItem();
 
         if (e.getClickedInventory() == player.getInventory()) return;
+        if (clickedItem == null) return;
+        if (clickedItem.getType().equals(Material.AIR)) return;
+        if (clickedItem.equals(fillerGlass)) return;
 
-        ItemStack item = e.getCurrentItem();
-
-        if (item != null) {
-            switch (e.getSlot()) {
-                case 10 -> updatePermItem(player, item, 10, player.getLocation().getChunk());
-                case 12 -> updatePermItem(player, item, 12, player.getLocation().getChunk());
-                case 14 -> updatePermItem(player, item, 14, player.getLocation().getChunk());
-                case 16 -> updatePermItem(player, item, 16, player.getLocation().getChunk());
-                case 31 -> {
-                    new ChunkManager(pmu).open();
-                    playClickSound(player);
-                }
+        switch (e.getSlot()) {
+            case 10 -> updatePermItem(player, clickedItem, 10, player.getLocation().getChunk());
+            case 12 -> updatePermItem(player, clickedItem, 12, player.getLocation().getChunk());
+            case 14 -> updatePermItem(player, clickedItem, 14, player.getLocation().getChunk());
+            case 16 -> updatePermItem(player, clickedItem, 16, player.getLocation().getChunk());
+            case 31 -> {
+                new ChunkManager(pmu).open();
+                playClickSound(player);
             }
         }
     }

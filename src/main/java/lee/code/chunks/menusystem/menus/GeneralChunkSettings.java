@@ -2,12 +2,14 @@ package lee.code.chunks.menusystem.menus;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.database.Cache;
+import lee.code.chunks.lists.MenuItems;
 import lee.code.chunks.lists.chunksettings.ChunkSettings;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.Menu;
 import lee.code.chunks.menusystem.PlayerMU;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -31,24 +33,21 @@ public class GeneralChunkSettings extends Menu {
 
     @Override
     public void handleMenu(InventoryClickEvent e) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Player player = pmu.getOwner();
+        ItemStack clickedItem = e.getCurrentItem();
 
-        if (plugin.getData().hasPlayerClickDelay(player.getUniqueId())) return;
-        else plugin.getPU().addPlayerClickDelay(player.getUniqueId());
         if (e.getClickedInventory() == player.getInventory()) return;
+        if (clickedItem == null) return;
+        if (clickedItem.getType().equals(Material.AIR)) return;
+        if (clickedItem.equals(fillerGlass)) return;
 
-        ItemStack item = e.getCurrentItem();
-
-        if (item != null) {
-            switch (e.getSlot()) {
-                case 11 -> updatePermItem(player, item, 11, player.getLocation().getChunk());
-                case 13 -> updatePermItem(player, item, 13, player.getLocation().getChunk());
-                case 15 -> updatePermItem(player, item, 15, player.getLocation().getChunk());
-                case 31 -> {
-                    new ChunkManager(pmu).open();
-                    playClickSound(player);
-                }
+        switch (e.getSlot()) {
+            case 11 -> updatePermItem(player, clickedItem, 11, player.getLocation().getChunk());
+            case 13 -> updatePermItem(player, clickedItem, 13, player.getLocation().getChunk());
+            case 15 -> updatePermItem(player, clickedItem, 15, player.getLocation().getChunk());
+            case 31 -> {
+                new ChunkManager(pmu).open();
+                playClickSound(player);
             }
         }
     }

@@ -2,6 +2,7 @@ package lee.code.chunks.commands.adminchunk.subcommands;
 
 import lee.code.chunks.Data;
 import lee.code.chunks.GoldmanChunks;
+import lee.code.chunks.PU;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.chunksettings.ChunkAdminSettings;
@@ -44,6 +45,7 @@ public class Selection extends SubCommand {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Data data = plugin.getData();
         Cache cache = plugin.getCache();
+        PU pu = plugin.getPU();
 
         UUID uuid = player.getUniqueId();
         Chunk chunk = player.getLocation().getChunk();
@@ -52,7 +54,7 @@ public class Selection extends SubCommand {
             Vector start = new Vector(chunk.getX(), 0, chunk.getZ());
             String world = player.getWorld().getName();
             String selectedChunk = world + ",%.0f,%.0f";
-            plugin.getPU().renderChunkBorder(player, chunk, RenderTypes.CLAIM);
+            pu.renderChunkBorder(player, chunk, RenderTypes.CLAIM);
 
             if (!data.hasFirstAdminSelection(uuid)) {
                 data.setFirstAdminSelection(uuid, start);
@@ -99,7 +101,7 @@ public class Selection extends SubCommand {
                             boolean value = Boolean.parseBoolean(args[3]);
                             String settingFormat = value ? Lang.TRUE.getString() : Lang.FALSE.getString();
 
-                            if (plugin.getPU().getAdminChunkSettings().contains(setting)) {
+                            if (pu.getAdminChunkSettings().contains(setting)) {
                                 int updated = cache.updateBulkAdminChunks(data.getAdminSelectedChunks(uuid), ChunkAdminSettings.valueOf(setting), value);
                                 player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_SELECTION_SETTING_UPDATE.getComponent(new String[]{setting, settingFormat, String.valueOf(updated)})));
                             }

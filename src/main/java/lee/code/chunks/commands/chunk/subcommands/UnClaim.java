@@ -1,6 +1,7 @@
 package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
+import lee.code.chunks.PU;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
@@ -38,15 +39,16 @@ public class UnClaim extends SubCommand {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         UUID uuid = player.getUniqueId();
         Cache cache = plugin.getCache();
+        PU pu = plugin.getPU();
 
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+        String chunkCord = pu.formatChunkLocation(chunk);
 
         if (cache.isChunkClaimed(chunkCord)) {
             if (cache.isChunkOwner(chunkCord, uuid)) {
                 cache.unclaimChunk(chunkCord, uuid);
                 player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_UNCLAIM_SUCCESSFUL.getComponent(new String[] { chunkCord })));
-                plugin.getPU().renderChunkBorder(player, chunk, RenderTypes.UNCLAIM);
+                pu.renderChunkBorder(player, chunk, RenderTypes.UNCLAIM);
             } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_UNCLAIM_OWNER.getComponent(new String[] { cache.getChunkOwnerName(chunkCord) })));
         } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_UNCLAIMED_NOT_CLAIMED.getComponent(null)));
     }

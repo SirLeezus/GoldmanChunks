@@ -16,7 +16,6 @@ import java.util.List;
 public enum MenuItems {
     FILLER_GLASS(Material.GRAY_STAINED_GLASS_PANE, "&r", null, null),
     BACK_MENU(Material.BARRIER, "&6&l<- Back", null, null),
-    CLOSE_MENU(Material.BARRIER, "&c&lClose", null, null),
     NEXT_PAGE(Material.PAPER, "&eNext Page >", null, null),
     PREVIOUS_PAGE(Material.PAPER, "&e< Previous Page", null, null),
     TRUSTED(Material.PLAYER_HEAD, "&2&lTrusted Chunk Settings", "&7Toggle your trusted player settings\n&7on the chunk you are standing on.", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjE5ZTM2YTg3YmFmMGFjNzYzMTQzNTJmNTlhN2Y2M2JkYjNmNGM4NmJkOWJiYTY5Mjc3NzJjMDFkNGQxIn19fQ=="),

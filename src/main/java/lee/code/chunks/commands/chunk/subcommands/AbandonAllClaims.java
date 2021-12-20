@@ -1,6 +1,7 @@
 package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
+import lee.code.chunks.PU;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
@@ -35,13 +36,14 @@ public class AbandonAllClaims extends SubCommand {
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
+        PU pu = plugin.getPU();
         UUID uuid = player.getUniqueId();
 
         if (cache.hasClaimedChunks(uuid)) {
             cache.unclaimAllChunks(uuid);
             int maxClaims = cache.getPlayerMaxClaimAmount(uuid);
             int totalClaims = cache.getClaimedAmount(uuid);
-            player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ABANDONALLCLAIMS_SUCCESSFUL.getComponent(new String[] { plugin.getPU().formatAmount(totalClaims), plugin.getPU().formatAmount(maxClaims) })));
+            player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ABANDONALLCLAIMS_SUCCESSFUL.getComponent(new String[] { pu.formatAmount(totalClaims), pu.formatAmount(maxClaims) })));
         } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_ABANDONALLCLAIMS_NO_CLAIMS.getComponent(null)));
     }
 

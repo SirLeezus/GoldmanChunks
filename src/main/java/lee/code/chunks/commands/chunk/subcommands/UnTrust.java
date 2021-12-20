@@ -1,6 +1,7 @@
 package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
+import lee.code.chunks.PU;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
@@ -39,12 +40,13 @@ public class UnTrust extends SubCommand {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         UUID uuid = player.getUniqueId();
         Cache cache = plugin.getCache();
+        PU pu = plugin.getPU();
 
         if (args.length > 1) {
             OfflinePlayer target = Bukkit.getOfflinePlayerIfCached(args[1]);
             if (target != null) {
                 Chunk chunk = player.getLocation().getChunk();
-                String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+                String chunkCord = pu.formatChunkLocation(chunk);
                 UUID targetUUID = target.getUniqueId();
                 if (cache.isChunkOwner(chunkCord, uuid)) {
                     if (cache.isChunkTrusted(chunkCord, targetUUID)) {

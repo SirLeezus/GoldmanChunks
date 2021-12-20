@@ -3,13 +3,16 @@ package lee.code.chunks.menusystem.menus;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
+import lee.code.chunks.lists.MenuItems;
 import lee.code.chunks.menusystem.Menu;
 import lee.code.chunks.menusystem.PlayerMU;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
@@ -35,10 +38,12 @@ public class ChunkManager extends Menu {
         Cache cache = plugin.getCache();
 
         Player player = pmu.getOwner();
+        ItemStack clickedItem = e.getCurrentItem();
 
-        if (plugin.getData().hasPlayerClickDelay(pmu.getOwner().getUniqueId())) return;
-        else plugin.getPU().addPlayerClickDelay(pmu.getOwner().getUniqueId());
         if (e.getClickedInventory() == player.getInventory()) return;
+        if (clickedItem == null) return;
+        if (clickedItem.getType().equals(Material.AIR)) return;
+        if (clickedItem.equals(fillerGlass)) return;
 
         Chunk chunk = player.getLocation().getChunk();
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);

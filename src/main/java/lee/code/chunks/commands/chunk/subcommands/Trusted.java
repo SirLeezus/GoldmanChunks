@@ -45,16 +45,17 @@ public class Trusted extends SubCommand {
 
         if (cache.isChunkClaimed(chunkCord)) {
             List<Component> lines = new ArrayList<>();
+            Component spacer = Component.text("");
 
             UUID ownerUUID = cache.getChunkOwnerUUID(chunkCord);
             String trusted = String.join(", ", cache.getChunkTrustedNames(chunkCord));
             String globalTrusted = String.join(", ", cache.getGlobalTrustedNames(ownerUUID));
 
             lines.add(Lang.COMMAND_TRUSTED_HEADER.getComponent(null));
-            lines.add(Component.text(""));
+            lines.add(spacer);
             lines.add(Lang.COMMAND_TRUSTED_LINE_1.getComponent(new String[] { globalTrusted }));
             lines.add(Lang.COMMAND_TRUSTED_LINE_2.getComponent(new String[] { trusted }));
-            lines.add(Component.text(""));
+            lines.add(spacer);
             lines.add(Lang.COMMAND_TRUSTED_FOOTER.getComponent(null));
 
             for (Component line : lines) player.sendMessage(line);

@@ -1,6 +1,8 @@
 package lee.code.chunks.commands.adminchunk.subcommands;
 
+import lee.code.chunks.Data;
 import lee.code.chunks.GoldmanChunks;
+import lee.code.chunks.PU;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
@@ -36,11 +38,13 @@ public class Manage extends SubCommand {
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
+        Data data = plugin.getData();
+        PU pu = plugin.getPU();
 
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+        String chunkCord = pu.formatChunkLocation(chunk);
         if (cache.isAdminChunk(chunkCord)) {
-            new AdminChunkSettings(plugin.getData().getPlayerMU(player.getUniqueId())).open();
+            new AdminChunkSettings(data.getPlayerMU(player.getUniqueId())).open();
             player.playSound(player.getLocation(), Sound.ENTITY_LLAMA_SWAG, 1, 1);
         } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_ADMIN_MANAGE_NOT_ADMIN_CHUNK.getComponent(null)));
     }

@@ -45,6 +45,8 @@ public class GoldmanChunks extends JavaPlugin {
         registerListeners();
 
         pU.accruedClaimTimer();
+
+        sqLite.resetMainWorldChunks();
     }
 
     @Override

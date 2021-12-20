@@ -1,6 +1,7 @@
 package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
+import lee.code.chunks.PU;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
@@ -39,6 +40,7 @@ public class SetPrice extends SubCommand {
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
+        PU pu = plugin.getPU();
 
         if (args.length > 1) {
             Scanner valueScanner = new Scanner(args[1]);
@@ -47,14 +49,14 @@ public class SetPrice extends SubCommand {
                 if (value < Settings.CHUNK_SELL_PRICE_MAX.getValue()) {
                     UUID uuid = player.getUniqueId();
                     Chunk chunk = player.getLocation().getChunk();
-                    String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+                    String chunkCord = pu.formatChunkLocation(chunk);
                     if (!cache.isAdminChunk(chunkCord)) {
                         if (cache.isChunkClaimed(chunkCord)) {
                             if (cache.isChunkOwner(chunkCord, uuid)) {
                                 cache.setChunkPrice(chunkCord, value);
                                 if (value == 0) player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_SETPRICE_REMOVE_SUCCESSFUL.getComponent(new String[]{chunkCord})));
                                 else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_SETPRICE_SUCCESSFUL.getComponent(new String[]{chunkCord, plugin.getPU().formatAmount(value)})));
-                                plugin.getPU().renderChunkBorder(player, chunk, RenderTypes.INFO);
+                                pu.renderChunkBorder(player, chunk, RenderTypes.INFO);
                             } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_SETPRICE_NOT_OWNER.getComponent(new String[]{cache.getChunkOwnerName(chunkCord)})));
                         } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_SETPRICE_NOT_CLAIMED.getComponent(null)));
                     } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_SETPRICE_ADMIN_CHUNK.getComponent(null)));

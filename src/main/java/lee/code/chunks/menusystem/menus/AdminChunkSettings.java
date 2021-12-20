@@ -2,12 +2,14 @@ package lee.code.chunks.menusystem.menus;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.database.Cache;
+import lee.code.chunks.lists.MenuItems;
 import lee.code.chunks.lists.chunksettings.ChunkAdminSettings;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.Menu;
 import lee.code.chunks.menusystem.PlayerMU;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -29,19 +31,16 @@ public class AdminChunkSettings extends Menu {
 
     @Override
     public void handleMenu(InventoryClickEvent e) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Player player = pmu.getOwner();
+        ItemStack clickedItem = e.getCurrentItem();
 
-        if (plugin.getData().hasPlayerClickDelay(player.getUniqueId())) return;
-        else plugin.getPU().addPlayerClickDelay(player.getUniqueId());
         if (e.getClickedInventory() == player.getInventory()) return;
+        if (clickedItem == null) return;
+        if (clickedItem.getType().equals(Material.AIR)) return;
+        if (clickedItem.equals(fillerGlass)) return;
 
-        ItemStack item = e.getCurrentItem();
-
-        if (item != null && item != fillerGlass) {
-            int slot = e.getSlot();
-            updatePermItem(player, item, slot, player.getLocation().getChunk());
-        }
+        int slot = e.getSlot();
+        updatePermItem(player, clickedItem, slot, player.getLocation().getChunk());
     }
 
     @Override

@@ -40,9 +40,7 @@ public class Cache {
             pipe.hset("chunkPrice", chunk, "0");
             pipe.sync();
 
-            int newClaimAmount = Integer.parseInt(jedis.hget("claimed", sUUID)) + 1;
-            String sNewClaimAmount = String.valueOf(newClaimAmount);
-            jedis.hset("claimed", sUUID, sNewClaimAmount);
+            String sNewClaimAmount = addToClaimedAmount(sUUID);
             addToChunkClaims(sUUID, chunk);
 
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.claimChunk(chunk, uuid, sNewClaimAmount));
@@ -102,15 +100,10 @@ public class Cache {
         String sOldUUID = String.valueOf(oldOwner);
 
         try (Jedis jedis = pool.getResource()) {
-
-            int newClaimAmount = Integer.parseInt(jedis.hget("claimed", sNewUUID)) + 1;
-            String sNewClaimAmount = String.valueOf(newClaimAmount);
-            jedis.hset("claimed", sNewUUID, sNewClaimAmount);
+            String sNewClaimAmount = addToClaimedAmount(sNewUUID);
             addToChunkClaims(sNewUUID, chunk);
 
-            int oldClaimAmount = Integer.parseInt(jedis.hget("claimed", sOldUUID)) - 1;
-            String sOldClaimAmount = String.valueOf(oldClaimAmount);
-            jedis.hset("claimed", sOldUUID, sOldClaimAmount);
+            String sOldClaimAmount = subtractFromClaimedAmount(sOldUUID);
             removeFromChunkClaims(sOldUUID, chunk);
 
             jedis.hset("chunk", chunk, sNewUUID);
@@ -185,10 +178,7 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             jedis.hdel("chunk", chunk);
-            int newClaimAmount = Integer.parseInt(jedis.hget("claimed", sUUID)) - 1;
-            String sNewClaimAmount = String.valueOf(newClaimAmount);
-            jedis.hset("claimed", sUUID, sNewClaimAmount);
-
+            String sNewClaimAmount = subtractFromClaimedAmount(sUUID);
             removeFromChunkClaims(sUUID, chunk);
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.unclaimChunk(chunk, uuid, sNewClaimAmount));
         }
@@ -575,6 +565,31 @@ public class Cache {
         }
     }
 
+    private String addToClaimedAmount(String uuid) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        try (Jedis jedis = pool.getResource()) {
+            int newClaimAmount = Integer.parseInt(jedis.hget("claimed", uuid)) + 1;
+            String sNewClaimAmount = String.valueOf(newClaimAmount);
+            jedis.hset("claimed", uuid, sNewClaimAmount);
+            return sNewClaimAmount;
+        }
+    }
+
+    private String subtractFromClaimedAmount(String uuid) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        try (Jedis jedis = pool.getResource()) {
+            int newClaimAmount = Integer.parseInt(jedis.hget("claimed", uuid)) - 1;
+            if (newClaimAmount < 0) newClaimAmount = 0;
+            String sNewClaimAmount = String.valueOf(newClaimAmount);
+            jedis.hset("claimed", uuid, sNewClaimAmount);
+            return sNewClaimAmount;
+        }
+    }
+
     public boolean isGlobalTrusted(UUID uuid, UUID trusted) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
@@ -630,6 +645,22 @@ public class Cache {
         }
     }
 
+    public List<String> getGlobalTrusted(UUID uuid) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getChunksPool();
+
+        String sUUID = String.valueOf(uuid);
+
+        try (Jedis jedis = pool.getResource()) {
+            String trusted = jedis.hget("trustedGlobal", sUUID);
+
+            if (!trusted.equals("0")) {
+                String[] split = StringUtils.split(trusted, ',');
+                return new ArrayList<>(Arrays.asList(split));
+            } else return Collections.singletonList("");
+        }
+    }
+
     public void removeGlobalTrusted(UUID uuid, UUID trusted) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
@@ -641,11 +672,10 @@ public class Cache {
         try (Jedis jedis = pool.getResource()) {
             String players = jedis.hget("trustedGlobal", sUUID);
             if (!players.equals("0")) {
-
                 List<String> trustedList = new ArrayList<>();
                 String[] split = StringUtils.split(players, ',');
                 for (String player : split) if (!player.equals(sTrusted)) trustedList.add(player);
-                String newTrusted = StringUtils.join(trustedList, ",");
+                String newTrusted = trustedList.isEmpty() ? "0" : StringUtils.join(trustedList, ",");
                 jedis.hset("trustedGlobal", sUUID, newTrusted);
 
                 Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setTrustedGlobal(sUUID, newTrusted));

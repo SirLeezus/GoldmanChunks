@@ -14,7 +14,6 @@ public abstract class PaginatedMenu extends Menu {
 
     public void addMenuBorder(){
         inventory.setItem(48, super.previousPageItem);
-        inventory.setItem(49, super.closeItem);
         inventory.setItem(50, super.nextPageItem);
 
         for (int i = 0; i < 10; i++) {

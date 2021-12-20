@@ -1,6 +1,7 @@
 package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
+import lee.code.chunks.PU;
 import lee.code.chunks.commands.SubCommand;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
@@ -44,12 +45,13 @@ public class Map extends SubCommand {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         UUID uuid = player.getUniqueId();
         Cache cache = plugin.getCache();
+        PU pu = plugin.getPU();
 
         List<Component> chunkMap = new ArrayList<>();
         List<Component> chunkSquare = new ArrayList<>();
 
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+        String chunkCord = pu.formatChunkLocation(chunk);
 
         chunkMap.add(Lang.COMMAND_MAP_HEADER.getComponent(null));
 
@@ -69,18 +71,18 @@ public class Map extends SubCommand {
                     String chunkSelected = world + "," + x + "," + z;
 
                     if ((chunkSelected).equals(chunkCord)) {
-                        chunkSquare.add(plugin.getPU().formatC("&9■").hoverEvent(plugin.getPU().formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
+                        chunkSquare.add(pu.formatC("&9■").hoverEvent(pu.formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
                     } else if (cache.isAdminChunk(chunkSelected)) {
-                        chunkSquare.add(plugin.getPU().formatC("&4■").hoverEvent(plugin.getPU().formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
+                        chunkSquare.add(pu.formatC("&4■").hoverEvent(pu.formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
                     } else if (cache.isChunkClaimed(chunkSelected)) {
                         UUID owner = cache.getChunkOwnerUUID(chunkSelected);
 
-                        if (cache.isChunkOwner(chunkSelected, uuid)) chunkSquare.add(plugin.getPU().formatC("&2■").hoverEvent(plugin.getPU().formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
-                        else if (cache.isChunkTrusted(chunkSelected, uuid)) chunkSquare.add(plugin.getPU().formatC("&a■").hoverEvent(plugin.getPU().formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
-                        else if (cache.isGlobalTrusted(owner, uuid)) chunkSquare.add(plugin.getPU().formatC("&a■").hoverEvent(plugin.getPU().formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
-                        else chunkSquare.add(plugin.getPU().formatC("&c■").hoverEvent(plugin.getPU().formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
+                        if (cache.isChunkOwner(chunkSelected, uuid)) chunkSquare.add(pu.formatC("&2■").hoverEvent(pu.formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
+                        else if (cache.isChunkTrusted(chunkSelected, uuid)) chunkSquare.add(pu.formatC("&a■").hoverEvent(pu.formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
+                        else if (cache.isGlobalTrusted(owner, uuid)) chunkSquare.add(pu.formatC("&a■").hoverEvent(pu.formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
+                        else chunkSquare.add(pu.formatC("&c■").hoverEvent(pu.formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
 
-                    } else chunkSquare.add(plugin.getPU().formatC("&7■").hoverEvent(plugin.getPU().formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
+                    } else chunkSquare.add(pu.formatC("&7■").hoverEvent(pu.formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
                     x++;
                 }
                 x = firstX;
@@ -94,18 +96,19 @@ public class Map extends SubCommand {
             }
             chunkMap.add(Lang.COMMAND_MAP_FOOTER.getComponent(null));
 
-            String line1 = plugin.getPU().format(" &e\\ &9&lN &e/ ");
-            String line2 = plugin.getPU().format(" &b&lW &6&l• &b&lE");
-            String line3 = plugin.getPU().format(" &e/ &b&lS &e\\");
+            String line1 = pu.format(" &e\\ &9&lN &e/ ");
+            String line2 = pu.format(" &b&lW &6&l• &b&lE");
+            String line3 = pu.format(" &e/ &b&lS &e\\");
 
             List<Component> lines = new ArrayList<>();
+            Component spacer = Component.text("");
 
             lines.add(Lang.COMMAND_MAP_KEY_HEADER.getComponent(null));
-            lines.add(Component.text(""));
+            lines.add(spacer);
             lines.add(Lang.COMMAND_MAP_LINE_1.getComponent(new String[] { line1 }));
             lines.add(Lang.COMMAND_MAP_LINE_2.getComponent(new String[] { line2 }));
             lines.add(Lang.COMMAND_MAP_LINE_3.getComponent(new String[] { line3 }));
-            lines.add(Component.text(""));
+            lines.add(spacer);
 
             for (Component line : lines) player.sendMessage(line);
             for (Component selectedChunk : chunkMap) player.sendMessage(selectedChunk);

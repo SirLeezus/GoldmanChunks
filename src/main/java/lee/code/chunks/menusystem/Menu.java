@@ -16,7 +16,6 @@ public abstract class Menu implements InventoryHolder {
     protected Inventory inventory;
     protected ItemStack fillerGlass = MenuItems.FILLER_GLASS.getItem();
     protected ItemStack backItem = MenuItems.BACK_MENU.getItem();
-    protected ItemStack closeItem = MenuItems.CLOSE_MENU.getItem();
     protected ItemStack trustedItem = MenuItems.TRUSTED.getItem();
     protected ItemStack globalTrustedItem = MenuItems.GLOBAL_TRUSTED.getItem();
     protected ItemStack generalSettingsItem = MenuItems.GENERAL.getItem();

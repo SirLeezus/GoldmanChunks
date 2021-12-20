@@ -1,6 +1,7 @@
 package lee.code.chunks.database;
 
 import lee.code.chunks.GoldmanChunks;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 
 import java.io.File;
@@ -303,6 +304,123 @@ public class SQLite {
                 count++;
             }
             Bukkit.getLogger().log(Level.INFO, plugin.getPU().format("&6Admin Chunk Claims Loaded: &a" + count));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void resetMainWorldChunks() {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
+
+        HashMap<String, String> unclaimChunks = new HashMap<>();
+        for (UUID uuid : cache.getUserList()) {
+            if (cache.hasClaimedChunks(uuid)) {
+                for (String chunk : cache.getChunkClaims(uuid)) {
+                    String[] split = chunk.split(",", 2);
+                    if (split.length > 1) {
+                        if (split[0].equals("world")) {
+                            unclaimChunks.put(chunk, uuid.toString());
+                        }
+                    }
+                }
+            }
+        }
+
+        String sqlQuery = "DELETE FROM chunks WHERE chunk = ?;";
+
+        HashMap<String, Integer> newClaimAmount = new HashMap<>();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(sqlQuery);
+
+            for (Map.Entry<String, String> user : unclaimChunks.entrySet()) {
+                pstmt.setString(1, user.getKey());
+                pstmt.addBatch();
+
+                newClaimAmount.put(user.getValue(), newClaimAmount.getOrDefault(user.getValue(), 0) + 1);
+            }
+
+            pstmt.executeBatch();
+            pstmt.close();
+
+            updateMaxClaims(newClaimAmount);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateMaxClaims(HashMap<String, Integer> newClaimAmount) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
+        String sqlQuery = "UPDATE player_data SET claimed = ? WHERE player = ?;";
+
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(sqlQuery);
+
+            for (Map.Entry<String, Integer> user : newClaimAmount.entrySet()) {
+                int saveNewClaimAmount = cache.getClaimedAmount(UUID.fromString(user.getKey())) - user.getValue();
+                pstmt.setString(1, String.valueOf(saveNewClaimAmount));
+                pstmt.setString(2, String.valueOf(user.getKey()));
+                pstmt.addBatch();
+
+                System.out.println("New Claim Amount: " + user.getKey() + " | " + saveNewClaimAmount);
+            }
+
+            pstmt.executeBatch();
+            pstmt.close();
+
+            resetAdminChunks();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void resetAdminChunks() {
+        String sqlQuery = "DELETE FROM admin_chunks WHERE chunk = ?;";
+
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
+
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(sqlQuery);
+
+            for (String chunk : cache.getAdminChunkClaims()) {
+                pstmt.setString(1, chunk);
+                pstmt.addBatch();
+            }
+
+            pstmt.executeBatch();
+            pstmt.close();
+
+            fixGlobalTrustedUser();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void fixGlobalTrustedUser() {
+        String sqlQuery = "UPDATE player_data SET trusted_global = ? WHERE player = ?;";
+
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
+
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(sqlQuery);
+
+            for (UUID uuid : cache.getUserList()) {
+                List<String> trusted = cache.getGlobalTrusted(uuid);
+                String newTrustedString = "0";
+                if (!trusted.isEmpty() && !trusted.get(0).equals("")) {
+                    newTrustedString = StringUtils.join(trusted, ",");
+                }
+
+                pstmt.setString(1, newTrustedString);
+                pstmt.setString(2, String.valueOf(uuid));
+                pstmt.addBatch();
+            }
+
+            pstmt.executeBatch();
+            pstmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
