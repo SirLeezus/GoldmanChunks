@@ -285,7 +285,7 @@ public class Cache {
                 List<String> trusted = new ArrayList<>();
                 String[] split = StringUtils.split(players, ',');
                 for (String player : split) if (!player.equals(sUUID)) trusted.add(player);
-                String newTrusted = StringUtils.join(trusted, ",");
+                String newTrusted = trusted.isEmpty() ? "0" : StringUtils.join(trusted, ",");
                 jedis.hset("chunkTrusted", chunk, newTrusted);
 
                 Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setChunkTrusted(chunk, newTrusted));
@@ -451,8 +451,10 @@ public class Cache {
         String sUUID = String.valueOf(uuid);
 
         try (Jedis jedis = pool.getResource()) {
-            int amount = Integer.parseInt(jedis.hget("claimed", sUUID));
-            return amount != 0;
+            if (jedis.hexists("claimed", sUUID)) {
+                int amount = Integer.parseInt(jedis.hget("claimed", sUUID));
+                return amount != 0;
+            } else return false;
         }
     }
 

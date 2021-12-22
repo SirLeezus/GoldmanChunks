@@ -4,7 +4,6 @@ import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.PU;
 import lee.code.chunks.database.Cache;
 import lee.code.chunks.lists.Lang;
-import lee.code.chunks.lists.MenuItems;
 import lee.code.chunks.menusystem.PaginatedMenu;
 import lee.code.chunks.menusystem.PlayerMU;
 import net.kyori.adventure.text.Component;
