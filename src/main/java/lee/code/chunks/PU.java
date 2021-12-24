@@ -130,12 +130,12 @@ public class PU {
         player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_TELEPORT_UNSAFE.getComponent(null)));
     }
 
-    public List<String> getChunksAroundPlayer(Player player) {
+    public List<String> getChunksAroundPlayer(Location location) {
         int[] offset = {-1, 0, 1};
 
-        World world = player.getWorld();
-        int baseX = player.getLocation().getChunk().getX();
-        int baseZ = player.getLocation().getChunk().getZ();
+        World world = location.getWorld();
+        int baseX = location.getChunk().getX();
+        int baseZ = location.getChunk().getZ();
 
         List<String> chunksAroundPlayer = new ArrayList<>();
         for (int x : offset) {

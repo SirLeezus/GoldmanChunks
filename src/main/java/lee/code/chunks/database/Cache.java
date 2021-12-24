@@ -643,7 +643,7 @@ public class Cache {
                 String[] split = StringUtils.split(trusted, ',');
                 for (String player : split) players.add(Bukkit.getOfflinePlayer(UUID.fromString(player)).getName());
                 return players;
-            } else return Collections.singletonList("");
+            } else return new ArrayList<>();
         }
     }
 

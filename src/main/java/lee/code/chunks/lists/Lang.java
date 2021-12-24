@@ -19,7 +19,7 @@ public enum Lang {
     MESSAGE_HELP_TITLE("                      &6-== &e&l&nChunk Help&r &6==-"),
     MESSAGE_HELP_SUB_COMMAND("&3{0}&b. &e{1} &c| &7{2}"),
     ERROR_NO_PERMISSION("&cYou sadly do not have permission for this."),
-    ERROR_PVP_DISABLED("&c&lPvP is disabled in this chunk!"),
+    ERROR_PVP_DISABLED("{0} &7| &6&lOwner&7: &2{1}"),
     ERROR_NO_CLAIM_PERMISSION_ADMIN_CHUNK("&4&lAdmin Chunk"),
     ERROR_NO_CLAIM_PERMISSION("&6&lTrusted&7: {0} &7| {1} &7| &6&lOwner&7: &2{2}"),
     ERROR_CLAIMED("&cThis chunk has already been claimed by &6{0}&c."),
@@ -140,6 +140,7 @@ public enum Lang {
     ITEM_SETTINGS_INTERACT_NAME("&6&lInteract&7: {0}"),
     ITEM_SETTINGS_PVP_NAME("&6&lPvP&7: {0}"),
     ITEM_SETTINGS_PVE_NAME("&6&lPvE&7: {0}"),
+    ITEM_SETTINGS_PORTAL_NAME("&6&lUse Portals&7: {0}"),
     ITEM_SETTINGS_MONSTER_SPAWNING_NAME("&6&lMonster Spawning&7: {0}"),
     ITEM_SETTINGS_EXPLOSIONS_NAME("&6&lExplosions&7: {0}"),
     ;

@@ -43,7 +43,8 @@ public class ChunkListener implements Listener {
             case BREAK -> Lang.ERROR_NO_CLAIM_PERMISSION.getComponent(new String[] { messageTrusted, Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.FALSE.getString(null)}), name });
             case INTERACT -> Lang.ERROR_NO_CLAIM_PERMISSION.getComponent(new String[] { messageTrusted, Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.FALSE.getString(null)}), name });
             case PVE -> Lang.ERROR_NO_CLAIM_PERMISSION.getComponent(new String[] { messageTrusted, Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[]{Lang.FALSE.getString(null)}), name });
-            case PVP -> Lang.ERROR_PVP_DISABLED.getComponent(null);
+            case PVP -> Lang.ERROR_PVP_DISABLED.getComponent(new String[] { Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[]{Lang.FALSE.getString(null)}), name });
+            case PORTAL -> Lang.ERROR_NO_CLAIM_PERMISSION.getComponent(new String[] { messageTrusted, Lang.ITEM_SETTINGS_PORTAL_NAME.getString(new String[]{Lang.FALSE.getString(null)}), name });
             case ADMIN -> Lang.ERROR_NO_CLAIM_PERMISSION_ADMIN_CHUNK.getComponent(null);
             default -> Component.text("ERROR");
         };
@@ -589,7 +590,7 @@ public class ChunkListener implements Listener {
 
             if (!cache.isChunkClaimed(chunkCord)) {
                 if (!cache.isAdminChunk(chunkCord)) {
-                    List<String> chunksAroundPlayer = plugin.getPU().getChunksAroundPlayer(player);
+                    List<String> chunksAroundPlayer = plugin.getPU().getChunksAroundPlayer(player.getLocation());
                     String lastChunkClaim = data.getPlayerLastAutoClaim(uuid);
                     if (chunksAroundPlayer.contains(lastChunkClaim)) {
 
@@ -638,24 +639,32 @@ public class ChunkListener implements Listener {
 
     //portal claim check
     @EventHandler
-    public void onPortalCreate(PlayerPortalEvent e) {
+    public void onPortalUse(PlayerPortalEvent e) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Data data = plugin.getData();
         Cache cache = plugin.getCache();
+        PU pu = plugin.getPU();
 
-        UUID uuid = e.getPlayer().getUniqueId();
+        Player player = e.getPlayer();
+        UUID uuid = player.getUniqueId();
         Chunk chunk = e.getTo().getChunk();
-        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+        String chunkCord = pu.formatChunkLocation(chunk);
 
         if (!e.getTo().getWorld().getEnvironment().equals(World.Environment.THE_END)) {
-            if (cache.isChunkClaimed(chunkCord)) {
-                if (!data.hasAdminBypass(uuid)) {
+            if (!data.hasAdminBypass(uuid)) {
+                if (cache.isChunkClaimed(chunkCord)) {
                     UUID ownerUUID = cache.getChunkOwnerUUID(chunkCord);
                     if (!cache.isChunkOwner(chunkCord, uuid)) {
-                        if (!cache.isChunkTrusted(chunkCord, uuid) && !cache.isGlobalTrusted(ownerUUID, uuid)) e.setCancelled(true);
+                        if (!cache.isChunkTrusted(chunkCord, uuid) && !cache.isGlobalTrusted(ownerUUID, uuid)) {
+                            e.setCancelled(true);
+                            warnMessage(player, false, ownerUUID, ChunkWarnings.PORTAL);
+                        }
                     }
+                } else if (cache.isAdminChunk(chunkCord)) {
+                    e.setCancelled(true);
+                    warnMessage(player, false, uuid, ChunkWarnings.ADMIN);
                 }
-            } else if (cache.isAdminChunk(chunkCord)) e.setCancelled(true);
+            }
         }
     }
 

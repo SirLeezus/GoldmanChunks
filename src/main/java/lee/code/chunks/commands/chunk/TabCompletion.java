@@ -40,9 +40,7 @@ public class TabCompletion implements TabCompleter {
                     if (cache.isChunkClaimed(chunkCord) && cache.isChunkOwner(chunkCord, uuid)) return StringUtil.copyPartialMatches(args[1], cache.getChunkTrustedNames(chunkCord), new ArrayList<>());
                 }
             } else if (args[0].equals("untrustall")) {
-                if (args.length == 2) {
-                    return StringUtil.copyPartialMatches(args[1], cache.getGlobalTrustedNames(uuid), new ArrayList<>());
-                }
+                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], cache.getGlobalTrustedNames(uuid), new ArrayList<>());
             } else if (args[0].equals("teleport")) {
                 if (args.length == 2) return StringUtil.copyPartialMatches(args[1], cache.getChunkClaims(uuid), new ArrayList<>());
             } else if (args[0].equals("admin")) {

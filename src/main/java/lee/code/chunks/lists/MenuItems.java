@@ -14,7 +14,7 @@ import java.util.List;
 
 @AllArgsConstructor
 public enum MenuItems {
-    FILLER_GLASS(Material.GRAY_STAINED_GLASS_PANE, "&r", null, null),
+    FILLER_GLASS(Material.BLACK_STAINED_GLASS_PANE, "&r", null, null),
     BACK_MENU(Material.BARRIER, "&6&l<- Back", null, null),
     NEXT_PAGE(Material.PAPER, "&eNext Page >", null, null),
     PREVIOUS_PAGE(Material.PAPER, "&e< Previous Page", null, null),
