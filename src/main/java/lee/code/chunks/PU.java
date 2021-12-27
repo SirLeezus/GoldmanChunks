@@ -207,4 +207,8 @@ public class PU {
         }
         head.setItemMeta(skullMeta);
     }
+
+    public boolean containOnlyNumbers(String string) {
+        return string.matches("[0-9]+");
+    }
 }

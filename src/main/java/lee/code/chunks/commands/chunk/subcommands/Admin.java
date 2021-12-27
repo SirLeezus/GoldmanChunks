@@ -12,7 +12,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Scanner;
 import java.util.UUID;
 
 public class Admin extends SubCommand {
@@ -85,8 +84,7 @@ public class Admin extends SubCommand {
                         case 4 -> player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_ADMIN_BONUS_CLAIMS_ARG_4.getComponent(null)));
 
                         default -> {
-                            Scanner sellScanner = new Scanner(args[4]);
-                            if (sellScanner.hasNextInt()) {
+                            if (pu.containOnlyNumbers(args[4])) {
                                 int amount = Integer.parseInt(args[4]);
                                 OfflinePlayer target = Bukkit.getOfflinePlayerIfCached(args[3]);
                                 if (target != null) {
@@ -131,8 +129,7 @@ public class Admin extends SubCommand {
                     case 4 -> console.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_ADMIN_BONUS_CLAIMS_ARG_4.getComponent(null)));
 
                     default -> {
-                        Scanner sellScanner = new Scanner(args[4]);
-                        if (sellScanner.hasNextInt()) {
+                        if (pu.containOnlyNumbers(args[4])) {
                             int amount = Integer.parseInt(args[4]);
                             OfflinePlayer target = Bukkit.getOfflinePlayerIfCached(args[3]);
                             if (target != null) {

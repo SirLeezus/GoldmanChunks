@@ -11,7 +11,6 @@ import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Scanner;
 import java.util.UUID;
 
 public class SetPrice extends SubCommand {
@@ -43,8 +42,7 @@ public class SetPrice extends SubCommand {
         PU pu = plugin.getPU();
 
         if (args.length > 1) {
-            Scanner valueScanner = new Scanner(args[1]);
-            if (valueScanner.hasNextInt()) {
+            if (pu.containOnlyNumbers(args[1])) {
                 long value = Long.parseLong(args[1]);
                 if (value < Settings.CHUNK_SELL_PRICE_MAX.getValue()) {
                     UUID uuid = player.getUniqueId();
