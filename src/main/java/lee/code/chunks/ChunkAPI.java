@@ -103,4 +103,19 @@ public class ChunkAPI {
         } else if (cache.isAdminChunk(chunkCord)) return data.hasAdminBypass(uuid);
         return true;
     }
+
+    public boolean canInteractInChunk(UUID uuid, Chunk chunk) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Cache cache = plugin.getCache();
+        Data data = plugin.getData();
+        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+        if (cache.isChunkClaimed(chunkCord)) {
+            UUID oUUID = cache.getChunkOwnerUUID(chunkCord);
+            if (cache.isChunkOwner(chunkCord, uuid)) return true;
+            else if (cache.isChunkTrusted(chunkCord, uuid)) return cache.canChunkTrustedSetting(ChunkTrustedSettings.INTERACT, chunkCord);
+            else if (cache.isGlobalTrusted(oUUID, uuid)) return cache.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSettings.INTERACT, oUUID);
+            else return data.hasAdminBypass(uuid);
+        } else if (cache.isAdminChunk(chunkCord)) return data.hasAdminBypass(uuid);
+        return true;
+    }
 }
