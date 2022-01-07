@@ -4,7 +4,6 @@ import lee.code.cache.CacheAPI;
 import lee.code.chunks.commands.adminchunk.AdminCommandManager;
 import lee.code.chunks.commands.adminchunk.AdminTabCompletion;
 import lee.code.chunks.database.Cache;
-import lee.code.chunks.listeners.ChunkCheckerListener;
 import lee.code.chunks.listeners.ChunkListener;
 import lee.code.chunks.commands.chunk.CommandManager;
 import lee.code.chunks.commands.chunk.TabCompletion;
@@ -64,7 +63,6 @@ public class GoldmanChunks extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ChunkListener(), this);
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
         getServer().getPluginManager().registerEvents(new JoinQuitListener(), this);
-        getServer().getPluginManager().registerEvents(new ChunkCheckerListener(), this);
     }
 
     public static GoldmanChunks getPlugin() {
