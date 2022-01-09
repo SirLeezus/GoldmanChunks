@@ -9,7 +9,6 @@ public enum ChunkAdminSettings {
     BREAK("adminChunkBreak", "break"),
     EXPLOSIONS("adminChunkExplode", "explosions"),
     INTERACT("adminChunkInteract", "interact"),
-    PVP("adminChunkPvP", "pvp"),
     PVE("adminChunkPvE", "pve"),
     MONSTERS("adminChunkMonsters", "monster_spawning"),
     ;

@@ -6,7 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ChunkSettings {
     EXPLOSIONS("chunkExplode", "explosions"),
-    PVP("chunkPvP", "pvp"),
     MONSTERS("chunkMonsters", "monster_spawning"),
     ;
 

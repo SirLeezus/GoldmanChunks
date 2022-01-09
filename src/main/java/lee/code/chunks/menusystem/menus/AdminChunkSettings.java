@@ -108,17 +108,6 @@ public class AdminChunkSettings extends Menu {
             inventory.setItem(14, deny);
         }
 
-        if (cache.canAdminChunkSetting(ChunkAdminSettings.PVP, chunkCord)) {
-            allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
-            allow.setItemMeta(allowMeta);
-            inventory.setItem(15, allow);
-
-        } else {
-            denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.FALSE.getString(null) })));
-            deny.setItemMeta(denyMeta);
-            inventory.setItem(15, deny);
-        }
-
         if (cache.canAdminChunkSetting(ChunkAdminSettings.PVE, chunkCord)) {
             allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
             allow.setItemMeta(allowMeta);
@@ -181,13 +170,6 @@ public class AdminChunkSettings extends Menu {
                     inventory.setItem(slot, allow);
                     playClickOnSound(player);
                 }
-                case 15 -> {
-                    allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
-                    allow.setItemMeta(allowMeta);
-                    cache.setAdminChunkSetting(ChunkAdminSettings.PVP, chunkCord, true);
-                    inventory.setItem(slot, allow);
-                    playClickOnSound(player);
-                }
                 case 16 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
@@ -232,13 +214,6 @@ public class AdminChunkSettings extends Menu {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
                     cache.setAdminChunkSetting(ChunkAdminSettings.MONSTERS, chunkCord, false);
-                    inventory.setItem(slot, deny);
-                    playClickOffSound(player);
-                }
-                case 15 -> {
-                    denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
-                    deny.setItemMeta(denyMeta);
-                    cache.setAdminChunkSetting(ChunkAdminSettings.PVP, chunkCord, false);
                     inventory.setItem(slot, deny);
                     playClickOffSound(player);
                 }

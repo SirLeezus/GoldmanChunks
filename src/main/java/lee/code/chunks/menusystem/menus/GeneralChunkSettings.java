@@ -40,10 +40,12 @@ public class GeneralChunkSettings extends Menu {
         if (clickedItem.getType().equals(Material.AIR)) return;
         if (clickedItem.equals(fillerGlass)) return;
 
+        Chunk chunk = player.getLocation().getChunk();
+
         switch (e.getSlot()) {
-            case 11 -> updatePermItem(player, clickedItem, 11, player.getLocation().getChunk());
-            case 13 -> updatePermItem(player, clickedItem, 13, player.getLocation().getChunk());
-            case 15 -> updatePermItem(player, clickedItem, 15, player.getLocation().getChunk());
+            case 11 -> updatePermItem(player, clickedItem, 11, chunk);
+            case 13 -> updatePermItem(player, clickedItem, 13, chunk);
+            case 15 -> updatePermItem(player, clickedItem, 15, chunk);
             case 31 -> {
                 new ChunkManager(pmu).open();
                 playClickSound(player);
@@ -76,18 +78,6 @@ public class GeneralChunkSettings extends Menu {
             denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[] { Lang.FALSE.getString(null) })));
             deny.setItemMeta(denyMeta);
             inventory.setItem(11, deny);
-        }
-
-        //chunk pvp
-        if (cache.canChunkSetting(ChunkSettings.PVP, chunkCord)) {
-            allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
-            allow.setItemMeta(allowMeta);
-            inventory.setItem(13, allow);
-
-        } else {
-            denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[] { Lang.FALSE.getString(null) })));
-            deny.setItemMeta(denyMeta);
-            inventory.setItem(13, deny);
         }
 
         //chunk explosions
@@ -127,13 +117,6 @@ public class GeneralChunkSettings extends Menu {
                     inventory.setItem(slot, allow);
                     playClickOnSound(player);
                 }
-                case 13 -> {
-                    allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
-                    allow.setItemMeta(allowMeta);
-                    cache.setChunkSetting(ChunkSettings.PVP, chunkCord, true);
-                    inventory.setItem(slot, allow);
-                    playClickOnSound(player);
-                }
                 case 15 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
@@ -150,13 +133,6 @@ public class GeneralChunkSettings extends Menu {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
                     cache.setChunkSetting(ChunkSettings.MONSTERS, chunkCord, false);
-                    inventory.setItem(slot, deny);
-                    playClickOffSound(player);
-                }
-                case 13 -> {
-                    denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVP_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
-                    deny.setItemMeta(denyMeta);
-                    cache.setChunkSetting(ChunkSettings.PVP, chunkCord, false);
                     inventory.setItem(slot, deny);
                     playClickOffSound(player);
                 }

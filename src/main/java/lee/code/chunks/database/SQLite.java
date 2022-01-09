@@ -74,7 +74,6 @@ public class SQLite {
                 "`break` varchar NOT NULL," +
                 "`interact` varchar NOT NULL," +
                 "`pve` varchar NOT NULL," +
-                "`pvp` varchar NOT NULL," +
                 "`monster_spawning` varchar NOT NULL," +
                 "`explosions` varchar NOT NULL," +
                 "`price` varchar NOT NULL" +
@@ -87,7 +86,6 @@ public class SQLite {
                 "`break` varchar NOT NULL," +
                 "`interact` varchar NOT NULL," +
                 "`pve` varchar NOT NULL," +
-                "`pvp` varchar NOT NULL," +
                 "`monster_spawning` varchar NOT NULL," +
                 "`explosions` varchar NOT NULL" +
                 ");");
@@ -110,7 +108,7 @@ public class SQLite {
     //CHUNKS TABLE
 
     public void claimChunk(String chunk, UUID uuid, String amount) {
-        update("INSERT OR REPLACE INTO chunks (chunk, owner, trusted, build, break, interact, pve, pvp, monster_spawning, explosions, price) VALUES( '" + chunk + "','" + uuid + "', '0', '1', '1', '1', '1', '0', '0', '0', '0');");
+        update("INSERT OR REPLACE INTO chunks (chunk, owner, trusted, build, break, interact, pve, monster_spawning, explosions, price) VALUES( '" + chunk + "','" + uuid + "', '0', '1', '1', '1', '1', '0', '0', '0');");
         update("UPDATE player_data SET claimed ='" + amount + "' WHERE player ='" + uuid + "';");
     }
 
@@ -160,7 +158,7 @@ public class SQLite {
     }
 
     public void claimBulkAdminChunks(List<String> chunks) {
-        String sqlQuery = "INSERT OR REPLACE INTO admin_chunks values (?,?,?,?,?,?,?,?)";
+        String sqlQuery = "INSERT OR REPLACE INTO admin_chunks values (?,?,?,?,?,?,?)";
         try {
             PreparedStatement pstmt = connection.prepareStatement(sqlQuery);
 
@@ -172,7 +170,6 @@ public class SQLite {
                 pstmt.setString(5, "0");
                 pstmt.setString(6, "0");
                 pstmt.setString(7, "0");
-                pstmt.setString(8, "0");
                 pstmt.addBatch();
             }
             pstmt.executeBatch();
@@ -183,7 +180,7 @@ public class SQLite {
     }
 
     public void claimAdminChunk(String chunk) {
-        update("INSERT OR REPLACE INTO admin_chunks (chunk, build, break, interact, pve, pvp, monster_spawning, explosions) VALUES( '" + chunk + "', '0', '0', '0', '0', '0', '0', '0');");
+        update("INSERT OR REPLACE INTO admin_chunks (chunk, build, break, interact, pve, monster_spawning, explosions) VALUES( '" + chunk + "', '0', '0', '0', '0', '0', '0');");
     }
 
     public void unclaimBulkAdminChunks(List<String> chunks) {
@@ -243,11 +240,10 @@ public class SQLite {
                 String canTrustedBreak = rs.getString("break");
                 String canTrustedInteract = rs.getString("interact");
                 String canTrustedPvE = rs.getString("pve");
-                String canPvP = rs.getString("pvp");
                 String canSpawnMonsters = rs.getString("monster_spawning");
                 String canExplode = rs.getString("explosions");
                 String chunkPrice = rs.getString("price");
-                cache.setChunk(chunk, uuid, trusted, canTrustedBuild, canTrustedBreak, canTrustedInteract, canTrustedPvE, canPvP, canSpawnMonsters, canExplode, chunkPrice);
+                cache.setChunk(chunk, uuid, trusted, canTrustedBuild, canTrustedBreak, canTrustedInteract, canTrustedPvE, canSpawnMonsters, canExplode, chunkPrice);
                 count++;
             }
             Bukkit.getLogger().log(Level.INFO, plugin.getPU().format("&6Chunk Claims Loaded: &a" + count));
@@ -297,130 +293,12 @@ public class SQLite {
                 String canBreak = rs.getString("break");
                 String canInteract = rs.getString("interact");
                 String canPvE = rs.getString("pve");
-                String canPvP = rs.getString("pvp");
                 String canSpawnMonsters = rs.getString("monster_spawning");
                 String canExplode = rs.getString("explosions");
-                cache.setAdminChunk(chunk, canBuild, canBreak, canInteract, canPvE, canPvP, canSpawnMonsters, canExplode);
+                cache.setAdminChunk(chunk, canBuild, canBreak, canInteract, canPvE, canSpawnMonsters, canExplode);
                 count++;
             }
             Bukkit.getLogger().log(Level.INFO, plugin.getPU().format("&6Admin Chunk Claims Loaded: &a" + count));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void resetMainWorldChunks() {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
-
-        HashMap<String, String> unclaimChunks = new HashMap<>();
-        for (UUID uuid : cache.getUserList()) {
-            if (cache.hasClaimedChunks(uuid)) {
-                for (String chunk : cache.getChunkClaims(uuid)) {
-                    String[] split = chunk.split(",", 2);
-                    if (split.length > 1) {
-                        if (split[0].equals("world")) {
-                            unclaimChunks.put(chunk, uuid.toString());
-                        }
-                    }
-                }
-            }
-        }
-
-        String sqlQuery = "DELETE FROM chunks WHERE chunk = ?;";
-
-        HashMap<String, Integer> newClaimAmount = new HashMap<>();
-        try {
-            PreparedStatement pstmt = connection.prepareStatement(sqlQuery);
-
-            for (Map.Entry<String, String> user : unclaimChunks.entrySet()) {
-                pstmt.setString(1, user.getKey());
-                pstmt.addBatch();
-
-                newClaimAmount.put(user.getValue(), newClaimAmount.getOrDefault(user.getValue(), 0) + 1);
-            }
-
-            pstmt.executeBatch();
-            pstmt.close();
-
-            updateMaxClaims(newClaimAmount);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void updateMaxClaims(HashMap<String, Integer> newClaimAmount) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
-        String sqlQuery = "UPDATE player_data SET claimed = ? WHERE player = ?;";
-
-        try {
-            PreparedStatement pstmt = connection.prepareStatement(sqlQuery);
-
-            for (Map.Entry<String, Integer> user : newClaimAmount.entrySet()) {
-                int saveNewClaimAmount = cache.getClaimedAmount(UUID.fromString(user.getKey())) - user.getValue();
-                pstmt.setString(1, String.valueOf(saveNewClaimAmount));
-                pstmt.setString(2, String.valueOf(user.getKey()));
-                pstmt.addBatch();
-
-                System.out.println("New Claim Amount: " + user.getKey() + " | " + saveNewClaimAmount);
-            }
-
-            pstmt.executeBatch();
-            pstmt.close();
-
-            resetAdminChunks();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void resetAdminChunks() {
-        String sqlQuery = "DELETE FROM admin_chunks WHERE chunk = ?;";
-
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
-
-        try {
-            PreparedStatement pstmt = connection.prepareStatement(sqlQuery);
-
-            for (String chunk : cache.getAdminChunkClaims()) {
-                pstmt.setString(1, chunk);
-                pstmt.addBatch();
-            }
-
-            pstmt.executeBatch();
-            pstmt.close();
-
-            fixGlobalTrustedUser();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void fixGlobalTrustedUser() {
-        String sqlQuery = "UPDATE player_data SET trusted_global = ? WHERE player = ?;";
-
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
-
-        try {
-            PreparedStatement pstmt = connection.prepareStatement(sqlQuery);
-
-            for (UUID uuid : cache.getUserList()) {
-                List<String> trusted = cache.getGlobalTrusted(uuid);
-                String newTrustedString = "0";
-                if (!trusted.isEmpty() && !trusted.get(0).equals("")) {
-                    newTrustedString = StringUtils.join(trusted, ",");
-                }
-
-                pstmt.setString(1, newTrustedString);
-                pstmt.setString(2, String.valueOf(uuid));
-                pstmt.addBatch();
-            }
-
-            pstmt.executeBatch();
-            pstmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

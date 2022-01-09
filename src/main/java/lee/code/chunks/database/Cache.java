@@ -36,7 +36,6 @@ public class Cache {
             pipe.hset("chunkTrustedPvE", chunk, "1");
             pipe.hset("chunkMonsters", chunk, "0");
             pipe.hset("chunkExplode", chunk, "0");
-            pipe.hset("chunkPvP", chunk, "0");
             pipe.hset("chunkPrice", chunk, "0");
             pipe.sync();
 
@@ -47,7 +46,7 @@ public class Cache {
         }
     }
 
-    public void setChunk(String chunk, String uuid, String trusted, String canTrustedBuild, String canTrustedBreak, String canTrustedInteract, String canTrustedPvE, String canPvP, String canSpawnMonsters, String canExplode, String chunkPrice) {
+    public void setChunk(String chunk, String uuid, String trusted, String canTrustedBuild, String canTrustedBreak, String canTrustedInteract, String canTrustedPvE, String canSpawnMonsters, String canExplode, String chunkPrice) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
@@ -59,7 +58,6 @@ public class Cache {
             pipe.hset("chunkTrustedBreak", chunk, canTrustedBreak);
             pipe.hset("chunkTrustedInteract", chunk, canTrustedInteract);
             pipe.hset("chunkTrustedPvE", chunk, canTrustedPvE);
-            pipe.hset("chunkPvP", chunk, canPvP);
             pipe.hset("chunkMonsters", chunk, canSpawnMonsters);
             pipe.hset("chunkExplode", chunk, canExplode);
             pipe.hset("chunkPrice", chunk, chunkPrice);
@@ -809,7 +807,6 @@ public class Cache {
                 pipe.hset("adminChunkBreak", chunk, "0");
                 pipe.hset("adminChunkInteract", chunk, "0");
                 pipe.hset("adminChunkPvE", chunk, "0");
-                pipe.hset("adminChunkPvP", chunk, "0");
                 pipe.hset("adminChunkMonsters", chunk, "0");
                 pipe.hset("adminChunkExplode", chunk, "0");
                 pipe.sync();
@@ -833,7 +830,6 @@ public class Cache {
             pipe.hset("adminChunkBreak", chunk, "0");
             pipe.hset("adminChunkInteract", chunk, "0");
             pipe.hset("adminChunkPvE", chunk, "0");
-            pipe.hset("adminChunkPvP", chunk, "0");
             pipe.hset("adminChunkMonsters", chunk, "0");
             pipe.hset("adminChunkExplode", chunk, "0");
             pipe.sync();
@@ -844,7 +840,7 @@ public class Cache {
         }
     }
 
-    public void setAdminChunk(String chunk, String canBuild, String canBreak, String canInteract, String canPvE, String canPvP, String canSpawnMonsters, String canExplode) {
+    public void setAdminChunk(String chunk, String canBuild, String canBreak, String canInteract, String canPvE, String canSpawnMonsters, String canExplode) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getChunksPool();
 
@@ -854,7 +850,6 @@ public class Cache {
             pipe.hset("adminChunkBreak", chunk, canBreak);
             pipe.hset("adminChunkInteract", chunk, canInteract);
             pipe.hset("adminChunkPvE", chunk, canPvE);
-            pipe.hset("adminChunkPvP", chunk, canPvP);
             pipe.hset("adminChunkMonsters", chunk, canSpawnMonsters);
             pipe.hset("adminChunkExplode", chunk, canExplode);
             pipe.sync();
@@ -875,7 +870,6 @@ public class Cache {
                 jedis.hdel("adminChunkBreak", chunk);
                 jedis.hdel("adminChunkInteract", chunk);
                 jedis.hdel("adminChunkPvE", chunk);
-                jedis.hdel("adminChunkPvP", chunk);
                 jedis.hdel("adminChunkMonsters", chunk);
                 jedis.hdel("adminChunkExplode", chunk);
 
