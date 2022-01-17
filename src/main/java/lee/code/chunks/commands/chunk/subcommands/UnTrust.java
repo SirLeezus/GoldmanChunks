@@ -22,7 +22,7 @@ public class UnTrust extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Untrust a player from the chunk you're standing on.";
+        return "Untrusts a player from the chunk you're standing on.";
     }
 
     @Override

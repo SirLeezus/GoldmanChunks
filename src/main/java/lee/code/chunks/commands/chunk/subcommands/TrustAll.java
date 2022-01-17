@@ -20,7 +20,7 @@ public class TrustAll extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Add a player to your global trust list.";
+        return "Adds a player to your global trust list.";
     }
 
     @Override

@@ -22,7 +22,7 @@ public class SetPrice extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Set the price of the chunk you're standing on.";
+        return "Sets the price of the chunk you're standing on.";
     }
 
     @Override

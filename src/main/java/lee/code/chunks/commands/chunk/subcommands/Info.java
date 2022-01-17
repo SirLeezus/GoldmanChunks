@@ -23,7 +23,7 @@ public class Info extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Display info about the chunk you're standing on in chat.";
+        return "Displays info about the chunk you're standing on.";
     }
 
     @Override

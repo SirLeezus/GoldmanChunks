@@ -18,7 +18,7 @@ public class Bypass extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Bypass all claimed chunks.";
+        return "Bypasses all claimed chunks.";
     }
 
     @Override

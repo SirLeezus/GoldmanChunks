@@ -19,7 +19,7 @@ public class Claim extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Select a group of chunks to claim.";
+        return "Claims the chunk you're standing on as a admin chunk.";
     }
 
     @Override

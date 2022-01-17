@@ -22,9 +22,7 @@ public class Trusted extends SubCommand {
     }
 
     @Override
-    public String getDescription() {
-        return "Check your global and chunk trusted players.";
-    }
+    public String getDescription() { return "Checks your global and chunk trusted players on the chunk you're standing on."; }
 
     @Override
     public String getSyntax() {

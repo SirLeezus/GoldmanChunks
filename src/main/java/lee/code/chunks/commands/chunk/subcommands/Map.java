@@ -27,7 +27,7 @@ public class Map extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Display a map of chunks around you in chat.";
+        return "Displays a map of chunks around you.";
     }
 
     @Override

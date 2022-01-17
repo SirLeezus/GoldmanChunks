@@ -17,7 +17,7 @@ public class ChunkList extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Opens your chunks claimed menu.";
+        return "Opens a menu of all your claimed chunks.";
     }
 
     @Override

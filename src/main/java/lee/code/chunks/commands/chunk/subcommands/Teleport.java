@@ -20,7 +20,7 @@ public class Teleport extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Teleport to a chunk you own.";
+        return "Teleports you to a chunk you own.";
     }
 
     @Override

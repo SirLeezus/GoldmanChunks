@@ -27,7 +27,7 @@ public class Selection extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Select a group of chunks.";
+        return "Selects a group of chunks.";
     }
 
     @Override

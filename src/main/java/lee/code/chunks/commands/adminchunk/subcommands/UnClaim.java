@@ -19,7 +19,7 @@ public class UnClaim extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Unclaim a group of admin chunks.";
+        return "Unclaims the chunk you're standing on as a admin chunk.";
     }
 
     @Override

@@ -21,7 +21,7 @@ public class Manage extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Change the settings of the admin chunk you are standing on.";
+        return "Opens a menu to manage admin chunk settings.";
     }
 
     @Override

@@ -20,7 +20,7 @@ public class AutoClaim extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Toggle auto claim to claim chunks as you walk.";
+        return "Toggles auto claim which claims chunks as you walk.";
     }
 
     @Override

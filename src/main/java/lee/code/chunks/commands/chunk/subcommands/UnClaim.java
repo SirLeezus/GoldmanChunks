@@ -21,7 +21,7 @@ public class UnClaim extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Unclaim the chunk you're standing on.";
+        return "Unclaims the chunk you're standing on.";
     }
 
     @Override

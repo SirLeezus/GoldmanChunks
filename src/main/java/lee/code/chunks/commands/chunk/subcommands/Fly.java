@@ -19,7 +19,7 @@ public class Fly extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Toggle fly in claimed or trusted chunks.";
+        return "Toggles fly in claimed or trusted chunks.";
     }
 
     @Override

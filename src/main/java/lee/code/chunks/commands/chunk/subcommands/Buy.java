@@ -23,7 +23,7 @@ public class Buy extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Buy the chunk you're standing on.";
+        return "Buys the chunk you're standing on.";
     }
 
     @Override

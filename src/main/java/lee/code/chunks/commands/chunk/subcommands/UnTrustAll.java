@@ -20,7 +20,7 @@ public class UnTrustAll extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Remove a player from your global trust list.";
+        return "Removes a player from your global trust list.";
     }
 
     @Override

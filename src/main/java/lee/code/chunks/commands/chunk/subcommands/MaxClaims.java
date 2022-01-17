@@ -24,7 +24,7 @@ public class MaxClaims extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Display info in chat regarding claims.";
+        return "Displays info regarding max claims.";
     }
 
     @Override

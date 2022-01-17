@@ -23,7 +23,7 @@ public class Claim extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Claim the chunk you're standing on.";
+        return "Claims the chunk you're standing on.";
     }
 
     @Override

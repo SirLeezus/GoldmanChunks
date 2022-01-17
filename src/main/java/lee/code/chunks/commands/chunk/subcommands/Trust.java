@@ -22,7 +22,7 @@ public class Trust extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Trust the player to the chunk you're standing on.";
+        return "Trusts a player to the chunk you're standing on.";
     }
 
     @Override

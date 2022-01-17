@@ -209,6 +209,6 @@ public class PU {
     }
 
     public boolean containOnlyNumbers(String string) {
-        return string.matches("[0-9]+");
+        return string.matches("-?[1-9]\\d*|0");
     }
 }

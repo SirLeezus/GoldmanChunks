@@ -19,7 +19,7 @@ public class AbandonAllClaims extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Unclaim all the chunks you own.";
+        return "Unclaims all the chunks you own.";
     }
 
     @Override
