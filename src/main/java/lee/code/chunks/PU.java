@@ -106,20 +106,23 @@ public class PU {
     public void teleportPlayerToChunk(Player player, Location location) {
         World world = location.getWorld();
 
-        int y = location.getBlockY();
+        int y = 200;
         int x = location.getBlockX() + 8;
         int z = location.getBlockZ() + 8;
         float yaw = location.getYaw();
         float pitch = location.getPitch();
 
+        Material[] blackList = new Material[] { Material.AIR, Material.CAVE_AIR, Material.VOID_AIR, Material.LAVA, Material.BEDROCK };
+        Material[] whiteList = new Material[] { Material.AIR, Material.CAVE_AIR, Material.VOID_AIR};
+
         if (world.getWorldBorder().isInside(location)) {
-            world.loadChunk(location.getChunk());
-            for (int i = y; i > 0; i--) {
+            world.getChunkAtAsync(location, false);
+            for (int i = y; i > 50; i--) {
                 Location loc = new Location(world, x, i, z, yaw, pitch);
-                if (loc.getBlock().getType() == Material.AIR) {
+                if (Arrays.asList(whiteList).contains(loc.getBlock().getType())) {
                     Location ground = loc.subtract(0, 1, 0);
-                    Block block = ground.getBlock();
-                    if (block.getType() != Material.AIR && block.getType() != Material.LAVA) {
+                    Block groundBlock = ground.getBlock();
+                    if (!Arrays.asList(blackList).contains(groundBlock.getType())) {
                         player.teleportAsync(loc.add(0, 1, 0));
                         player.sendActionBar(Lang.TELEPORT.getComponent(null));
                         return;

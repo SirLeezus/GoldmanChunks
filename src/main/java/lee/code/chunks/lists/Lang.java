@@ -135,6 +135,7 @@ public enum Lang {
     MENU_GENERAL_CHUNK_SETTINGS_TITLE("&e&lGeneral Chunk Settings"),
     MENU_TRUSTED_TITLE("&2&lTrusted Chunk Settings"),
     MENU_GLOBAL_TRUSTED_TITLE("&2&lTrusted Global Settings"),
+    MENU_PLAYER_CHUNKS_ITEM_NAME("&b&l&n{0}"),
     ITEM_SETTINGS_BUILD_NAME("&6&lBuild&7: {0}"),
     ITEM_SETTINGS_BREAK_NAME("&6&lBreak&7: {0}"),
     ITEM_SETTINGS_INTERACT_NAME("&6&lInteract&7: {0}"),

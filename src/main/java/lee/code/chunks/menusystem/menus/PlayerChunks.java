@@ -14,6 +14,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,7 @@ public class PlayerChunks extends PaginatedMenu {
         PU pu = plugin.getPU();
 
         Player player = pmu.getOwner();
+        UUID uuid = player.getUniqueId();
         ItemStack clickedItem = e.getCurrentItem();
 
         if (e.getClickedInventory() == player.getInventory()) return;
@@ -59,8 +62,8 @@ public class PlayerChunks extends PaginatedMenu {
                 playClickSound(player);
             }
         } else if (clickedItem.equals(nextPageItem)) {
-
-            if (!((index + 1) >= cache.getChunkClaims(player.getUniqueId()).size())) {
+            List<String> chunks = cache.getChunkClaims(uuid);
+            if (!((index + 1) >= chunks.size())) {
                 page = page + 1;
                 pmu.setChunkListPage(page);
                 super.open();
@@ -68,10 +71,14 @@ public class PlayerChunks extends PaginatedMenu {
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NEXT_PAGE.getString(null));
 
         } else {
-            playClickSound(player);
-            if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasDisplayName()) {
-                Location chunk = pu.unFormatChunkLocation(ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()));
-                pu.teleportPlayerToChunk(player, chunk);
+            if (clickedItem.hasItemMeta()) {
+                playClickSound(player);
+                Location chunkLocation = getItemChunkLocation(clickedItem);
+                if (chunkLocation != null) {
+                    pu.teleportPlayerToChunk(player, chunkLocation);
+                    player.sendActionBar(Lang.TELEPORT.getComponent(null));
+                }
+                player.getInventory().close();
             }
         }
     }
@@ -81,8 +88,8 @@ public class PlayerChunks extends PaginatedMenu {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
         PU pu = plugin.getPU();
-        addMenuBorder();
 
+        addMenuBorder();
         page = pmu.getChunkListPage();
 
         Player player = pmu.getOwner();
@@ -92,44 +99,49 @@ public class PlayerChunks extends PaginatedMenu {
 
         List<String> chunks = cache.getChunkClaims(uuid);
 
-        if (!chunks.contains("n")) {
+        List<ItemStack> items = new ArrayList<>();
+        for (String chunk : chunks) {
+            String[] worldString = chunk.split(",", 2);
+            ItemStack itemChunk = switch (worldString[0]) {
+                case "world_nether" -> new ItemStack(Material.NETHERRACK);
+                case "world_the_end" -> new ItemStack(Material.END_STONE);
+                default -> new ItemStack(Material.GRASS_BLOCK);
+            };
 
-            List<ItemStack> items = new ArrayList<>();
-            for (String chunk : chunks) {
+            ItemMeta itemChunkMeta = itemChunk.getItemMeta();
+            itemChunkMeta.displayName(Lang.MENU_PLAYER_CHUNKS_ITEM_NAME.getComponent(new String[] { chunk }));
 
-                String[] worldString = chunk.split(",", 2);
-                World world = Bukkit.getWorld(worldString[0]);
-                if (world == null) continue;
-                String name = world.getEnvironment().name();
-
-                new ItemStack(Material.GRASS_BLOCK);
-                ItemStack itemChunk = switch (name) {
-                    case "NETHER" -> new ItemStack(Material.NETHERRACK);
-                    case "THE_END" -> new ItemStack(Material.END_STONE);
-                    default -> new ItemStack(Material.GRASS_BLOCK);
-                };
-
-                ItemMeta itemChunkMeta = itemChunk.getItemMeta();
-                itemChunkMeta.displayName(pu.formatC("&b&l&n" + chunk));
-
-                if (chunk.equals(playerChunkCord)) {
-                    itemChunkMeta.addEnchant(Enchantment.PROTECTION_FALL, 1, false);
-                    itemChunkMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                }
-                itemChunk.setItemMeta(itemChunkMeta);
-                items.add(itemChunk);
+            if (chunk.equals(playerChunkCord)) {
+                itemChunkMeta.addEnchant(Enchantment.PROTECTION_FALL, 1, false);
+                itemChunkMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
 
-            if (!items.isEmpty()) {
-                for(int i = 0; i < getMaxItemsPerPage(); i++) {
-                    index = getMaxItemsPerPage() * page + i;
-                    if(index >= items.size()) break;
-                    if (items.get(index) != null) {
-                        ItemStack theItem = items.get(index);
-                        inventory.addItem(theItem);
-                    }
+            PersistentDataContainer container = itemChunkMeta.getPersistentDataContainer();
+            NamespacedKey chunkLocation = new NamespacedKey(plugin, "chunk-location");
+            container.set(chunkLocation, PersistentDataType.STRING, chunk);
+
+            itemChunk.setItemMeta(itemChunkMeta);
+            items.add(itemChunk);
+        }
+
+        if (!items.isEmpty()) {
+            for(int i = 0; i < getMaxItemsPerPage(); i++) {
+                index = getMaxItemsPerPage() * page + i;
+                if(index >= items.size()) break;
+                if (items.get(index) != null) {
+                    ItemStack theItem = items.get(index);
+                    inventory.addItem(theItem);
                 }
             }
         }
+    }
+
+    private Location getItemChunkLocation(ItemStack item) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        ItemMeta itemMeta = item.getItemMeta();
+        PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, "chunk-location");
+        String sHome = container.get(key, PersistentDataType.STRING);
+        return sHome != null ? plugin.getPU().unFormatChunkLocation(sHome) : null;
     }
 }
