@@ -8,6 +8,7 @@ commands:
   chunk:
     description: Main plugin command.
     permission: chunk.command.chunk
+    aliases: [c]
   adminchunk:
     description: Admin chunk command.
     permission: chunk.command.adminchunk

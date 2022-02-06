@@ -54,16 +54,18 @@ public class Admin extends SubCommand {
                 case "unclaim":
                     if (cache.isChunkClaimed(chunkCord)) {
                         UUID owner = cache.getChunkOwnerUUID(chunkCord);
+                        String ownerName = cache.getChunkOwnerName(chunkCord);
                         cache.unclaimChunk(chunkCord, owner);
-                        player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_UNCLAIM.getComponent(new String[]{ chunkCord, cache.getChunkOwnerName(chunkCord) })));
+                        player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_UNCLAIM.getComponent(new String[]{ chunkCord, ownerName })));
                     } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_ADMIN_UNCLAIM.getComponent(new String[]{ chunkCord })));
                     break;
 
                 case "unclaimall":
                     if (cache.isChunkClaimed(chunkCord)) {
                         UUID owner = cache.getChunkOwnerUUID(chunkCord);
+                        String ownerName = cache.getChunkOwnerName(chunkCord);
                         cache.unclaimAllChunks(owner);
-                        player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_UNCLAIMALL.getComponent(new String[]{ cache.getChunkOwnerName(chunkCord) })));
+                        player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_UNCLAIMALL.getComponent(new String[]{ ownerName })));
                     } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_ADMIN_UNCLAIM.getComponent(new String[]{ chunkCord })));
                     break;
 

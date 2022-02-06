@@ -29,6 +29,7 @@
             </resource>
         </resources>
     </build>
+
     <repositories>
         <!-- Paper API -->
         <repository>
