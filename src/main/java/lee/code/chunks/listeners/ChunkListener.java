@@ -495,24 +495,28 @@ public class ChunkListener implements Listener {
     public void onPistonMove(BlockPistonExtendEvent e) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Cache cache = plugin.getCache();
+        Data data = plugin.getData();
 
         //check piston location
         Chunk chunk = e.getBlock().getLocation().getChunk();
         String chunkCord = plugin.getPU().formatChunkLocation(chunk);
-        if (!cache.isChunkClaimed(chunkCord)) {
-            e.setCancelled(true);
-            return;
-        }
 
-        if (cache.isAdminChunk(chunkCord)) return;
-
-        //check piston moved blocks
-        for (Block block : new ArrayList<>(e.getBlocks())) {
-            Chunk movedBlockChunk = block.getLocation().getChunk();
-            String movedBlockChunkCords = plugin.getPU().formatChunkLocation(movedBlockChunk);
-            if (!cache.isChunkClaimed(movedBlockChunkCords)) {
+        if (data.getWhitelistedWorlds().contains(chunk.getWorld().getName())) {
+            if (!cache.isChunkClaimed(chunkCord)) {
                 e.setCancelled(true);
                 return;
+            }
+
+            if (cache.isAdminChunk(chunkCord)) return;
+
+            //check piston moved blocks
+            for (Block block : new ArrayList<>(e.getBlocks())) {
+                Chunk movedBlockChunk = block.getLocation().getChunk();
+                String movedBlockChunkCords = plugin.getPU().formatChunkLocation(movedBlockChunk);
+                if (!cache.isChunkClaimed(movedBlockChunkCords)) {
+                    e.setCancelled(true);
+                    return;
+                }
             }
         }
     }
