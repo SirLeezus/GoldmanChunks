@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
-    <artifactId>GoldmanChunks</artifactId>
+    <groupId>lee.code.chunks</groupId>
+    <artifactId>goldman-chunks</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
@@ -63,23 +63,21 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.20</version>
+            <version>1.18.22</version>
         </dependency>
         <!-- Redis Cache API -->
         <dependency>
-            <groupId>lee.code.cache</groupId>
-            <artifactId>redis-17-api</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>C:\Users\Lee\Documents\APIs\RedisCache.jar</systemPath>
+            <groupId>lee.code.redis</groupId>
+            <artifactId>redis-cache</artifactId>
+            <version>1.0.0</version>
+            <scope>provided</scope>
         </dependency>
         <!-- GoldmanEssentials API -->
         <dependency>
             <groupId>lee.code.essentials</groupId>
             <artifactId>essentials-api</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>C:\Users\Lee\Documents\APIs\EssentailsAPI.jar</systemPath>
+            <version>1.0.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
