@@ -37,7 +37,6 @@ public enum HostileEntities {
     WITCH(EntityType.WITCH),
     WITHER_SKELETON(EntityType.WITHER_SKELETON),
     ZOGLIN(EntityType.ZOGLIN),
-    ZOMBIE_VILLAGER(EntityType.ZOMBIE_VILLAGER),
     ZOMBIE(EntityType.ZOMBIE),
     ENDER_DRAGON(EntityType.ENDER_DRAGON),
     WITHER(EntityType.WITHER),

@@ -396,7 +396,7 @@ public class ChunkListener implements Listener {
             if (e.getDamager() instanceof Player player && !(e.getEntity() instanceof Player)) {
                 UUID uuid = player.getUniqueId();
                 if (!data.hasAdminBypass(uuid)) {
-                    if (!pu.getHostileEntities().contains(entity.getType())) {
+                    if (!pu.getHostileEntities().contains(entity.getType()) || entity.customName() != null) {
                         UUID owner = cache.getChunkOwnerUUID(chunkCord);
                         if (!cache.isChunkOwner(chunkCord, uuid)) {
                             if (cache.isGlobalTrusted(owner, uuid)) {
