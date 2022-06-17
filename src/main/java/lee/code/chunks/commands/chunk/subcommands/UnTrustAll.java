@@ -2,7 +2,7 @@ package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
-import lee.code.chunks.database.Cache;
+import lee.code.chunks.database.CacheManager;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -37,14 +37,14 @@ public class UnTrustAll extends SubCommand {
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         UUID uuid = player.getUniqueId();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
 
         if (args.length > 1) {
             OfflinePlayer target = Bukkit.getOfflinePlayerIfCached(args[1]);
             if (target != null) {
                 UUID targetUUID = target.getUniqueId();
-                if (cache.isGlobalTrusted(uuid, targetUUID)) {
-                    cache.removeGlobalTrusted(uuid, targetUUID);
+                if (cacheManager.isGlobalTrusted(uuid, targetUUID)) {
+                    cacheManager.removeGlobalTrusted(uuid, targetUUID);
                     player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_UNTRUSTALL_REMOVED_PLAYER.getComponent(new String[]{target.getName()})));
                 } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_UNTRUSTALL_PLAYER_NOT_TRUSTED.getComponent(new String[]{target.getName()})));
             } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_PLAYER_NOT_FOUND.getComponent(new String[]{args[1]})));

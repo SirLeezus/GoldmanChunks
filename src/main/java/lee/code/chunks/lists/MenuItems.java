@@ -1,16 +1,17 @@
 package lee.code.chunks.lists;
 
-import lee.code.chunks.GoldmanChunks;
+import lee.code.core.util.bukkit.BukkitUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 public enum MenuItems {
@@ -31,19 +32,18 @@ public enum MenuItems {
     @Getter private final String skin;
 
     public ItemStack getItem() {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
         ItemStack item = new ItemStack(type);
         ItemMeta itemMeta = item.getItemMeta();
         if (itemMeta != null) {
-            if (name != null) itemMeta.displayName(plugin.getPU().formatC(name));
+            if (name != null) itemMeta.displayName(BukkitUtils.parseColorComponent(name));
             if (lore != null) {
                 String[] split = StringUtils.split(lore, "\n");
                 List<Component> lines = new ArrayList<>();
-                for (String line : split) lines.add(plugin.getPU().formatC(line));
+                for (String line : split) lines.add(BukkitUtils.parseColorComponent(line));
                 itemMeta.lore(lines);
             }
             item.setItemMeta(itemMeta);
-            if (skin != null) plugin.getPU().applyHeadSkin(item, skin);
+            if (skin != null) BukkitUtils.applyHeadSkin(item, skin, UUID.randomUUID());
         }
         return item;
     }

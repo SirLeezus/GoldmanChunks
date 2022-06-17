@@ -3,7 +3,7 @@ package lee.code.chunks.commands.adminchunk.subcommands;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.PU;
 import lee.code.chunks.commands.SubCommand;
-import lee.code.chunks.database.Cache;
+import lee.code.chunks.database.CacheManager;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.lists.RenderTypes;
 import org.bukkit.Chunk;
@@ -35,14 +35,14 @@ public class UnClaim extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
         PU pu = plugin.getPU();
 
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+        String chunkCord = plugin.getPU().serializeChunkLocation(chunk);
 
-        if (cache.isAdminChunk(chunkCord)) {
-            cache.unclaimAdminChunk(chunkCord);
+        if (cacheManager.isAdminChunk(chunkCord)) {
+            cacheManager.unclaimAdminChunk(chunkCord);
             pu.renderChunkBorder(player, chunk, RenderTypes.UNCLAIM);
             player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_UNCLAIM_CHUNK.getComponent(new String[] { chunkCord })));
         }

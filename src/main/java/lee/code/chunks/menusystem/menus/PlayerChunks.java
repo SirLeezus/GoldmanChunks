@@ -2,7 +2,7 @@ package lee.code.chunks.menusystem.menus;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.PU;
-import lee.code.chunks.database.Cache;
+import lee.code.chunks.database.CacheManager;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.PaginatedMenu;
 import lee.code.chunks.menusystem.PlayerMU;
@@ -40,7 +40,7 @@ public class PlayerChunks extends PaginatedMenu {
     @Override
     public void handleMenu(InventoryClickEvent e) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
         PU pu = plugin.getPU();
 
         Player player = pmu.getOwner();
@@ -62,7 +62,7 @@ public class PlayerChunks extends PaginatedMenu {
                 playClickSound(player);
             }
         } else if (clickedItem.equals(nextPageItem)) {
-            List<String> chunks = cache.getChunkClaims(uuid);
+            List<String> chunks = cacheManager.getChunkClaims(uuid);
             if (!((index + 1) >= chunks.size())) {
                 page = page + 1;
                 pmu.setChunkListPage(page);
@@ -86,7 +86,7 @@ public class PlayerChunks extends PaginatedMenu {
     @Override
     public void setMenuItems() {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
         PU pu = plugin.getPU();
 
         addMenuBorder();
@@ -95,9 +95,9 @@ public class PlayerChunks extends PaginatedMenu {
         Player player = pmu.getOwner();
         UUID uuid = player.getUniqueId();
         Chunk playerChunk = player.getLocation().getChunk();
-        String playerChunkCord = pu.formatChunkLocation(playerChunk);
+        String playerChunkCord = pu.serializeChunkLocation(playerChunk);
 
-        List<String> chunks = cache.getChunkClaims(uuid);
+        List<String> chunks = cacheManager.getChunkClaims(uuid);
 
         List<ItemStack> items = new ArrayList<>();
         for (String chunk : chunks) {
@@ -142,6 +142,6 @@ public class PlayerChunks extends PaginatedMenu {
         PersistentDataContainer container = itemMeta.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, "chunk-location");
         String sHome = container.get(key, PersistentDataType.STRING);
-        return sHome != null ? plugin.getPU().unFormatChunkLocation(sHome) : null;
+        return sHome != null ? plugin.getPU().parseChunkLocation(sHome) : null;
     }
 }

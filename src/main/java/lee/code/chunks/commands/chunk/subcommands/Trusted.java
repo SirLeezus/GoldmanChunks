@@ -2,7 +2,7 @@ package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
-import lee.code.chunks.database.Cache;
+import lee.code.chunks.database.CacheManager;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.lists.RenderTypes;
 import net.kyori.adventure.text.Component;
@@ -38,16 +38,16 @@ public class Trusted extends SubCommand {
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
-        Cache cache = plugin.getCache();
+        String chunkCord = plugin.getPU().serializeChunkLocation(chunk);
+        CacheManager cacheManager = plugin.getCacheManager();
 
-        if (cache.isChunkClaimed(chunkCord)) {
+        if (cacheManager.isChunkClaimed(chunkCord)) {
             List<Component> lines = new ArrayList<>();
             Component spacer = Component.text("");
 
-            UUID ownerUUID = cache.getChunkOwnerUUID(chunkCord);
-            String trusted = String.join(", ", cache.getChunkTrustedNames(chunkCord));
-            String globalTrusted = String.join(", ", cache.getGlobalTrustedNames(ownerUUID));
+            UUID ownerUUID = cacheManager.getChunkOwnerUUID(chunkCord);
+            String trusted = String.join(", ", cacheManager.getChunkTrustedNames(chunkCord));
+            String globalTrusted = String.join(", ", cacheManager.getGlobalTrustedNames(ownerUUID));
 
             lines.add(Lang.COMMAND_TRUSTED_HEADER.getComponent(null));
             lines.add(spacer);
@@ -57,7 +57,7 @@ public class Trusted extends SubCommand {
             lines.add(Lang.COMMAND_TRUSTED_FOOTER.getComponent(null));
 
             for (Component line : lines) player.sendMessage(line);
-        } else if (cache.isAdminChunk(chunkCord)) {
+        } else if (cacheManager.isAdminChunk(chunkCord)) {
             player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_TRUSTED_ADMIN_CHUNK.getComponent(null)));
         } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_TRUSTED_NOT_CLAIMED.getComponent(null)));
         plugin.getPU().renderChunkBorder(player, chunk, RenderTypes.INFO);

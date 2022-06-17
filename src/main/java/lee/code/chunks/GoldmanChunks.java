@@ -1,13 +1,13 @@
 package lee.code.chunks;
 
-import lee.code.cache.CacheAPI;
 import lee.code.chunks.commands.adminchunk.AdminCommandManager;
 import lee.code.chunks.commands.adminchunk.AdminTabCompletion;
-import lee.code.chunks.database.Cache;
+import lee.code.chunks.database.CacheManager;
+import lee.code.chunks.database.DatabaseManager;
+import lee.code.chunks.database.SQLite;
 import lee.code.chunks.listeners.ChunkListener;
 import lee.code.chunks.commands.chunk.CommandManager;
 import lee.code.chunks.commands.chunk.TabCompletion;
-import lee.code.chunks.database.SQLite;
 import lee.code.chunks.listeners.JoinQuitListener;
 import lee.code.chunks.listeners.MenuListener;
 import lee.code.essentials.EssentialsAPI;
@@ -18,37 +18,37 @@ public class GoldmanChunks extends JavaPlugin {
 
     @Getter private Data data;
     @Getter private PU pU;
-    @Getter private SQLite sqLite;
-    @Getter private Cache cache;
-    @Getter private CacheAPI cacheAPI;
+    @Getter private CacheManager cacheManager;
+    @Getter private DatabaseManager databaseManager;
     @Getter private EssentialsAPI essentialsAPI;
     @Getter private ChunkAPI chunkAPI;
+
+
+    @Getter private SQLite oldSqLite;
 
     @Override
     public void onEnable() {
         this.data = new Data();
         this.pU = new PU();
-        this.sqLite = new SQLite();
-        this.cache = new Cache();
-        this.cacheAPI = new CacheAPI();
+        this.cacheManager = new CacheManager();
         this.essentialsAPI = new EssentialsAPI();
         this.chunkAPI = new ChunkAPI();
+        this.databaseManager = new DatabaseManager();
 
-        sqLite.connect();
-        sqLite.loadTables();
+        this.oldSqLite = new SQLite();
 
-        data.cacheDatabase();
-        data.loadListData();
+        databaseManager.initialize();
+        //oldSqLite.transferData();
+
+        data.loadData();
 
         registerCommands();
         registerListeners();
-
-        pU.accruedClaimTimer();
     }
 
     @Override
     public void onDisable() {
-        sqLite.disconnect();
+        databaseManager.closeConnection();
     }
 
     private void registerCommands() {

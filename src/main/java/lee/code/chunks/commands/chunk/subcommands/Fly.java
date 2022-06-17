@@ -2,7 +2,7 @@ package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
-import lee.code.chunks.database.Cache;
+import lee.code.chunks.database.CacheManager;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
@@ -35,22 +35,22 @@ public class Fly extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
 
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+        String chunkCord = plugin.getPU().serializeChunkLocation(chunk);
         UUID uuid = player.getUniqueId();
 
-        if (cache.isChunkClaimed(chunkCord)) {
-            UUID ownerUUID = cache.getChunkOwnerUUID(chunkCord);
-            if (cache.isChunkOwner(chunkCord, uuid) || cache.isChunkTrusted(chunkCord, uuid) || cache.isGlobalTrusted(ownerUUID, uuid)) {
-                if (!cache.isChunkFlying(uuid)) {
-                    cache.setChunkFlying(uuid, true);
+        if (cacheManager.isChunkClaimed(chunkCord)) {
+            UUID ownerUUID = cacheManager.getChunkOwnerUUID(chunkCord);
+            if (cacheManager.isChunkOwner(chunkCord, uuid) || cacheManager.isChunkTrusted(chunkCord, uuid) || cacheManager.isGlobalTrusted(ownerUUID, uuid)) {
+                if (!cacheManager.isChunkFlying(uuid)) {
+                    cacheManager.setChunkFlying(uuid, true);
                     player.setAllowFlight(true);
                     player.setFlying(true);
                     player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_FLY_TOGGLE_SUCCESSFUL.getComponent(new String[] { Lang.ON.getString() })));
                 } else {
-                    cache.setChunkFlying(uuid, false);
+                    cacheManager.setChunkFlying(uuid, false);
                     player.setAllowFlight(false);
                     player.setFlying(false);
                     player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_FLY_TOGGLE_SUCCESSFUL.getComponent(new String[] { Lang.OFF.getString() })));

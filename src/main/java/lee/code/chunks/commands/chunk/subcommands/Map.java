@@ -3,8 +3,9 @@ package lee.code.chunks.commands.chunk.subcommands;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.PU;
 import lee.code.chunks.commands.SubCommand;
-import lee.code.chunks.database.Cache;
+import lee.code.chunks.database.CacheManager;
 import lee.code.chunks.lists.Lang;
+import lee.code.core.util.bukkit.BukkitUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
@@ -44,14 +45,14 @@ public class Map extends SubCommand {
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         UUID uuid = player.getUniqueId();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
         PU pu = plugin.getPU();
 
         List<Component> chunkMap = new ArrayList<>();
         List<Component> chunkSquare = new ArrayList<>();
 
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = pu.formatChunkLocation(chunk);
+        String chunkCord = pu.serializeChunkLocation(chunk);
 
         chunkMap.add(Lang.COMMAND_MAP_HEADER.getComponent(null));
 
@@ -67,22 +68,18 @@ public class Map extends SubCommand {
 
             for (int l = 1; l <= 11; l++) {
                 for (int w = 1; w <= 19; w++) {
-
                     String chunkSelected = world + "," + x + "," + z;
-
                     if ((chunkSelected).equals(chunkCord)) {
-                        chunkSquare.add(pu.formatC("&9■").hoverEvent(pu.formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
-                    } else if (cache.isAdminChunk(chunkSelected)) {
-                        chunkSquare.add(pu.formatC("&4■").hoverEvent(pu.formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
-                    } else if (cache.isChunkClaimed(chunkSelected)) {
-                        UUID owner = cache.getChunkOwnerUUID(chunkSelected);
-
-                        if (cache.isChunkOwner(chunkSelected, uuid)) chunkSquare.add(pu.formatC("&2■").hoverEvent(pu.formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
-                        else if (cache.isChunkTrusted(chunkSelected, uuid)) chunkSquare.add(pu.formatC("&a■").hoverEvent(pu.formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
-                        else if (cache.isGlobalTrusted(owner, uuid)) chunkSquare.add(pu.formatC("&a■").hoverEvent(pu.formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
-                        else chunkSquare.add(pu.formatC("&c■").hoverEvent(pu.formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
-
-                    } else chunkSquare.add(pu.formatC("&7■").hoverEvent(pu.formatC("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
+                        chunkSquare.add(BukkitUtils.parseColorComponent("&9■").hoverEvent(BukkitUtils.parseColorComponent("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
+                    } else if (cacheManager.isAdminChunk(chunkSelected)) {
+                        chunkSquare.add(BukkitUtils.parseColorComponent("&4■").hoverEvent(BukkitUtils.parseColorComponent("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
+                    } else if (cacheManager.isChunkClaimed(chunkSelected)) {
+                        UUID owner = cacheManager.getChunkOwnerUUID(chunkSelected);
+                        if (cacheManager.isChunkOwner(chunkSelected, uuid)) chunkSquare.add(BukkitUtils.parseColorComponent("&2■").hoverEvent(BukkitUtils.parseColorComponent("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
+                        else if (cacheManager.isChunkTrusted(chunkSelected, uuid)) chunkSquare.add(BukkitUtils.parseColorComponent("&a■").hoverEvent(BukkitUtils.parseColorComponent("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
+                        else if (cacheManager.isGlobalTrusted(owner, uuid)) chunkSquare.add(BukkitUtils.parseColorComponent("&a■").hoverEvent(BukkitUtils.parseColorComponent("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
+                        else chunkSquare.add(BukkitUtils.parseColorComponent("&c■").hoverEvent(BukkitUtils.parseColorComponent("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
+                    } else chunkSquare.add(BukkitUtils.parseColorComponent("&7■").hoverEvent(BukkitUtils.parseColorComponent("&b" + chunkSelected)).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/chunk teleport " + chunkSelected)));
                     x++;
                 }
                 x = firstX;
@@ -95,10 +92,10 @@ public class Map extends SubCommand {
                 chunkSquare.clear();
             }
             chunkMap.add(Lang.COMMAND_MAP_FOOTER.getComponent(null));
-
-            String line1 = pu.format(" &e\\ &9&lN &e/ ");
-            String line2 = pu.format(" &b&lW &6&l• &b&lE");
-            String line3 = pu.format(" &e/ &b&lS &e\\");
+            
+            String line1 = BukkitUtils.parseColorString(" &e\\ &9&lN &e/ ");
+            String line2 = BukkitUtils.parseColorString(" &b&lW &6&l• &b&lE");
+            String line3 = BukkitUtils.parseColorString(" &e/ &b&lS &e\\");
 
             List<Component> lines = new ArrayList<>();
             Component spacer = Component.text("");

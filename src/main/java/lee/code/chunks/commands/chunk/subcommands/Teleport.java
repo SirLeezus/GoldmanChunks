@@ -3,7 +3,7 @@ package lee.code.chunks.commands.chunk.subcommands;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.PU;
 import lee.code.chunks.commands.SubCommand;
-import lee.code.chunks.database.Cache;
+import lee.code.chunks.database.CacheManager;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -36,16 +36,16 @@ public class Teleport extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
         PU pu = plugin.getPU();
 
         if (args.length > 1) {
             UUID uuid = player.getUniqueId();
             String chunk = args[1].trim();
-            if (!cache.isAdminChunk(chunk)) {
-                if (cache.isChunkClaimed(chunk)) {
-                    if (cache.isChunkOwner(chunk, uuid)) {
-                        Location chunkLocation = pu.unFormatChunkLocation(chunk);
+            if (!cacheManager.isAdminChunk(chunk)) {
+                if (cacheManager.isChunkClaimed(chunk)) {
+                    if (cacheManager.isChunkOwner(chunk, uuid)) {
+                        Location chunkLocation = pu.parseChunkLocation(chunk);
                         pu.teleportPlayerToChunk(player, chunkLocation);
                     } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_TELEPORT_NOT_OWNER.getComponent(new String[] { chunk })));
                 } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_TELEPORT_NOT_CLAIMED.getComponent(new String[] { chunk })));

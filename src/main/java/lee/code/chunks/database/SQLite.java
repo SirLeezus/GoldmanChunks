@@ -1,7 +1,10 @@
 package lee.code.chunks.database;
 
 import lee.code.chunks.GoldmanChunks;
-import org.apache.commons.lang.StringUtils;
+import lee.code.chunks.database.tables.AdminChunkTable;
+import lee.code.chunks.database.tables.ChunkTable;
+import lee.code.chunks.database.tables.PlayerTable;
+import lee.code.core.util.bukkit.BukkitUtils;
 import org.bukkit.Bukkit;
 
 import java.io.File;
@@ -23,7 +26,7 @@ public class SQLite {
             if (!plugin.getDataFolder().exists()) {
                 boolean created = plugin.getDataFolder().mkdir();
             }
-            File dbFile = new File(plugin.getDataFolder(), "database.db");
+            File dbFile = new File(plugin.getDataFolder(), "old_database.db");
             if (!dbFile.exists()) {
                 boolean created = dbFile.createNewFile();
             }
@@ -140,45 +143,6 @@ public class SQLite {
 
     //ADMIN CHUNKS TABLE
 
-    public void updateBulkAdminChunksSetting(List<String> chunks, String key, String result) {
-        String sqlQuery = "UPDATE admin_chunks SET " + key + " = ? WHERE chunk = ?";
-        try {
-            PreparedStatement pstmt = connection.prepareStatement(sqlQuery);
-
-            for (String chunk : chunks) {
-                pstmt.setString(1, result);
-                pstmt.setString(2, chunk);
-                pstmt.addBatch();
-            }
-            pstmt.executeBatch();
-            pstmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void claimBulkAdminChunks(List<String> chunks) {
-        String sqlQuery = "INSERT OR REPLACE INTO admin_chunks values (?,?,?,?,?,?,?)";
-        try {
-            PreparedStatement pstmt = connection.prepareStatement(sqlQuery);
-
-            for (String chunk : chunks) {
-                pstmt.setString(1, chunk);
-                pstmt.setString(2, "0");
-                pstmt.setString(3, "0");
-                pstmt.setString(4, "0");
-                pstmt.setString(5, "0");
-                pstmt.setString(6, "0");
-                pstmt.setString(7, "0");
-                pstmt.addBatch();
-            }
-            pstmt.executeBatch();
-            pstmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void claimAdminChunk(String chunk) {
         update("INSERT OR REPLACE INTO admin_chunks (chunk, build, break, interact, pve, monster_spawning, explosions) VALUES( '" + chunk + "', '0', '0', '0', '0', '0', '0');");
     }
@@ -225,13 +189,20 @@ public class SQLite {
         update("UPDATE player_data SET " + key + " = '" + value + "' WHERE player ='" + uuid + "';");
     }
 
-    public void loadChunks() {
+    public void transferData() {
+        connect();
+        transferChunkData();
+        transferPlayerData();
+        transferAdminChunks();
+    }
+
+    public void transferChunkData() {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        DatabaseManager databaseManager = plugin.getDatabaseManager();
+
+        List<ChunkTable> chunkTables = new ArrayList<>();
         try {
             ResultSet rs = getResult("SELECT * FROM chunks;");
-
-            int count = 0;
             while (rs.next()) {
                 String chunk = rs.getString("chunk");
                 String uuid = rs.getString("owner");
@@ -243,23 +214,42 @@ public class SQLite {
                 String canSpawnMonsters = rs.getString("monster_spawning");
                 String canExplode = rs.getString("explosions");
                 String chunkPrice = rs.getString("price");
-                cache.setChunk(chunk, uuid, trusted, canTrustedBuild, canTrustedBreak, canTrustedInteract, canTrustedPvE, canSpawnMonsters, canExplode, chunkPrice);
-                count++;
+
+                ChunkTable chunkTable = new ChunkTable(chunk, UUID.fromString(uuid));
+                chunkTable.setTrusted(trusted);
+
+                boolean trustedBuild = !canTrustedBuild.equals("0");
+                chunkTable.setTrustedBuild(trustedBuild);
+                boolean trustedBreak = !canTrustedBreak.equals("0");
+                chunkTable.setTrustedBreak(trustedBreak);
+                boolean trustedInteract = !canTrustedInteract.equals("0");
+                chunkTable.setTrustedInteract(trustedInteract);
+                boolean trustedPVE = !canTrustedPvE.equals("0");
+                chunkTable.setTrustedPVE(trustedPVE);
+                boolean chunkMonsters = !canSpawnMonsters.equals("0");
+                chunkTable.setChunkMonsterSpawning(chunkMonsters);
+                boolean chunkExplosions = !canExplode.equals("0");
+                chunkTable.setChunkExplosions(chunkExplosions);
+
+                chunkTable.setChunkPrice(Long.parseLong(chunkPrice));
+                chunkTables.add(chunkTable);
             }
-            Bukkit.getLogger().log(Level.INFO, plugin.getPU().format("&6Chunk Claims Loaded: &a" + count));
+            databaseManager.createBulkChunkTable(chunkTables);
+            Bukkit.getLogger().log(Level.INFO, BukkitUtils.parseColorString("&6Chunk Data Profiles Transferred: &a" + chunkTables.size()));
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
 
-    public void loadPlayerData() {
+    public void transferPlayerData() {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        DatabaseManager databaseManager = plugin.getDatabaseManager();
+
+        List<PlayerTable> playerTables = new ArrayList<>();
+
         try {
             ResultSet rs = getResult("SELECT * FROM player_data;");
-
-            int count = 0;
             while (rs.next()) {
                 String uuid = rs.getString("player");
                 String claimed = rs.getString("claimed");
@@ -271,22 +261,41 @@ public class SQLite {
                 String trustedGlobalInteract = rs.getString("interact");
                 String trustedGlobalPvE = rs.getString("pve");
                 String flying = rs.getString("flying");
-                cache.setPlayerData(uuid, claimed, bonusClaimed, accruedClaims, trustedGlobal, trustedGlobalBuild, trustedGlobalBreak, trustedGlobalInteract, trustedGlobalPvE, flying);
-                count++;
+
+                PlayerTable playerTable = new PlayerTable(UUID.fromString(uuid));
+                playerTable.setClaimed(Integer.parseInt(claimed));
+                playerTable.setBonusClaims(Integer.parseInt(bonusClaimed));
+                playerTable.setGlobalTrusted(trustedGlobal);
+                boolean trustedBuild = !trustedGlobalBuild.equals("0");
+                playerTable.setGlobalBuild(trustedBuild);
+                boolean trustedBreak = !trustedGlobalBreak.equals("0");
+                playerTable.setGlobalBreak(trustedBreak);
+                boolean trustedInteract = !trustedGlobalInteract.equals("0");
+                playerTable.setGlobalInteract(trustedInteract);
+                boolean trustedPVE = !trustedGlobalPvE.equals("0");
+                playerTable.setGlobalPVE(trustedPVE);
+                boolean chunkFlying = !flying.equals("0");
+                playerTable.setChunkFlying(chunkFlying);
+
+                playerTables.add(playerTable);
             }
-            Bukkit.getLogger().log(Level.INFO, plugin.getPU().format("&6Players Loaded: &a" + count));
+
+            databaseManager.createBulkPlayerTable(playerTables);
+            Bukkit.getLogger().log(Level.INFO, BukkitUtils.parseColorString("&6Players Data Profiles Transferred: &a" + playerTables.size()));
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void loadAdminChunks() {
+    public void transferAdminChunks() {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        DatabaseManager databaseManager = plugin.getDatabaseManager();
+
+        List<AdminChunkTable> adminChunkTables = new ArrayList<>();
+
         try {
             ResultSet rs = getResult("SELECT * FROM admin_chunks;");
 
-            int count = 0;
             while (rs.next()) {
                 String chunk = rs.getString("chunk");
                 String canBuild = rs.getString("build");
@@ -295,10 +304,25 @@ public class SQLite {
                 String canPvE = rs.getString("pve");
                 String canSpawnMonsters = rs.getString("monster_spawning");
                 String canExplode = rs.getString("explosions");
-                cache.setAdminChunk(chunk, canBuild, canBreak, canInteract, canPvE, canSpawnMonsters, canExplode);
-                count++;
+
+                AdminChunkTable adminChunkTable = new AdminChunkTable(chunk);
+                boolean chunkBuild = !canBuild.equals("0");
+                adminChunkTable.setChunkBuild(chunkBuild);
+                boolean chunkBreak = !canBreak.equals("0");
+                adminChunkTable.setChunkBreak(chunkBreak);
+                boolean chunkInteract = !canInteract.equals("0");
+                adminChunkTable.setChunkInteract(chunkInteract);
+                boolean chunkPVE = !canPvE.equals("0");
+                adminChunkTable.setChunkPVE(chunkPVE);
+                boolean chunkMonsters = !canSpawnMonsters.equals("0");
+                adminChunkTable.setChunkMonsterSpawning(chunkMonsters);
+                boolean chunkExplode = !canExplode.equals("0");
+                adminChunkTable.setChunkExplosions(chunkExplode);
+
+                adminChunkTables.add(adminChunkTable);
             }
-            Bukkit.getLogger().log(Level.INFO, plugin.getPU().format("&6Admin Chunk Claims Loaded: &a" + count));
+            databaseManager.createBulkAdminChunks(adminChunkTables);
+            Bukkit.getLogger().log(Level.INFO, BukkitUtils.parseColorString("&6Admin Chunk Data Profiles Transferred: &a" + adminChunkTables.size()));
         } catch (SQLException e) {
             e.printStackTrace();
         }

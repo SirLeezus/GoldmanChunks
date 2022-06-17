@@ -3,7 +3,7 @@ package lee.code.chunks.commands.chunk.subcommands;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.PU;
 import lee.code.chunks.commands.SubCommand;
-import lee.code.chunks.database.Cache;
+import lee.code.chunks.database.CacheManager;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -38,22 +38,22 @@ public class Trust extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
         PU pu = plugin.getPU();
 
         if (args.length > 1) {
             OfflinePlayer target = Bukkit.getOfflinePlayerIfCached(args[1]);
             if (target != null) {
                 Chunk chunk = player.getLocation().getChunk();
-                String chunkCord = pu.formatChunkLocation(chunk);
+                String chunkCord = pu.serializeChunkLocation(chunk);
                 UUID targetUUID = target.getUniqueId();
                 UUID uuid = player.getUniqueId();
 
-                if (cache.isChunkClaimed(chunkCord)) {
-                    if (!cache.isChunkTrusted(chunkCord, targetUUID)) {
-                        if (cache.isChunkOwner(chunkCord, uuid)) {
+                if (cacheManager.isChunkClaimed(chunkCord)) {
+                    if (!cacheManager.isChunkTrusted(chunkCord, targetUUID)) {
+                        if (cacheManager.isChunkOwner(chunkCord, uuid)) {
                             if (!targetUUID.equals(uuid)) {
-                                cache.addChunkTrusted(chunkCord, target.getUniqueId());
+                                cacheManager.addChunkTrusted(chunkCord, target.getUniqueId());
                                 player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_TRUST_ADDED_PLAYER.getComponent(new String[]{target.getName(), chunkCord})));
                             } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_TRUST_OWNER.getComponent(null)));
                         } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_TRUST_NOT_OWNER.getComponent(null)));

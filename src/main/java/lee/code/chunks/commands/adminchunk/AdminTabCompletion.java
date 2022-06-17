@@ -27,7 +27,7 @@ public class AdminTabCompletion implements TabCompleter {
                 return StringUtil.copyPartialMatches(args[0], hasCommand, new ArrayList<>());
             } else if (args[0].equals("selection")) {
                 if (args.length == 2) return StringUtil.copyPartialMatches(args[1], Arrays.asList("set", "clear", "claim", "unclaim"), new ArrayList<>());
-                else if (args.length == 3) return StringUtil.copyPartialMatches(args[2], plugin.getPU().getAdminChunkSettings(), new ArrayList<>());
+                else if (args.length == 3) return StringUtil.copyPartialMatches(args[2], plugin.getData().getAdminChunkSettings(), new ArrayList<>());
                 else if (args.length == 4) return StringUtil.copyPartialMatches(args[3], Arrays.asList("true", "false"), new ArrayList<>());
             }
         }

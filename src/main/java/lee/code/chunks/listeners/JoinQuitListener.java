@@ -1,7 +1,7 @@
 package lee.code.chunks.listeners;
 
 import lee.code.chunks.GoldmanChunks;
-import lee.code.chunks.database.Cache;
+import lee.code.chunks.database.CacheManager;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,13 +16,13 @@ public class JoinQuitListener implements Listener {
     @EventHandler
     public void onJoinEvent(PlayerJoinEvent e) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
 
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        if (!cache.hasPlayerData(uuid)) cache.createPlayerData(uuid);
-        else if (cache.isChunkFlying(uuid)) {
+        if (!cacheManager.hasPlayerData(uuid)) cacheManager.createPlayerData(uuid);
+        else if (cacheManager.isChunkFlying(uuid)) {
             player.setAllowFlight(true);
             player.setFlying(true);
             player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_FLY_TOGGLE_SUCCESSFUL.getComponent(new String[] { Lang.ON.getString() })));

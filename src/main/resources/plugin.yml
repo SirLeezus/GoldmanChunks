@@ -1,9 +1,9 @@
 name: GoldmanChunks
 main: lee.code.chunks.GoldmanChunks
 version: ${project.version}
-api-version: 1.18
+api-version: 1.19
 author: Lee
-depend: [GoldmanEssentials, RedisCache]
+depend: [GoldmanEssentials, GoldmanCore]
 commands:
   chunk:
     description: Main plugin command.

@@ -3,9 +3,10 @@ package lee.code.chunks.commands.chunk.subcommands;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.PU;
 import lee.code.chunks.commands.SubCommand;
-import lee.code.chunks.database.Cache;
+import lee.code.chunks.database.CacheManager;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.lists.RenderTypes;
+import lee.code.core.util.bukkit.BukkitUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
@@ -39,14 +40,14 @@ public class Info extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
         PU pu = plugin.getPU();
 
         String owner = "";
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = pu.formatChunkLocation(chunk);
-        if (cache.isAdminChunk(chunkCord)) owner = "&4&lAdmin";
-        else if (cache.isChunkClaimed(chunkCord)) owner = cache.getChunkOwnerName(chunkCord);
+        String chunkCord = pu.serializeChunkLocation(chunk);
+        if (cacheManager.isAdminChunk(chunkCord)) owner = "&4&lAdmin";
+        else if (cacheManager.isChunkClaimed(chunkCord)) owner = cacheManager.getChunkOwnerName(chunkCord);
 
         List<Component> lines = new ArrayList<>();
         Component spacer = Component.text("");
@@ -54,7 +55,7 @@ public class Info extends SubCommand {
         lines.add(spacer);
         lines.add(Lang.COMMAND_INFO_LINE_1.getComponent(new String[] { owner }));
         lines.add(Lang.COMMAND_INFO_LINE_2.getComponent(new String[] { chunkCord }));
-        if (cache.isChunkClaimed(chunkCord)) if (cache.isChunkForSale(chunkCord)) lines.add(Lang.COMMAND_INFO_LINE_3.getComponent(new String[] { pu.formatAmount(cache.getChunkPrice(chunkCord)) }));
+        if (cacheManager.isChunkClaimed(chunkCord)) if (cacheManager.isChunkForSale(chunkCord)) lines.add(Lang.COMMAND_INFO_LINE_3.getComponent(new String[] { BukkitUtils.parseValue(cacheManager.getChunkPrice(chunkCord)) }));
         lines.add(spacer);
         lines.add(Lang.COMMAND_INFO_FOOTER.getComponent(null));
 

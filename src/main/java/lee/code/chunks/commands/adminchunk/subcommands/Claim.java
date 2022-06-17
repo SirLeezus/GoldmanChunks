@@ -3,7 +3,7 @@ package lee.code.chunks.commands.adminchunk.subcommands;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.PU;
 import lee.code.chunks.commands.SubCommand;
-import lee.code.chunks.database.Cache;
+import lee.code.chunks.database.CacheManager;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.lists.RenderTypes;
 import org.bukkit.Chunk;
@@ -35,14 +35,14 @@ public class Claim extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
         PU pu = plugin.getPU();
 
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = pu.formatChunkLocation(chunk);
+        String chunkCord = pu.serializeChunkLocation(chunk);
 
-        if (!cache.isAdminChunk(chunkCord)) {
-            cache.claimAdminChunk(chunkCord);
+        if (!cacheManager.isAdminChunk(chunkCord)) {
+            cacheManager.claimAdminChunk(chunkCord);
             pu.renderChunkBorder(player, chunk, RenderTypes.CLAIM);
             player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_CLAIM_CHUNK.getComponent(new String[] { chunkCord })));
         }

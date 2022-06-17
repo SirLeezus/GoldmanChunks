@@ -4,8 +4,8 @@ import lee.code.chunks.Data;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.PU;
 import lee.code.chunks.commands.SubCommand;
-import lee.code.chunks.database.Cache;
-import lee.code.chunks.lists.chunksettings.ChunkAdminSettings;
+import lee.code.chunks.database.CacheManager;
+import lee.code.chunks.lists.chunksettings.AdminChunkSetting;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.lists.RenderTypes;
 import org.bukkit.Bukkit;
@@ -44,7 +44,7 @@ public class Selection extends SubCommand {
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Data data = plugin.getData();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
         PU pu = plugin.getPU();
 
         UUID uuid = player.getUniqueId();
@@ -73,7 +73,7 @@ public class Selection extends SubCommand {
                     for(double z = min.getZ(); z <= max.getZ(); z++) {
                         String inSelectionMessage = world + ",%.0f,%.0f";
                         String chunkCordSelected = String.format(inSelectionMessage, x, z);
-                        if (!cache.isChunkClaimed(chunkCordSelected)) {
+                        if (!cacheManager.isChunkClaimed(chunkCordSelected)) {
                             selected++;
                             chunks.add(chunkCordSelected);
                         }
@@ -101,8 +101,8 @@ public class Selection extends SubCommand {
                             boolean value = Boolean.parseBoolean(args[3]);
                             String settingFormat = value ? Lang.TRUE.getString() : Lang.FALSE.getString();
 
-                            if (pu.getAdminChunkSettings().contains(setting)) {
-                                int updated = cache.updateBulkAdminChunks(data.getAdminSelectedChunks(uuid), ChunkAdminSettings.valueOf(setting), value);
+                            if (data.getAdminChunkSettings().contains(setting)) {
+                                int updated = cacheManager.updateBulkAdminChunks(data.getAdminSelectedChunks(uuid), AdminChunkSetting.valueOf(setting), value);
                                 player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_SELECTION_SETTING_UPDATE.getComponent(new String[]{setting, settingFormat, String.valueOf(updated)})));
                             }
                         }
@@ -111,14 +111,14 @@ public class Selection extends SubCommand {
 
                 case "claim" -> {
                     if (data.hasAdminSelectedChunks(uuid)) {
-                        cache.claimBulkAdminChunks(data.getAdminSelectedChunks(uuid));
+                        cacheManager.claimBulkAdminChunks(data.getAdminSelectedChunks(uuid));
                         player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_CLAIM_SELECTION.getComponent(new String[] { String.valueOf(data.getAdminSelectedChunks(uuid).size()) })));
                     } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_SELECTION_NO_CHUNKS_SELECTED.getComponent(null)));
                 }
 
                 case "unclaim" -> {
                     if (data.hasAdminSelectedChunks(uuid)) {
-                        cache.unclaimBulkAdminChunk(data.getAdminSelectedChunks(uuid));
+                        cacheManager.unclaimBulkAdminChunk(data.getAdminSelectedChunks(uuid));
                         player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_ADMIN_UNCLAIM_SELECTION.getComponent(new String[] { String.valueOf(data.getAdminSelectedChunks(uuid).size()) })));
                     } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_SELECTION_NO_CHUNKS_SELECTED.getComponent(null)));
                 }

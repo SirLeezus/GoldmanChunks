@@ -1,6 +1,7 @@
 package lee.code.chunks.lists;
 
 import lee.code.chunks.GoldmanChunks;
+import lee.code.core.util.bukkit.BukkitUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
@@ -148,18 +149,17 @@ public enum Lang {
     @Getter private final String string;
 
     public String getString(final String[] variables) {
-        String value = ChatColor.translateAlternateColorCodes('&', string);
+        String value = BukkitUtils.parseColorString(string);
         if (variables == null) return value;
         else if (variables.length == 0) return value;
         for (int i = 0; i < variables.length; i++) value = value.replace("{" + i + "}", variables[i]);
-        return ChatColor.translateAlternateColorCodes('&', value);
+        return BukkitUtils.parseColorString(value);
     }
 
     public Component getComponent(String[] variables) {
-        GoldmanChunks plugin = GoldmanChunks.getPlugin();
         String value = string;
-        if (variables == null || variables.length == 0) return plugin.getPU().formatC(value);
+        if (variables == null || variables.length == 0) return BukkitUtils.parseColorComponent(value);
         for (int i = 0; i < variables.length; i++) value = value.replace("{" + i + "}", variables[i]);
-        return plugin.getPU().formatC(value);
+        return BukkitUtils.parseColorComponent(value);
     }
 }

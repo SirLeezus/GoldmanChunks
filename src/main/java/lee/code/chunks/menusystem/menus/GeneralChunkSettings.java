@@ -1,8 +1,8 @@
 package lee.code.chunks.menusystem.menus;
 
 import lee.code.chunks.GoldmanChunks;
-import lee.code.chunks.database.Cache;
-import lee.code.chunks.lists.chunksettings.ChunkSettings;
+import lee.code.chunks.database.CacheManager;
+import lee.code.chunks.lists.chunksettings.ChunkSetting;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.Menu;
 import lee.code.chunks.menusystem.PlayerMU;
@@ -56,7 +56,7 @@ public class GeneralChunkSettings extends Menu {
     @Override
     public void setMenuItems() {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
         setFillerGlass();
 
         ItemStack allow = new ItemStack(permTrueItem);
@@ -67,10 +67,10 @@ public class GeneralChunkSettings extends Menu {
 
         Player player = pmu.getOwner();
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+        String chunkCord = plugin.getPU().serializeChunkLocation(chunk);
 
         //chunk monster spawning
-        if (cache.canChunkSetting(ChunkSettings.MONSTERS, chunkCord)) {
+        if (cacheManager.canChunkSetting(ChunkSetting.MONSTERS, chunkCord)) {
             allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
             allow.setItemMeta(allowMeta);
             inventory.setItem(11, allow);
@@ -81,7 +81,7 @@ public class GeneralChunkSettings extends Menu {
         }
 
         //chunk explosions
-        if (cache.canChunkSetting(ChunkSettings.EXPLOSIONS, chunkCord)) {
+        if (cacheManager.canChunkSetting(ChunkSetting.EXPLOSIONS, chunkCord)) {
             allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
             allow.setItemMeta(allowMeta);
             inventory.setItem(15, allow);
@@ -97,9 +97,9 @@ public class GeneralChunkSettings extends Menu {
 
     private void updatePermItem(Player player, ItemStack item, int slot, Chunk chunk) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
 
-        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+        String chunkCord = plugin.getPU().serializeChunkLocation(chunk);
 
         ItemStack allow = new ItemStack(permTrueItem);
         ItemStack deny = new ItemStack(permFalseItem);
@@ -113,14 +113,14 @@ public class GeneralChunkSettings extends Menu {
                 case 11 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
-                    cache.setChunkSetting(ChunkSettings.MONSTERS, chunkCord, true);
+                    cacheManager.setChunkSetting(ChunkSetting.MONSTERS, chunkCord, true);
                     inventory.setItem(slot, allow);
                     playClickOnSound(player);
                 }
                 case 15 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
-                    cache.setChunkSetting(ChunkSettings.EXPLOSIONS, chunkCord, true);
+                    cacheManager.setChunkSetting(ChunkSetting.EXPLOSIONS, chunkCord, true);
                     inventory.setItem(slot, allow);
                     playClickOnSound(player);
                 }
@@ -132,14 +132,14 @@ public class GeneralChunkSettings extends Menu {
                 case 11 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_MONSTER_SPAWNING_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
-                    cache.setChunkSetting(ChunkSettings.MONSTERS, chunkCord, false);
+                    cacheManager.setChunkSetting(ChunkSetting.MONSTERS, chunkCord, false);
                     inventory.setItem(slot, deny);
                     playClickOffSound(player);
                 }
                 case 15 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_EXPLOSIONS_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
-                    cache.setChunkSetting(ChunkSettings.EXPLOSIONS, chunkCord, false);
+                    cacheManager.setChunkSetting(ChunkSetting.EXPLOSIONS, chunkCord, false);
                     inventory.setItem(slot, deny);
                     playClickOffSound(player);
                 }

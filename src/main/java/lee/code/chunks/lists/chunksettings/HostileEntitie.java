@@ -5,7 +5,7 @@ import lombok.Getter;
 import org.bukkit.entity.EntityType;
 
 @AllArgsConstructor
-public enum HostileEntities {
+public enum HostileEntitie {
 
     CAVE_SPIDER(EntityType.CAVE_SPIDER),
     ENDERMAN(EntityType.ENDERMAN),

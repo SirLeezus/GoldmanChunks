@@ -2,7 +2,7 @@ package lee.code.chunks.commands.chunk.subcommands;
 
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.commands.SubCommand;
-import lee.code.chunks.database.Cache;
+import lee.code.chunks.database.CacheManager;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -36,14 +36,14 @@ public class TrustAll extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
 
         if (args.length > 1) {
             OfflinePlayer target = Bukkit.getOfflinePlayerIfCached(args[1]);
             if (target != null) {
                 UUID targetUUID = target.getUniqueId();
-                if (!cache.isGlobalTrusted(player.getUniqueId(), targetUUID)) {
-                    cache.addGlobalTrusted(player.getUniqueId(), targetUUID);
+                if (!cacheManager.isGlobalTrusted(player.getUniqueId(), targetUUID)) {
+                    cacheManager.addGlobalTrusted(player.getUniqueId(), targetUUID);
                     player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_TRUSTALL_ADDED_PLAYER.getComponent(new String[] { target.getName() })));
                 } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_TRUSTALL_ALREADY_ADDED.getComponent(new String[] { target.getName() })));
             } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_PLAYER_NOT_FOUND.getComponent(new String[]{args[1]})));

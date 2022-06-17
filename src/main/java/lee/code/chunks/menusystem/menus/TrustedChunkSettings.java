@@ -1,8 +1,8 @@
 package lee.code.chunks.menusystem.menus;
 
 import lee.code.chunks.GoldmanChunks;
-import lee.code.chunks.database.Cache;
-import lee.code.chunks.lists.chunksettings.ChunkTrustedSettings;
+import lee.code.chunks.database.CacheManager;
+import lee.code.chunks.lists.chunksettings.ChunkTrustedSetting;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.Menu;
 import lee.code.chunks.menusystem.PlayerMU;
@@ -55,7 +55,7 @@ public class TrustedChunkSettings extends Menu {
     @Override
     public void setMenuItems() {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
         setFillerGlass();
 
         ItemStack allow = new ItemStack(permTrueItem);
@@ -66,10 +66,10 @@ public class TrustedChunkSettings extends Menu {
 
         Player player = pmu.getOwner();
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+        String chunkCord = plugin.getPU().serializeChunkLocation(chunk);
 
         //build
-        if (cache.canChunkTrustedSetting(ChunkTrustedSettings.BUILD, chunkCord)) {
+        if (cacheManager.canChunkTrustedSetting(ChunkTrustedSetting.BUILD, chunkCord)) {
             allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
             allow.setItemMeta(allowMeta);
             inventory.setItem(10, allow);
@@ -81,7 +81,7 @@ public class TrustedChunkSettings extends Menu {
         }
 
         //break
-        if (cache.canChunkTrustedSetting(ChunkTrustedSettings.BREAK, chunkCord)) {
+        if (cacheManager.canChunkTrustedSetting(ChunkTrustedSetting.BREAK, chunkCord)) {
             allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
             allow.setItemMeta(allowMeta);
             inventory.setItem(12, allow);
@@ -93,7 +93,7 @@ public class TrustedChunkSettings extends Menu {
         }
 
         //interact
-        if (cache.canChunkTrustedSetting(ChunkTrustedSettings.INTERACT, chunkCord)) {
+        if (cacheManager.canChunkTrustedSetting(ChunkTrustedSetting.INTERACT, chunkCord)) {
             allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
             allow.setItemMeta(allowMeta);
             inventory.setItem(14, allow);
@@ -105,7 +105,7 @@ public class TrustedChunkSettings extends Menu {
         }
 
         //pve
-        if (cache.canChunkTrustedSetting(ChunkTrustedSettings.PVE, chunkCord)) {
+        if (cacheManager.canChunkTrustedSetting(ChunkTrustedSetting.PVE, chunkCord)) {
             allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[] { Lang.TRUE.getString(null) })));
             allow.setItemMeta(allowMeta);
             inventory.setItem(16, allow);
@@ -122,9 +122,9 @@ public class TrustedChunkSettings extends Menu {
 
     private void updatePermItem(Player player, ItemStack item, int slot, Chunk chunk) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
 
-        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+        String chunkCord = plugin.getPU().serializeChunkLocation(chunk);
 
         ItemStack allow = new ItemStack(permTrueItem);
         ItemStack deny = new ItemStack(permFalseItem);
@@ -139,28 +139,28 @@ public class TrustedChunkSettings extends Menu {
                 case 10 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
-                    cache.setChunkTrustedSetting(ChunkTrustedSettings.BUILD, chunkCord, true);
+                    cacheManager.setChunkTrustedSetting(ChunkTrustedSetting.BUILD, chunkCord, true);
                     inventory.setItem(slot, allow);
                     playClickOnSound(player);
                 }
                 case 12 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
-                    cache.setChunkTrustedSetting(ChunkTrustedSettings.BREAK, chunkCord, true);
+                    cacheManager.setChunkTrustedSetting(ChunkTrustedSetting.BREAK, chunkCord, true);
                     inventory.setItem(slot, allow);
                     playClickOnSound(player);
                 }
                 case 14 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
-                    cache.setChunkTrustedSetting(ChunkTrustedSettings.INTERACT, chunkCord, true);
+                    cacheManager.setChunkTrustedSetting(ChunkTrustedSetting.INTERACT, chunkCord, true);
                     inventory.setItem(slot, allow);
                     playClickOnSound(player);
                 }
                 case 16 -> {
                     allowMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[]{Lang.TRUE.getString(null)})));
                     allow.setItemMeta(allowMeta);
-                    cache.setChunkTrustedSetting(ChunkTrustedSettings.PVE, chunkCord, true);
+                    cacheManager.setChunkTrustedSetting(ChunkTrustedSetting.PVE, chunkCord, true);
                     inventory.setItem(slot, allow);
                     playClickOnSound(player);
                 }
@@ -172,28 +172,28 @@ public class TrustedChunkSettings extends Menu {
                 case 10 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BUILD_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
-                    cache.setChunkTrustedSetting(ChunkTrustedSettings.BUILD, chunkCord, false);
+                    cacheManager.setChunkTrustedSetting(ChunkTrustedSetting.BUILD, chunkCord, false);
                     inventory.setItem(slot, deny);
                     playClickOffSound(player);
                 }
                 case 12 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_BREAK_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
-                    cache.setChunkTrustedSetting(ChunkTrustedSettings.BREAK, chunkCord, false);
+                    cacheManager.setChunkTrustedSetting(ChunkTrustedSetting.BREAK, chunkCord, false);
                     inventory.setItem(slot, deny);
                     playClickOffSound(player);
                 }
                 case 14 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_INTERACT_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
-                    cache.setChunkTrustedSetting(ChunkTrustedSettings.INTERACT, chunkCord, false);
+                    cacheManager.setChunkTrustedSetting(ChunkTrustedSetting.INTERACT, chunkCord, false);
                     inventory.setItem(slot, deny);
                     playClickOffSound(player);
                 }
                 case 16 -> {
                     denyMeta.displayName(Component.text(Lang.ITEM_SETTINGS_PVE_NAME.getString(new String[]{Lang.FALSE.getString(null)})));
                     deny.setItemMeta(denyMeta);
-                    cache.setChunkTrustedSetting(ChunkTrustedSettings.PVE, chunkCord, false);
+                    cacheManager.setChunkTrustedSetting(ChunkTrustedSetting.PVE, chunkCord, false);
                     inventory.setItem(slot, deny);
                     playClickOffSound(player);
                 }

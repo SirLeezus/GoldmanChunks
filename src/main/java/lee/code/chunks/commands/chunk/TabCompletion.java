@@ -1,7 +1,8 @@
 package lee.code.chunks.commands.chunk;
 
 import lee.code.chunks.GoldmanChunks;
-import lee.code.chunks.database.Cache;
+import lee.code.chunks.database.CacheManager;
+import lee.code.core.util.bukkit.BukkitUtils;
 import org.bukkit.Chunk;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -20,7 +21,7 @@ public class TabCompletion implements TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
 
         if (sender instanceof Player player) {
             UUID uuid = player.getUniqueId();
@@ -30,23 +31,23 @@ public class TabCompletion implements TabCompleter {
                 return StringUtil.copyPartialMatches(args[0], hasCommand, new ArrayList<>());
 
             } else if (args[0].equals("trust")) {
-                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], plugin.getPU().getOnlinePlayers(), new ArrayList<>());
+                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], BukkitUtils.getOnlinePlayers(), new ArrayList<>());
             } else if (args[0].equals("trustall")) {
-                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], plugin.getPU().getOnlinePlayers(), new ArrayList<>());
+                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], BukkitUtils.getOnlinePlayers(), new ArrayList<>());
             } else if (args[0].equals("untrust")) {
                 if (args.length == 2) {
                     Chunk chunk = player.getLocation().getChunk();
-                    String chunkCord = plugin.getPU().formatChunkLocation(chunk);
-                    if (cache.isChunkClaimed(chunkCord) && cache.isChunkOwner(chunkCord, uuid)) return StringUtil.copyPartialMatches(args[1], cache.getChunkTrustedNames(chunkCord), new ArrayList<>());
+                    String chunkCord = plugin.getPU().serializeChunkLocation(chunk);
+                    if (cacheManager.isChunkClaimed(chunkCord) && cacheManager.isChunkOwner(chunkCord, uuid)) return StringUtil.copyPartialMatches(args[1], cacheManager.getChunkTrustedNames(chunkCord), new ArrayList<>());
                 }
             } else if (args[0].equals("untrustall")) {
-                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], cache.getGlobalTrustedNames(uuid), new ArrayList<>());
+                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], cacheManager.getGlobalTrustedNames(uuid), new ArrayList<>());
             } else if (args[0].equals("teleport")) {
-                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], cache.getChunkClaims(uuid), new ArrayList<>());
+                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], cacheManager.getChunkClaims(uuid), new ArrayList<>());
             } else if (args[0].equals("admin")) {
                 if (args.length == 2) return StringUtil.copyPartialMatches(args[1], Arrays.asList("unclaim", "unclaimall", "bypass", "bonusclaims"), new ArrayList<>());
                 else if (args.length == 3 && args[1].equals("bonusclaims")) return StringUtil.copyPartialMatches(args[2], Arrays.asList("add", "remove", "set"), new ArrayList<>());
-                else if (args.length == 4 && args[1].equals("bonusclaims")) return StringUtil.copyPartialMatches(args[3], plugin.getPU().getOnlinePlayers(), new ArrayList<>());
+                else if (args.length == 4 && args[1].equals("bonusclaims")) return StringUtil.copyPartialMatches(args[3], BukkitUtils.getOnlinePlayers(), new ArrayList<>());
                 else if (args.length == 5 && args[1].equals("bonusclaims")) return StringUtil.copyPartialMatches(args[4], Collections.singletonList("<amount>") , new ArrayList<>());
             }
         }

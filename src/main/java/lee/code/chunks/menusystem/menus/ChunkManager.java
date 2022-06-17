@@ -1,7 +1,7 @@
 package lee.code.chunks.menusystem.menus;
 
 import lee.code.chunks.GoldmanChunks;
-import lee.code.chunks.database.Cache;
+import lee.code.chunks.database.CacheManager;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.menusystem.Menu;
 import lee.code.chunks.menusystem.PlayerMU;
@@ -33,7 +33,7 @@ public class ChunkManager extends Menu {
     @Override
     public void handleMenu(InventoryClickEvent e) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
 
         Player player = pmu.getOwner();
         ItemStack clickedItem = e.getCurrentItem();
@@ -44,18 +44,18 @@ public class ChunkManager extends Menu {
         if (clickedItem.equals(fillerGlass)) return;
 
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = plugin.getPU().formatChunkLocation(chunk);
+        String chunkCord = plugin.getPU().serializeChunkLocation(chunk);
         UUID uuid = player.getUniqueId();
 
         switch (e.getSlot()) {
             case 11:
-                if (cache.isChunkClaimed(chunkCord) && cache.isChunkOwner(chunkCord, uuid)) {
+                if (cacheManager.isChunkClaimed(chunkCord) && cacheManager.isChunkOwner(chunkCord, uuid)) {
                     new TrustedChunkSettings(pmu).open();
                     playClickSound(player);
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_MANAGE_NOT_CHUNK_OWNER.getString(null));
                 break;
             case 13:
-                if (cache.isChunkClaimed(chunkCord) && cache.isChunkOwner(chunkCord, uuid)) {
+                if (cacheManager.isChunkClaimed(chunkCord) && cacheManager.isChunkOwner(chunkCord, uuid)) {
                     new GeneralChunkSettings(pmu).open();
                     playClickSound(player);
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_MANAGE_NOT_CHUNK_OWNER.getString(null));

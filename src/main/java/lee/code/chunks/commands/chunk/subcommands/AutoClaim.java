@@ -41,7 +41,7 @@ public class AutoClaim extends SubCommand {
 
         UUID uuid = player.getUniqueId();
         Chunk chunk = player.getLocation().getChunk();
-        String chunkCord = pu.formatChunkLocation(chunk);
+        String chunkCord = pu.serializeChunkLocation(chunk);
         String worldName = player.getWorld().getName();
 
         if (data.getWhitelistedWorlds().contains(worldName)) {

@@ -3,7 +3,7 @@ package lee.code.chunks.commands.chunk.subcommands;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.PU;
 import lee.code.chunks.commands.SubCommand;
-import lee.code.chunks.database.Cache;
+import lee.code.chunks.database.CacheManager;
 import lee.code.chunks.lists.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -39,18 +39,18 @@ public class UnTrust extends SubCommand {
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         UUID uuid = player.getUniqueId();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
         PU pu = plugin.getPU();
 
         if (args.length > 1) {
             OfflinePlayer target = Bukkit.getOfflinePlayerIfCached(args[1]);
             if (target != null) {
                 Chunk chunk = player.getLocation().getChunk();
-                String chunkCord = pu.formatChunkLocation(chunk);
+                String chunkCord = pu.serializeChunkLocation(chunk);
                 UUID targetUUID = target.getUniqueId();
-                if (cache.isChunkOwner(chunkCord, uuid)) {
-                    if (cache.isChunkTrusted(chunkCord, targetUUID)) {
-                        cache.removeChunkTrusted(chunkCord, targetUUID);
+                if (cacheManager.isChunkOwner(chunkCord, uuid)) {
+                    if (cacheManager.isChunkTrusted(chunkCord, targetUUID)) {
+                        cacheManager.removeChunkTrusted(chunkCord, targetUUID);
                         player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_UNTRUST_REMOVED_PLAYER.getComponent(new String[] { target.getName(), chunkCord })));
                     } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_UNTRUST_PLAYER_NOT_TRUSTED.getComponent(new String[] { target.getName(), chunkCord })));
                 } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_UNTRUST_NOT_CHUNK_OWNER.getComponent(null)));
