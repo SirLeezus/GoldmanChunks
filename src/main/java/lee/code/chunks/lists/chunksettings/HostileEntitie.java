@@ -41,6 +41,7 @@ public enum HostileEntitie {
     ENDER_DRAGON(EntityType.ENDER_DRAGON),
     WITHER(EntityType.WITHER),
     GIANT(EntityType.GIANT),
+    WARDEN(EntityType.WARDEN),
 
     ;
 

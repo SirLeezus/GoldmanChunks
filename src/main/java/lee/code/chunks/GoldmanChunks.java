@@ -4,7 +4,6 @@ import lee.code.chunks.commands.adminchunk.AdminCommandManager;
 import lee.code.chunks.commands.adminchunk.AdminTabCompletion;
 import lee.code.chunks.database.CacheManager;
 import lee.code.chunks.database.DatabaseManager;
-import lee.code.chunks.database.SQLite;
 import lee.code.chunks.listeners.ChunkListener;
 import lee.code.chunks.commands.chunk.CommandManager;
 import lee.code.chunks.commands.chunk.TabCompletion;
@@ -23,9 +22,6 @@ public class GoldmanChunks extends JavaPlugin {
     @Getter private EssentialsAPI essentialsAPI;
     @Getter private ChunkAPI chunkAPI;
 
-
-    @Getter private SQLite oldSqLite;
-
     @Override
     public void onEnable() {
         this.data = new Data();
@@ -35,11 +31,7 @@ public class GoldmanChunks extends JavaPlugin {
         this.chunkAPI = new ChunkAPI();
         this.databaseManager = new DatabaseManager();
 
-        this.oldSqLite = new SQLite();
-
         databaseManager.initialize();
-        //oldSqLite.transferData();
-
         data.loadData();
 
         registerCommands();
