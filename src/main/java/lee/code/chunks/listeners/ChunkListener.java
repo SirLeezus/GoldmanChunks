@@ -170,8 +170,6 @@ public class ChunkListener implements Listener {
                         }
                     }
                 }
-            } else if (!(e.getAttacker() instanceof Player)) {
-                e.setCancelled(true);
             }
         } else if (cacheManager.isAdminChunk(chunkCord)) {
             if (e.getAttacker() instanceof Player player) {

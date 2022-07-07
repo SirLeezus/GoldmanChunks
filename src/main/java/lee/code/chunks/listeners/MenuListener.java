@@ -17,7 +17,6 @@ public class MenuListener implements Listener {
             e.setCancelled(true);
             Player player = (Player) e.getWhoClicked();
             if (BukkitUtils.hasClickDelay(player)) return;
-            else BukkitUtils.addClickDelay(player);
             menu.handleMenu(e);
         }
     }
