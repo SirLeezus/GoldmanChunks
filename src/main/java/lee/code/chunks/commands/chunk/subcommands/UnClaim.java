@@ -37,18 +37,20 @@ public class UnClaim extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
-        UUID uuid = player.getUniqueId();
         CacheManager cacheManager = plugin.getCacheManager();
         PU pu = plugin.getPU();
+        UUID uuid = player.getUniqueId();
 
         Chunk chunk = player.getLocation().getChunk();
         String chunkCord = pu.serializeChunkLocation(chunk);
 
         if (cacheManager.isChunkClaimed(chunkCord)) {
             if (cacheManager.isChunkOwner(chunkCord, uuid)) {
-                cacheManager.unclaimChunk(chunkCord, uuid);
-                player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_UNCLAIM_SUCCESSFUL.getComponent(new String[] { chunkCord })));
-                pu.renderChunkBorder(player, chunk, RenderTypes.UNCLAIM);
+                if (!plugin.getData().isPlayerAutoClaiming(uuid)) {
+                    cacheManager.unclaimChunk(chunkCord, uuid);
+                    player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_UNCLAIM_SUCCESSFUL.getComponent(new String[] { chunkCord })));
+                    pu.renderChunkBorder(player, chunk, RenderTypes.UNCLAIM);
+                } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_UNCLAIM_WHILE_AUTO_CLAIM.getComponent(null)));
             } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_UNCLAIM_OWNER.getComponent(new String[] { cacheManager.getChunkOwnerName(chunkCord) })));
         } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_UNCLAIMED_NOT_CLAIMED.getComponent(null)));
     }

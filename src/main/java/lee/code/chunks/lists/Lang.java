@@ -27,6 +27,7 @@ public enum Lang {
     ERROR_CLAIMED_OWNER("&cYou already own this chunk."),
     ERROR_ADMIN_CLAIMED("&cSadly this chunk has already been claimed as a &4&lAdmin &cchunk."),
     ERROR_COMMAND_ADMIN_UNCLAIM("&cThe chunk &e(&b{0}&e) &cis not owned by anyone, you need to stand on a chunk owned by a player."),
+    ERROR_COMMAND_UNCLAIM_WHILE_AUTO_CLAIM("&cYou can't unclaim chunks while auto-claim is enabled."),
     ERROR_COMMAND_UNCLAIM_OWNER("&cThis chunk is owned by &6{0}&c, you need to be the owner to unclaim it."),
     ERROR_COMMAND_UNCLAIMED_NOT_CLAIMED("&cThis chunk is not claimed so you can not unclaim it."),
     ERROR_COMMAND_AUTO_CLAIM("&cYou moved outside of the chunks around the last group you auto claimed so auto claim has been disabled."),
