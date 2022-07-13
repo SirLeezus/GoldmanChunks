@@ -1,5 +1,6 @@
 package lee.code.chunks.listeners;
 
+import io.papermc.paper.event.block.BlockBreakBlockEvent;
 import lee.code.chunks.Data;
 import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.PU;
@@ -713,5 +714,24 @@ public class ChunkListener implements Listener {
         player.addPotionEffect(PotionEffectType.SLOW_FALLING.createEffect(20*15, 1));
         if (type.equals(ChunkWarning.FLY_OUTSIDE)) player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_FLY_OUTSIDE_OF_CLAIM.getComponent(null)));
         else if (type.equals(ChunkWarning.FLY_PVP)) player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_FLY_PVP.getComponent(null)));
+    }
+
+    @EventHandler
+    public void onChunkBlockChange(EntityChangeBlockEvent e) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        CacheManager cacheManager = plugin.getCacheManager();
+        PU pu = plugin.getPU();
+        Entity entity = e.getEntity();
+        if (entity instanceof Wither) {
+            Chunk chunk = entity.getChunk();
+            String chunkCord = pu.serializeChunkLocation(chunk);
+            if (cacheManager.isChunkClaimed(chunkCord)) {
+                if (!cacheManager.canChunkSetting(ChunkSetting.EXPLOSIONS, chunkCord)) {
+                    e.setCancelled(true);
+                }
+            } else if (cacheManager.isAdminChunk(chunkCord)) {
+                if (!cacheManager.canAdminChunkSetting(AdminChunkSetting.EXPLOSIONS, chunkCord)) e.setCancelled(true);
+            }
+        }
     }
 }
