@@ -42,6 +42,7 @@ public enum HostileEntitie {
     WITHER(EntityType.WITHER),
     GIANT(EntityType.GIANT),
     WARDEN(EntityType.WARDEN),
+    ZOMBIE_VILLAGER(EntityType.ZOMBIE_VILLAGER),
 
     ;
 
