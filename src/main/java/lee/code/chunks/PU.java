@@ -59,21 +59,21 @@ public class PU {
         Material[] whiteList = new Material[] { Material.AIR, Material.CAVE_AIR, Material.VOID_AIR};
 
         if (world.getWorldBorder().isInside(location)) {
-            world.getChunkAtAsync(location, false);
-            for (int i = y; i > 50; i--) {
-                Location loc = new Location(world, x, i, z, yaw, pitch);
-                if (Arrays.asList(whiteList).contains(loc.getBlock().getType())) {
-                    Location ground = loc.subtract(0, 1, 0);
-                    Block groundBlock = ground.getBlock();
-                    if (!Arrays.asList(blackList).contains(groundBlock.getType())) {
-                        player.teleportAsync(loc.add(0, 1, 0));
-                        player.sendActionBar(Lang.TELEPORT.getComponent(null));
-                        return;
+            world.getChunkAtAsync(location, false).thenAccept(result -> {
+                for (int i = y; i > 50; i--) {
+                    Location loc = new Location(world, x, i, z, yaw, pitch);
+                    if (Arrays.asList(whiteList).contains(loc.getBlock().getType())) {
+                        Location ground = loc.subtract(0, 1, 0);
+                        Block groundBlock = ground.getBlock();
+                        if (!Arrays.asList(blackList).contains(groundBlock.getType())) {
+                            player.teleportAsync(loc.add(0, 1, 0)).thenAccept(result2 -> player.sendActionBar(Lang.TELEPORT.getComponent(null)));
+                            return;
+                        }
                     }
                 }
-            }
-        }
-        player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_TELEPORT_UNSAFE.getComponent(null)));
+                player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_TELEPORT_UNSAFE.getComponent(null)));
+            });
+        } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_TELEPORT_UNSAFE.getComponent(null)));
     }
 
     public List<String> getChunksAroundPlayer(Location location) {

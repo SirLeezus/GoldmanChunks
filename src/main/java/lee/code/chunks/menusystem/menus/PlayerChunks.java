@@ -76,7 +76,6 @@ public class PlayerChunks extends PaginatedMenu {
                 Location chunkLocation = getItemChunkLocation(clickedItem);
                 if (chunkLocation != null) {
                     pu.teleportPlayerToChunk(player, chunkLocation);
-                    player.sendActionBar(Lang.TELEPORT.getComponent(null));
                 }
                 player.getInventory().close();
             }
