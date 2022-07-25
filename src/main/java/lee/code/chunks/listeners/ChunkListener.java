@@ -19,6 +19,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
@@ -50,6 +51,45 @@ public class ChunkListener implements Listener {
             default -> Component.text("ERROR");
         };
         player.sendActionBar(messageType);
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent e) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        Data data = plugin.getData();
+        CacheManager cacheManager = plugin.getCacheManager();
+
+        Player player = e.getPlayer();
+        UUID uuid = player.getUniqueId();
+
+        Chunk chunk = e.getBlock().getLocation().getChunk();
+        String chunkCord = plugin.getPU().serializeChunkLocation(chunk);
+
+        if (!data.hasAdminBypass(uuid)) {
+            if (cacheManager.isChunkClaimed(chunkCord)) {
+                if (!cacheManager.isChunkOwner(chunkCord, uuid)) {
+                    UUID owner = cacheManager.getChunkOwnerUUID(chunkCord);
+                    //chunk trusted check
+                    if (cacheManager.isChunkTrusted(chunkCord, uuid)) {
+                        if (!cacheManager.canChunkTrustedSetting(ChunkTrustedSetting.BUILD, chunkCord)) {
+                            e.setCancelled(true);
+                            warnMessage(player, true, owner, ChunkWarning.BUILD);
+                        }
+                        //global trusted check
+                    } else if (cacheManager.isGlobalTrusted(owner, uuid)) {
+                        if (!cacheManager.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSetting.BUILD, owner)) {
+                            e.setCancelled(true);
+                            warnMessage(player, true, owner, ChunkWarning.BUILD);
+                        }
+                    } else {
+                        e.setCancelled(true);
+                        warnMessage(player, false, owner, ChunkWarning.BUILD);
+                    }
+                }
+            } else if (cacheManager.isAdminChunk(chunkCord)) {
+                if (!cacheManager.canAdminChunkSetting(AdminChunkSetting.BUILD, chunkCord)) e.setCancelled(true);
+            }
+        }
     }
 
     @EventHandler
@@ -549,12 +589,26 @@ public class ChunkListener implements Listener {
             }
 
             if (cacheManager.isAdminChunk(chunkCord)) return;
+            List<Block> blocks = new ArrayList<>(e.getBlocks());
+            if (blocks.size() > 0) {
+                Block lastBlock = blocks.get(blocks.size() - 1);
+                lastBlock = lastBlock.getRelative(e.getDirection());
+                blocks.add(lastBlock);
+            }
+
+            UUID chunkOwner = cacheManager.getChunkOwnerUUID(chunkCord);
 
             //check piston moved blocks
-            for (Block block : new ArrayList<>(e.getBlocks())) {
+            for (Block block : blocks) {
                 Chunk movedBlockChunk = block.getLocation().getChunk();
                 String movedBlockChunkCords = pu.serializeChunkLocation(movedBlockChunk);
-                if (!cacheManager.isChunkClaimed(movedBlockChunkCords)) {
+                if (cacheManager.isChunkClaimed(movedBlockChunkCords)) {
+                    UUID movedChunkOwner = cacheManager.getChunkOwnerUUID(movedBlockChunkCords);
+                    if (!movedChunkOwner.equals(chunkOwner)) {
+                        e.setCancelled(true);
+                        return;
+                    }
+                } else {
                     e.setCancelled(true);
                     return;
                 }
