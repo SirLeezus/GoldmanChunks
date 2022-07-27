@@ -20,7 +20,7 @@ public class Block extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Block a player from entering or teleporting to your chunk.";
+        return "Block a player from entering or teleporting to your chunks.";
     }
 
     @Override
