@@ -15,7 +15,7 @@ import java.util.*;
 
 public class TabCompletion implements TabCompleter {
 
-    private final List<String> subCommands = Arrays.asList("teleport", "trust", "trustall", "trusted", "untrust", "untrustall", "claim", "unclaim", "map", "info", "manage", "autoclaim", "list", "abandonallclaims", "admin", "maxclaims", "setprice", "buy", "fly");
+    private final List<String> subCommands = Arrays.asList("teleport", "trust", "trustall", "trusted", "untrust", "untrustall", "claim", "unclaim", "map", "info", "manage", "autoclaim", "list", "abandonallclaims", "admin", "maxclaims", "setprice", "buy", "fly", "block", "unblock", "blocked");
     private final List<String> blank = new ArrayList<>();
 
     @Override
@@ -44,6 +44,10 @@ public class TabCompletion implements TabCompleter {
                 if (args.length == 2) return StringUtil.copyPartialMatches(args[1], cacheManager.getGlobalTrustedNames(uuid), new ArrayList<>());
             } else if (args[0].equals("teleport")) {
                 if (args.length == 2) return StringUtil.copyPartialMatches(args[1], cacheManager.getChunkClaims(uuid), new ArrayList<>());
+            } else if (args[0].equals("block")) {
+                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], BukkitUtils.getOnlinePlayers(), new ArrayList<>());
+            } else if (args[0].equals("unblock")) {
+                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], cacheManager.getBlockedNames(uuid), new ArrayList<>());
             } else if (args[0].equals("admin")) {
                 if (args.length == 2) return StringUtil.copyPartialMatches(args[1], Arrays.asList("unclaim", "unclaimall", "bypass", "bonusclaims"), new ArrayList<>());
                 else if (args.length == 3 && args[1].equals("bonusclaims")) return StringUtil.copyPartialMatches(args[2], Arrays.asList("add", "remove", "set"), new ArrayList<>());

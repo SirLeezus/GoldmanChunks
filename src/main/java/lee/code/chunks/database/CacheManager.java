@@ -53,11 +53,9 @@ public class CacheManager {
 
     private String getPlayerChunksString(UUID uuid) { return getPlayerChunkCache().getIfPresent(uuid); }
 
-    public void claimChunk(String chunk, UUID owner) {
-        ChunkTable chunkTable = new ChunkTable(chunk, owner);
+    public void updateChunkTable(ChunkTable chunkTable) {
         getChunkCache().put(chunkTable.getChunk(), chunkTable);
-        GoldmanChunks.getPlugin().getDatabaseManager().createChunkTable(chunkTable);
-        addClaim(owner, chunk);
+        GoldmanChunks.getPlugin().getDatabaseManager().updateChunkTable(chunkTable);
     }
 
     public void setChunk(ChunkTable chunkTable) {
@@ -68,6 +66,13 @@ public class CacheManager {
         getPlayerChunkCache().put(chunkTable.getOwner(), chunks);
     }
 
+    public void claimChunk(String chunk, UUID owner) {
+        ChunkTable chunkTable = new ChunkTable(chunk, owner);
+        getChunkCache().put(chunkTable.getChunk(), chunkTable);
+        GoldmanChunks.getPlugin().getDatabaseManager().createChunkTable(chunkTable);
+        addClaim(owner, chunk);
+    }
+
     public boolean isChunkForSale(String chunk) {
         return getChunkTable(chunk).getChunkPrice() > 0;
     }
@@ -75,8 +80,7 @@ public class CacheManager {
     public void setChunkPrice(String chunk, long price) {
         ChunkTable chunkTable = getChunkTable(chunk);
         chunkTable.setChunkPrice(price);
-        getChunkCache().put(chunkTable.getChunk(), chunkTable);
-        GoldmanChunks.getPlugin().getDatabaseManager().updateChunkTable(chunkTable);
+        updateChunkTable(chunkTable);
     }
 
     public void setChunkOwner(String chunk, UUID oldOwner, UUID newOwner) {
@@ -85,8 +89,7 @@ public class CacheManager {
         chunkTable.setChunkPrice(0);
         addClaim(newOwner, chunk);
         subtractClaim(oldOwner, chunk);
-        getChunkCache().put(chunkTable.getChunk(), chunkTable);
-        GoldmanChunks.getPlugin().getDatabaseManager().updateChunkTable(chunkTable);
+        updateChunkTable(chunkTable);
     }
 
     public long getChunkPrice(String chunk) {
@@ -154,8 +157,7 @@ public class CacheManager {
         trusted.remove(uuid.toString());
         String newTrusted = trusted.isEmpty() ? "0" : StringUtils.join(trusted, ",");
         chunkTable.setTrusted(newTrusted);
-        getChunkCache().put(chunkTable.getChunk(), chunkTable);
-        GoldmanChunks.getPlugin().getDatabaseManager().updateChunkTable(chunkTable);
+        updateChunkTable(chunkTable);
     }
 
     public void addChunkTrusted(String chunk, UUID uuid) {
@@ -163,8 +165,7 @@ public class CacheManager {
         String trusted = chunkTable.getTrusted();
         trusted = trusted.equals("0") ? uuid.toString() : trusted + "," + uuid;
         chunkTable.setTrusted(trusted);
-        getChunkCache().put(chunkTable.getChunk(), chunkTable);
-        GoldmanChunks.getPlugin().getDatabaseManager().updateChunkTable(chunkTable);
+        updateChunkTable(chunkTable);
     }
 
     public boolean canChunkTrustedSetting(ChunkTrustedSetting setting, String chunk) {
@@ -186,8 +187,7 @@ public class CacheManager {
             case PVE -> chunkTable.setTrustedPVE(result);
             case INTERACT -> chunkTable.setTrustedInteract(result);
         }
-        getChunkCache().put(chunkTable.getChunk(), chunkTable);
-        GoldmanChunks.getPlugin().getDatabaseManager().updateChunkTable(chunkTable);
+        updateChunkTable(chunkTable);
     }
 
     public boolean canChunkSetting(ChunkSetting setting, String chunk) {
@@ -205,8 +205,7 @@ public class CacheManager {
             case MONSTERS -> chunkTable.setChunkMonsterSpawning(result);
             case EXPLOSIONS -> chunkTable.setChunkExplosions(result);
         }
-        getChunkCache().put(chunkTable.getChunk(), chunkTable);
-        GoldmanChunks.getPlugin().getDatabaseManager().updateChunkTable(chunkTable);
+        updateChunkTable(chunkTable);
     }
 
     //PLAYER DATA
@@ -231,6 +230,42 @@ public class CacheManager {
 
     public boolean hasClaimedChunks(UUID uuid) {
         return getPlayerTable(uuid).getClaimed() != 0;
+    }
+
+    public void updatePlayerTable(PlayerTable playerTable) {
+        getPlayerCache().put(playerTable.getPlayer(), playerTable);
+        GoldmanChunks.getPlugin().getDatabaseManager().updatePlayerTable(playerTable);
+    }
+
+    public List<String> getBlockedNames(UUID uuid) {
+        String blockedPlayers = getPlayerTable(uuid).getBlockedPlayers();
+        List<String> blockedNames = new ArrayList<>();
+        if (!blockedPlayers.equals("0")) {
+            for (String player : StringUtils.split(blockedPlayers, ',')) {
+                blockedNames.add(Bukkit.getOfflinePlayer(UUID.fromString(player)).getName());
+            }
+        }
+        return blockedNames;
+    }
+
+    public boolean isBlocked(UUID uuid, UUID target) {
+        return getPlayerTable(uuid).getBlockedPlayers().contains(String.valueOf(target));
+    }
+
+    public void addBlockedUser(UUID uuid, UUID target) {
+        PlayerTable playerTable = getPlayerTable(uuid);
+        String newBlocked = playerTable.getBlockedPlayers().equals("0") ? target.toString() : playerTable.getBlockedPlayers() + "," + target;
+        playerTable.setBlockedPlayers(newBlocked);
+        updatePlayerTable(playerTable);
+    }
+
+    public void removeBlockedUser(UUID uuid, UUID target) {
+        PlayerTable playerTable = getPlayerTable(uuid);
+        List<String> blocked = new ArrayList<>(Arrays.asList(StringUtils.split(playerTable.getBlockedPlayers(), ',')));
+        blocked.remove(target.toString());
+        String newBlocked = blocked.isEmpty() ? "0" : StringUtils.join(blocked, ",");
+        playerTable.setBlockedPlayers(newBlocked);
+        updatePlayerTable(playerTable);
     }
 
     public int getPlayerMaxClaimAmount(UUID uuid) {
@@ -264,8 +299,7 @@ public class CacheManager {
         int newAmount = playerTable.getBonusClaims() - amount;
         if (newAmount < 0) newAmount = 0;
         playerTable.setBonusClaims(newAmount);
-        getPlayerCache().put(playerTable.getPlayer(), playerTable);
-        GoldmanChunks.getPlugin().getDatabaseManager().updatePlayerTable(playerTable);
+        updatePlayerTable(playerTable);
     }
 
     public void addBonusClaimsAmount(UUID uuid, int amount) {
@@ -273,15 +307,13 @@ public class CacheManager {
         int newAmount = playerTable.getBonusClaims() + amount;
         if (newAmount > Settings.CLAIMS_MAX.getValue()) newAmount = Settings.CLAIMS_MAX.getValue();
         playerTable.setBonusClaims(newAmount);
-        getPlayerCache().put(playerTable.getPlayer(), playerTable);
-        GoldmanChunks.getPlugin().getDatabaseManager().updatePlayerTable(playerTable);
+        updatePlayerTable(playerTable);
     }
 
     public void setBonusClaimsAmount(UUID uuid, int amount) {
         PlayerTable playerTable = getPlayerTable(uuid);
         playerTable.setBonusClaims(Math.max(amount, 0));
-        getPlayerCache().put(playerTable.getPlayer(), playerTable);
-        GoldmanChunks.getPlugin().getDatabaseManager().updatePlayerTable(playerTable);
+        updatePlayerTable(playerTable);
     }
 
     public int getAccruedClaimsAmount(UUID uuid) {
@@ -305,8 +337,7 @@ public class CacheManager {
         //player cache
         PlayerTable playerTable = getPlayerTable(uuid);
         playerTable.setClaimed(playerTable.getClaimed() + 1);
-        getPlayerCache().put(playerTable.getPlayer(), playerTable);
-        GoldmanChunks.getPlugin().getDatabaseManager().updatePlayerTable(playerTable);
+        updatePlayerTable(playerTable);
 
         //player chunk cache
         String chunks = getPlayerChunksString(uuid) != null ? getPlayerChunksString(uuid) + "%" + chunk : chunk;
@@ -317,8 +348,7 @@ public class CacheManager {
         //player cache
         PlayerTable playerTable = getPlayerTable(uuid);
         playerTable.setClaimed(playerTable.getClaimed() - 1);
-        getPlayerCache().put(playerTable.getPlayer(), playerTable);
-        GoldmanChunks.getPlugin().getDatabaseManager().updatePlayerTable(playerTable);
+        updatePlayerTable(playerTable);
 
         //player chunk cache
         List<String> newChunks = new ArrayList<>();
@@ -336,8 +366,7 @@ public class CacheManager {
         PlayerTable playerTable = getPlayerTable(uuid);
         String newGlobalTrustedList = playerTable.getGlobalTrusted().equals("0") ? trusted.toString() : playerTable.getGlobalTrusted() + "," + trusted;
         playerTable.setGlobalTrusted(newGlobalTrustedList);
-        getPlayerCache().put(playerTable.getPlayer(), playerTable);
-        GoldmanChunks.getPlugin().getDatabaseManager().updatePlayerTable(playerTable);
+        updatePlayerTable(playerTable);
     }
 
     public List<String> getGlobalTrustedNames(UUID uuid) {
@@ -365,8 +394,7 @@ public class CacheManager {
         globalTrusted.remove(trusted.toString());
         String newTrusted = globalTrusted.isEmpty() ? "0" : StringUtils.join(globalTrusted, ",");
         playerTable.setGlobalTrusted(newTrusted);
-        getPlayerCache().put(playerTable.getPlayer(), playerTable);
-        GoldmanChunks.getPlugin().getDatabaseManager().updatePlayerTable(playerTable);
+        updatePlayerTable(playerTable);
     }
 
     public boolean canChunkTrustedGlobalSetting(ChunkTrustedGlobalSetting setting, UUID uuid) {
@@ -388,8 +416,7 @@ public class CacheManager {
             case PVE -> playerTable.setGlobalPVE(result);
             case INTERACT -> playerTable.setGlobalInteract(result);
         }
-        getPlayerCache().put(playerTable.getPlayer(), playerTable);
-        GoldmanChunks.getPlugin().getDatabaseManager().updatePlayerTable(playerTable);
+        updatePlayerTable(playerTable);
     }
 
     public List<UUID> getUserList() {
@@ -403,14 +430,16 @@ public class CacheManager {
     public void setChunkFlying(UUID uuid, boolean canFly) {
         PlayerTable playerTable = getPlayerTable(uuid);
         playerTable.setChunkFlying(canFly);
-        getPlayerCache().put(playerTable.getPlayer(), playerTable);
-        GoldmanChunks.getPlugin().getDatabaseManager().updatePlayerTable(playerTable);
+        updatePlayerTable(playerTable);
     }
 
     //ADMIN CHUNK DATA
 
     private AdminChunkTable getAdminChunkTable(String chunk) {
         return getAdminChunkCache().getIfPresent(chunk);
+    }
+    public void setAdminChunk(AdminChunkTable adminChunkTable) {
+        getAdminChunkCache().put(adminChunkTable.getChunk(), adminChunkTable);
     }
 
     public List<String> getAdminChunkClaims() {
@@ -450,10 +479,6 @@ public class CacheManager {
         AdminChunkTable adminChunkTable = new AdminChunkTable(chunk);
         getAdminChunkCache().put(adminChunkTable.getChunk(), adminChunkTable);
         GoldmanChunks.getPlugin().getDatabaseManager().createAdminChunkTable(adminChunkTable);
-    }
-
-    public void setAdminChunk(AdminChunkTable adminChunkTable) {
-        getAdminChunkCache().put(adminChunkTable.getChunk(), adminChunkTable);
     }
 
     public void unclaimBulkAdminChunk(List<String> chunks) {

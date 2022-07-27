@@ -1,5 +1,6 @@
 package lee.code.chunks;
 
+import lee.code.chunks.database.CacheManager;
 import lee.code.chunks.lists.Lang;
 import lee.code.chunks.lists.RenderTypes;
 import org.bukkit.*;

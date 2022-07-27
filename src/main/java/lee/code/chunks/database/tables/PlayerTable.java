@@ -41,6 +41,9 @@ public class PlayerTable {
     @DatabaseField(columnName = "chunk_flying", canBeNull = false)
     private boolean chunkFlying;
 
+    @DatabaseField(columnName = "blocked_players", canBeNull = false)
+    private String blockedPlayers;
+
     public PlayerTable(UUID player) {
         this.player = player;
         this.claimed = 0;
@@ -51,5 +54,6 @@ public class PlayerTable {
         this.globalInteract = true;
         this.globalPVE = true;
         this.chunkFlying = false;
+        this.blockedPlayers = "0";
     }
 }

@@ -650,6 +650,57 @@ public class ChunkListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void onChunkTeleport(PlayerTeleportEvent e) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        CacheManager cacheManager = plugin.getCacheManager();
+        PU pu = plugin.getPU();
+
+        Player player = e.getPlayer();
+        UUID uuid = player.getUniqueId();
+        Chunk toChunk = e.getTo().getChunk();
+        String toChunkCord = pu.serializeChunkLocation(toChunk);
+
+        if (cacheManager.isChunkClaimed(toChunkCord)) {
+            if (!plugin.getData().hasAdminBypass(uuid)) {
+                Chunk fromChunk = e.getFrom().getChunk();
+                String fromChunkCord = pu.serializeChunkLocation(fromChunk);
+                UUID toChunkOwner = cacheManager.getChunkOwnerUUID(toChunkCord);
+                if (cacheManager.isBlocked(toChunkOwner, uuid)) {
+                    if (cacheManager.isChunkClaimed(fromChunkCord) && cacheManager.getChunkOwnerUUID(fromChunkCord).equals(toChunkOwner)) {
+                        e.setCancelled(true);
+                    } else {
+                        player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_BLOCKED_TELEPORT.getComponent(new String[] { cacheManager.getChunkOwnerName(toChunkCord) })));
+                        e.setCancelled(true);
+                    }
+                }
+            }
+        }
+    }
+
+
+    @EventHandler
+    public void onChunkEnter(PlayerMoveEvent e) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        CacheManager cacheManager = plugin.getCacheManager();
+        PU pu = plugin.getPU();
+
+        Player player = e.getPlayer();
+        Chunk chunk = e.getTo().getChunk();
+        String chunkCord = pu.serializeChunkLocation(chunk);
+        UUID uuid = player.getUniqueId();
+
+        if (cacheManager.isChunkClaimed(chunkCord)) {
+            if (!plugin.getData().hasAdminBypass(uuid)) {
+                UUID chunkOwner = cacheManager.getChunkOwnerUUID(chunkCord);
+                if (cacheManager.isBlocked(chunkOwner, uuid)) {
+                    player.teleport(e.getFrom());
+                    player.sendActionBar(Lang.ERROR_BLOCKED_ENTER.getComponent(new String[] { cacheManager.getChunkOwnerName(chunkCord) }));
+                }
+            }
+        }
+    }
+
     //auto claim handler
     @EventHandler
     public void onAutoClaim(PlayerMoveEvent e) {

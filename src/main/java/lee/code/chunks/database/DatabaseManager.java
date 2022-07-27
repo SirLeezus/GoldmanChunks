@@ -4,14 +4,12 @@ import lee.code.chunks.GoldmanChunks;
 import lee.code.chunks.database.tables.AdminChunkTable;
 import lee.code.chunks.database.tables.ChunkTable;
 import lee.code.chunks.database.tables.PlayerTable;
-import lee.code.chunks.lists.chunksettings.AdminChunkSetting;
 import lee.code.core.ormlite.dao.Dao;
 import lee.code.core.ormlite.dao.DaoManager;
 import lee.code.core.ormlite.jdbc.JdbcConnectionSource;
 import lee.code.core.ormlite.jdbc.db.DatabaseTypeUtils;
 import lee.code.core.ormlite.logger.LogBackendType;
 import lee.code.core.ormlite.logger.LoggerFactory;
-import lee.code.core.ormlite.stmt.*;
 import lee.code.core.ormlite.support.ConnectionSource;
 import lee.code.core.ormlite.table.TableUtils;
 import lombok.AccessLevel;
@@ -49,6 +47,7 @@ public class DatabaseManager {
                     "test",
                     "test",
                     DatabaseTypeUtils.createDatabaseType(databaseURL));
+
             createTables();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -78,6 +77,14 @@ public class DatabaseManager {
 
         //load admin chunk data into cache
         for (AdminChunkTable adminChunkTable : adminChunkDao.queryForAll()) cacheManager.setAdminChunk(adminChunkTable);
+    }
+
+    public void update() {
+        try {
+            playerDao.executeRaw("ALTER TABLE `player` ADD COLUMN blocked_players VARCHAR NOT NULL DEFAULT '0';");
+         }catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void closeConnection() {
