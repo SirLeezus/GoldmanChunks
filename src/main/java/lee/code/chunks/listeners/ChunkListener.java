@@ -132,6 +132,27 @@ public class ChunkListener implements Listener {
     }
 
     @EventHandler
+    public void onHangingBreak(HangingBreakEvent e) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        CacheManager cacheManager = plugin.getCacheManager();
+
+        Chunk chunk = e.getEntity().getLocation().getChunk();
+        String chunkCord = plugin.getPU().serializeChunkLocation(chunk);
+
+        if (cacheManager.isChunkClaimed(chunkCord)) {
+            if (e.getCause().equals(HangingBreakEvent.RemoveCause.EXPLOSION)) {
+                if (!cacheManager.canChunkSetting(ChunkSetting.EXPLOSIONS, chunkCord)) {
+                    e.setCancelled(true);
+                }
+            }
+        } else if (cacheManager.isAdminChunk(chunkCord)) {
+            if (e.getCause().equals(HangingBreakEvent.RemoveCause.EXPLOSION)) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
     public void onHangingEntityBreak(HangingBreakByEntityEvent e) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Data data = plugin.getData();

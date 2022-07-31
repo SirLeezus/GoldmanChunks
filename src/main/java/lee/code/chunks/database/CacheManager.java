@@ -67,10 +67,12 @@ public class CacheManager {
     }
 
     public void claimChunk(String chunk, UUID owner) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
         ChunkTable chunkTable = new ChunkTable(chunk, owner);
         getChunkCache().put(chunkTable.getChunk(), chunkTable);
-        GoldmanChunks.getPlugin().getDatabaseManager().createChunkTable(chunkTable);
+        plugin.getDatabaseManager().createChunkTable(chunkTable);
         addClaim(owner, chunk);
+        plugin.getEssentialsAPI().drawOnlineChunk(chunk, owner, false);
     }
 
     public boolean isChunkForSale(String chunk) {
@@ -103,10 +105,16 @@ public class CacheManager {
         } else return new ArrayList<>();
     }
 
+    public List<ChunkTable> getAllChunkData() {
+        return new ArrayList<>(getChunkCache().asMap().values());
+    }
+
     public void unclaimChunk(String chunk, UUID uuid) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
         subtractClaim(uuid, chunk);
-        GoldmanChunks.getPlugin().getDatabaseManager().deleteChunkTable(getChunkTable(chunk));
+        plugin.getDatabaseManager().deleteChunkTable(getChunkTable(chunk));
         getChunkCache().invalidate(chunk);
+        plugin.getEssentialsAPI().removeOnlineChunk(chunk, uuid, false);
     }
 
     public boolean isChunkClaimed(String chunk) {
@@ -438,6 +446,7 @@ public class CacheManager {
     private AdminChunkTable getAdminChunkTable(String chunk) {
         return getAdminChunkCache().getIfPresent(chunk);
     }
+
     public void setAdminChunk(AdminChunkTable adminChunkTable) {
         getAdminChunkCache().put(adminChunkTable.getChunk(), adminChunkTable);
     }
@@ -445,6 +454,8 @@ public class CacheManager {
     public List<String> getAdminChunkClaims() {
         return new ArrayList<>(getAdminChunkCache().asMap().keySet());
     }
+
+    public List<AdminChunkTable> getAllAdminChunkData() { return new ArrayList<>(getAdminChunkCache().asMap().values()); }
 
     public int updateBulkAdminChunks(List<String> chunks, AdminChunkSetting setting, boolean result) {
         List<AdminChunkTable> adminChunks = new ArrayList<>();

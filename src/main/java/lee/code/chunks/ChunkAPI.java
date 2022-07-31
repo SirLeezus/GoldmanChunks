@@ -1,6 +1,9 @@
 package lee.code.chunks;
 
 import lee.code.chunks.database.CacheManager;
+import lee.code.chunks.database.tables.AdminChunkTable;
+import lee.code.chunks.database.tables.ChunkTable;
+import lee.code.chunks.lists.chunksettings.AdminChunkSetting;
 import lee.code.chunks.lists.chunksettings.ChunkTrustedGlobalSetting;
 import lee.code.chunks.lists.chunksettings.ChunkTrustedSetting;
 import org.bukkit.Chunk;
@@ -26,6 +29,14 @@ public class ChunkAPI {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         CacheManager cacheManager = plugin.getCacheManager();
         return cacheManager.getChunkClaims(uuid);
+    }
+
+    public List<ChunkTable> getAllChunkData() {
+        return GoldmanChunks.getPlugin().getCacheManager().getAllChunkData();
+    }
+
+    public List<AdminChunkTable> getAllAdminChunkData() {
+        return GoldmanChunks.getPlugin().getCacheManager().getAllAdminChunkData();
     }
 
     public List<String> getAdminChunks() {
@@ -100,7 +111,10 @@ public class ChunkAPI {
             else if (cacheManager.isChunkTrusted(chunkCord, uuid)) return cacheManager.canChunkTrustedSetting(ChunkTrustedSetting.BREAK, chunkCord);
             else if (cacheManager.isGlobalTrusted(oUUID, uuid)) return cacheManager.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSetting.BREAK, oUUID);
             else return data.hasAdminBypass(uuid);
-        } else if (cacheManager.isAdminChunk(chunkCord)) return data.hasAdminBypass(uuid);
+        } else if (cacheManager.isAdminChunk(chunkCord)) {
+            if (data.hasAdminBypass(uuid)) return true;
+            else return cacheManager.canAdminChunkSetting(AdminChunkSetting.BREAK, chunkCord);
+        }
         return true;
     }
 
