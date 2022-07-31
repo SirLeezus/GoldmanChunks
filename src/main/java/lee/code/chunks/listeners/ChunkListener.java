@@ -281,6 +281,46 @@ public class ChunkListener implements Listener {
     }
 
     @EventHandler
+    public void onnBlockPlace(EntityPlaceEvent e) {
+        Player player = e.getPlayer();
+        if (player != null) {
+            GoldmanChunks plugin = GoldmanChunks.getPlugin();
+            Data data = plugin.getData();
+            CacheManager cacheManager = plugin.getCacheManager();
+
+            UUID uuid = player.getUniqueId();
+            Chunk chunk = e.getBlock().getLocation().getChunk();
+            String chunkCord = plugin.getPU().serializeChunkLocation(chunk);
+
+            if (!data.hasAdminBypass(uuid)) {
+                if (cacheManager.isChunkClaimed(chunkCord)) {
+                    if (!cacheManager.isChunkOwner(chunkCord, uuid)) {
+                        UUID owner = cacheManager.getChunkOwnerUUID(chunkCord);
+                        //chunk trusted check
+                        if (cacheManager.isChunkTrusted(chunkCord, uuid)) {
+                            if (!cacheManager.canChunkTrustedSetting(ChunkTrustedSetting.BUILD, chunkCord)) {
+                                e.setCancelled(true);
+                                warnMessage(player, true, owner, ChunkWarning.BUILD);
+                            }
+                            //global trusted check
+                        } else if (cacheManager.isGlobalTrusted(owner, uuid)) {
+                            if (!cacheManager.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSetting.BUILD, owner)) {
+                                e.setCancelled(true);
+                                warnMessage(player, true, owner, ChunkWarning.BUILD);
+                            }
+                        } else {
+                            e.setCancelled(true);
+                            warnMessage(player, false, owner, ChunkWarning.BUILD);
+                        }
+                    }
+                } else if (cacheManager.isAdminChunk(chunkCord)) {
+                    if (!cacheManager.canAdminChunkSetting(AdminChunkSetting.BUILD, chunkCord)) e.setCancelled(true);
+                }
+            }
+        }
+    }
+
+    @EventHandler
     public void onInteractEvent(PlayerInteractEvent e) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         Data data = plugin.getData();
@@ -318,23 +358,6 @@ public class ChunkListener implements Listener {
                                     e.setCancelled(true);
                                     if (!isSign) warnMessage(player, false, owner, ChunkWarning.INTERACT);
                                 }
-                            } else {
-                                //chunk trusted check
-                                if (cacheManager.isChunkTrusted(chunkCord, uuid)) {
-                                    if (!cacheManager.canChunkTrustedSetting(ChunkTrustedSetting.BUILD, chunkCord)) {
-                                        e.setCancelled(true);
-                                        warnMessage(player, true, owner, ChunkWarning.BUILD);
-                                    }
-                                    //global trusted check
-                                } else if (cacheManager.isGlobalTrusted(owner, uuid)) {
-                                    if (!cacheManager.canChunkTrustedGlobalSetting(ChunkTrustedGlobalSetting.BUILD, owner)) {
-                                        e.setCancelled(true);
-                                        warnMessage(player, true, owner, ChunkWarning.BUILD);
-                                    }
-                                } else {
-                                    e.setCancelled(true);
-                                    warnMessage(player, false, owner, ChunkWarning.BUILD);
-                                }
                             }
                         }
                     } else if (cacheManager.isAdminChunk(chunkCord)) {
@@ -343,9 +366,6 @@ public class ChunkListener implements Listener {
                                 e.setCancelled(true);
                                 if (!isSign) warnMessage(player, false, uuid, ChunkWarning.ADMIN);
                             }
-                        } else if (!cacheManager.canAdminChunkSetting(AdminChunkSetting.BUILD, chunkCord)) {
-                            e.setCancelled(true);
-                            if (!isSign) warnMessage(player, false, uuid, ChunkWarning.ADMIN);
                         }
                     }
                 }
