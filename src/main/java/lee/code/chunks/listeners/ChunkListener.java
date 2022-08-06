@@ -16,10 +16,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
@@ -613,7 +610,52 @@ public class ChunkListener implements Listener {
 
     //piston move handler
     @EventHandler
-    public void onPistonMove(BlockPistonExtendEvent e) {
+    public void onPistonExtend(BlockPistonExtendEvent e) {
+        GoldmanChunks plugin = GoldmanChunks.getPlugin();
+        CacheManager cacheManager = plugin.getCacheManager();
+        Data data = plugin.getData();
+        PU pu = plugin.getPU();
+
+        //check piston location
+        Chunk chunk = e.getBlock().getLocation().getChunk();
+        String chunkCord = pu.serializeChunkLocation(chunk);
+
+        if (data.getWhitelistedWorlds().contains(chunk.getWorld().getName())) {
+            if (!cacheManager.isChunkClaimed(chunkCord)) {
+                e.setCancelled(true);
+                return;
+            }
+
+            if (cacheManager.isAdminChunk(chunkCord)) return;
+            List<Block> blocks = new ArrayList<>(e.getBlocks());
+            if (blocks.size() > 0) {
+                Block lastBlock = blocks.get(blocks.size() - 1);
+                lastBlock = lastBlock.getRelative(e.getDirection());
+                blocks.add(lastBlock);
+            }
+
+            UUID chunkOwner = cacheManager.getChunkOwnerUUID(chunkCord);
+
+            //check piston moved blocks
+            for (Block block : blocks) {
+                Chunk movedBlockChunk = block.getLocation().getChunk();
+                String movedBlockChunkCords = pu.serializeChunkLocation(movedBlockChunk);
+                if (cacheManager.isChunkClaimed(movedBlockChunkCords)) {
+                    UUID movedChunkOwner = cacheManager.getChunkOwnerUUID(movedBlockChunkCords);
+                    if (!movedChunkOwner.equals(chunkOwner)) {
+                        e.setCancelled(true);
+                        return;
+                    }
+                } else {
+                    e.setCancelled(true);
+                    return;
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPistonRetract(BlockPistonRetractEvent e) {
         GoldmanChunks plugin = GoldmanChunks.getPlugin();
         CacheManager cacheManager = plugin.getCacheManager();
         Data data = plugin.getData();
